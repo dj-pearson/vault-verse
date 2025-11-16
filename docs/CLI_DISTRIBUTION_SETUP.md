@@ -9,7 +9,7 @@ EnvVault CLI is distributed through:
 1. **Homebrew** (macOS & Linux) - `brew install envvault/tap/envvault`
 2. **npm** (All platforms) - `npm install -g @envvault/cli`
 3. **GitHub Releases** (Direct downloads) - Manual binary downloads
-4. **curl Installer** (Quick install) - `curl -fsSL https://get.envvault.com | sh`
+4. **curl Installer** (Quick install) - `curl -fsSL https://get.envault.net | sh`
 
 ## Prerequisites
 
@@ -259,12 +259,12 @@ If you need to create a release manually:
 
 ## 4. curl Installer Setup
 
-### Create get.envvault.com
+### Create get.envault.net
 
 The curl installer provides a quick one-line installation:
 
 ```bash
-curl -fsSL https://get.envvault.com | sh
+curl -fsSL https://get.envault.net | sh
 ```
 
 **Setup**:
@@ -282,7 +282,7 @@ curl -fsSL https://get.envvault.com | sh
    - Option 3: Custom domain with CDN
 
 3. **Set up redirect**:
-   - `get.envvault.com` → GitHub raw URL or CDN
+   - `get.envault.net` → GitHub raw URL or CDN
    - Or serve directly from CDN
 
 ### Installer Script
@@ -294,7 +294,7 @@ Create `cli/scripts/install.sh`:
 set -e
 
 # EnvVault CLI Installer
-# Usage: curl -fsSL https://get.envvault.com | sh
+# Usage: curl -fsSL https://get.envault.net | sh
 
 REPO="dj-pearson/vault-verse"
 INSTALL_DIR="${ENVVAULT_INSTALL_DIR:-$HOME/.local/bin}"
@@ -470,7 +470,7 @@ Before each release, test all distribution methods:
 - [ ] `./envvault --version` works
 
 **curl Installer**:
-- [ ] `curl -fsSL https://get.envvault.com | sh`
+- [ ] `curl -fsSL https://get.envault.net | sh`
 - [ ] Binary installs to correct location
 - [ ] PATH instructions are correct
 
@@ -521,7 +521,7 @@ npm install -g @envvault/cli --unsafe-perm
 - **Homebrew Tap**: https://github.com/envvault/homebrew-tap
 - **npm Package**: https://www.npmjs.com/package/@envvault/cli
 - **GitHub Releases**: https://github.com/dj-pearson/vault-verse/releases
-- **Documentation**: https://envvault.com/docs
+- **Documentation**: https://envault.net/docs
 
 ---
 

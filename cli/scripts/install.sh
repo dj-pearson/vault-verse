@@ -1,6 +1,6 @@
 #!/bin/sh
 # EnvVault CLI Installer
-# Usage: curl -fsSL https://get.envvault.com | sh
+# Usage: curl -fsSL https://get.envault.net | sh
 
 set -e
 
@@ -146,7 +146,7 @@ install() {
     echo "For shell completions, run:"
     echo "  envvault completion bash|zsh|fish"
     echo ""
-    echo "Documentation: https://envvault.com/docs"
+    echo "Documentation: https://envault.net/docs"
 }
 
 # Run installation

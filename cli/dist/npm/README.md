@@ -48,7 +48,7 @@ envvault run npm start
 
 ## Documentation
 
-Full documentation available at [envvault.com/docs](https://envvault.com/docs)
+Full documentation available at [envault.net/docs](https://envault.net/docs)
 
 ### Commands
 
@@ -100,12 +100,12 @@ Download binaries from [GitHub Releases](https://github.com/dj-pearson/vault-ver
 ### curl Installer
 
 ```bash
-curl -fsSL https://get.envvault.com | sh
+curl -fsSL https://get.envault.net | sh
 ```
 
 ## Support
 
-- 📖 Documentation: https://envvault.com/docs
+- 📖 Documentation: https://envault.net/docs
 - 🐛 Issues: https://github.com/dj-pearson/vault-verse/issues
 - 💬 Discussions: https://github.com/dj-pearson/vault-verse/discussions
 

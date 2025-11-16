@@ -608,7 +608,7 @@ Completed the sync command implementation with production-ready features:
 - ✅ Homebrew: `brew install envvault/tap/envvault`
 - ✅ npm: `npm install -g @envvault/cli`
 - ✅ GitHub Releases: Direct downloads
-- ✅ curl installer: `curl -fsSL https://get.envvault.com | sh`
+- ✅ curl installer: `curl -fsSL https://get.envault.net | sh`
 
 **Status**: **Production deployment ready** 🚀
 

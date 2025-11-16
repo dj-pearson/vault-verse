@@ -184,7 +184,7 @@
    - Configure incident alerts (Slack/email)
 
 4. ✅ Status page
-   - Set up status.envvault.com
+   - Set up status.envault.net
    - Show system status
    - Show incident history
 

@@ -169,7 +169,7 @@ envvault completion fish > ~/.config/fish/completions/envvault.fish
    - Checksum verification
 
 4. **curl Installer** (Quick install)
-   - `curl -fsSL https://get.envvault.com | sh`
+   - `curl -fsSL https://get.envault.net | sh`
    - Platform detection
    - Latest version fetching
    - PATH configuration help
@@ -178,7 +178,7 @@ envvault completion fish > ~/.config/fish/completions/envvault.fish
 - [ ] Create GitHub repository: `homebrew-tap`
 - [ ] Create npm organization: `@envvault`
 - [ ] Configure GitHub release workflow
-- [ ] Set up `get.envvault.com` redirect/hosting
+- [ ] Set up `get.envault.net` redirect/hosting
 
 ### 6. CLI Update Mechanism
 

@@ -258,7 +258,7 @@ derivedKey := argon2id.Key(
 ### Authentication
 
 **Personal Access Tokens** (PAT):
-- Generated at https://envvault.com/settings/tokens
+- Generated at https://envault.net/settings/tokens
 - SHA-256 hashed before storage
 - 90-day expiration (default)
 - Revocable anytime
@@ -442,7 +442,7 @@ Content-Security-Policy:
   script-src 'self';
   style-src 'self' 'unsafe-inline';
   img-src 'self' data: https:;
-  connect-src 'self' https://api.envvault.com;
+  connect-src 'self' https://api.envault.net;
 ```
 
 ---
@@ -602,8 +602,8 @@ EnvVault is designed to help you achieve compliance with:
 
 **Instead:**
 
-1. **Email**: security@envvault.com
-2. **PGP Key**: https://envvault.com/security/pgp.asc
+1. **Email**: security@envault.net
+2. **PGP Key**: https://envault.net/security/pgp.asc
 3. **Include**:
    - Description of vulnerability
    - Steps to reproduce
@@ -631,7 +631,7 @@ We appreciate responsible disclosure and may offer:
 
 ### Notification Channels
 
-- **Email**: security-announce@envvault.com
+- **Email**: security-announce@envault.net
 - **Twitter**: @envvault
 - **GitHub**: https://github.com/dj-pearson/vault-verse/security/advisories
 - **Discord**: https://discord.gg/envvault (security-announcements channel)
@@ -711,10 +711,10 @@ Self-hosting guide: Coming soon.
 
 ## Resources
 
-- 🔒 **Security Policy**: https://envvault.com/security
-- 🐛 **Report Vulnerability**: security@envvault.com
-- 📚 **Security Blog**: https://envvault.com/blog/security
-- 🔑 **PGP Key**: https://envvault.com/security/pgp.asc
+- 🔒 **Security Policy**: https://envault.net/security
+- 🐛 **Report Vulnerability**: security@envault.net
+- 📚 **Security Blog**: https://envault.net/blog/security
+- 🔑 **PGP Key**: https://envault.net/security/pgp.asc
 - 📜 **Security Advisories**: https://github.com/dj-pearson/vault-verse/security/advisories
 
 ---

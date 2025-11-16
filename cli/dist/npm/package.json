@@ -34,13 +34,13 @@
   ],
   "author": {
     "name": "EnvVault Team",
-    "url": "https://envvault.com"
+    "url": "https://envault.net"
   },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/dj-pearson/vault-verse/issues"
   },
-  "homepage": "https://envvault.com",
+  "homepage": "https://envault.net",
   "funding": {
     "type": "github",
     "url": "https://github.com/sponsors/envvault"

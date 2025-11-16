@@ -119,7 +119,7 @@ https://github.com/dj-pearson/vault-verse/releases/download/v1.0.0/envvault-darw
 
 **Installation Command**:
 ```bash
-curl -fsSL https://get.envvault.com | sh
+curl -fsSL https://get.envault.net | sh
 ```
 
 **File Created**:
@@ -134,7 +134,7 @@ curl -fsSL https://get.envvault.com | sh
 - ✅ Installation verification
 
 **Setup Required**:
-1. Create domain/subdomain: `get.envvault.com`
+1. Create domain/subdomain: `get.envault.net`
 2. Host `install.sh` or redirect to GitHub raw URL
 3. Options:
    - GitHub Pages (free)
@@ -380,7 +380,7 @@ git push origin v1.0.0
    - `NPM_TOKEN` - npm automation token
    - Test workflow: `git tag v0.1.0-beta && git push origin v0.1.0-beta`
 
-4. **Set up get.envvault.com** (30 minutes)
+4. **Set up get.envault.net** (30 minutes)
    - Option A: GitHub Pages
    - Option B: Cloudflare Pages
    - Option C: Redirect to GitHub raw URL
@@ -426,7 +426,7 @@ git push origin v1.0.0
    - Fix any installation issues
 
 5. **Documentation Website**
-   - Deploy docs to envvault.com/docs
+   - Deploy docs to envault.net/docs
    - Add installation guides
    - Create getting started tutorial
 

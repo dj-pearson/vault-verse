@@ -707,7 +707,7 @@ envvault login --token envt_abc123def456
 ```
 
 **Getting a token:**
-1. Go to https://envvault.com/settings/tokens
+1. Go to https://envault.net/settings/tokens
 2. Create new token
 3. Copy and use with `--token` flag
 
@@ -978,7 +978,7 @@ default_environment: development
 telemetry: false
 
 # Custom API endpoint (for self-hosted)
-api_endpoint: https://api.envvault.com
+api_endpoint: https://api.envault.net
 ```
 
 ---
@@ -990,7 +990,7 @@ These environment variables affect CLI behavior:
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `ENVVAULT_ENV` | Default environment | `export ENVVAULT_ENV=production` |
-| `ENVVAULT_API_URL` | Custom API endpoint | `https://api.envvault.com` |
+| `ENVVAULT_API_URL` | Custom API endpoint | `https://api.envault.net` |
 | `ENVVAULT_DEBUG` | Enable debug mode | `ENVVAULT_DEBUG=1` |
 | `ENVVAULT_NO_COLOR` | Disable colored output | `ENVVAULT_NO_COLOR=1` |
 | `ENVVAULT_TOKEN` | API token (for CI) | `envt_abc123...` |
@@ -1039,7 +1039,7 @@ envvault run --env production ./deploy_app.sh
 ### 4. Docker Integration
 ```dockerfile
 # Install EnvVault in Docker
-RUN curl -fsSL https://get.envvault.com | sh
+RUN curl -fsSL https://get.envault.net | sh
 
 # Use in entrypoint
 ENTRYPOINT ["envvault", "run", "--"]

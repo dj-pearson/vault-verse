@@ -64,7 +64,7 @@ jobs:
 
           ### macOS/Linux (curl)
           \`\`\`bash
-          curl -fsSL https://get.envvault.com | sh
+          curl -fsSL https://get.envault.net | sh
           \`\`\`
 
           ### npm (all platforms)
@@ -237,7 +237,7 @@ jobs:
 
           class Envvault < Formula
             desc "Secure, local-first environment variable management"
-            homepage "https://envvault.com"
+            homepage "https://envault.net"
             version "${VERSION_NUMBER}"
             license "MIT"
 

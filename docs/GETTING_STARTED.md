@@ -32,7 +32,7 @@ brew install envvault
 
 #### macOS/Linux (curl)
 ```bash
-curl -fsSL https://get.envvault.com | sh
+curl -fsSL https://get.envault.net | sh
 ```
 
 #### npm (all platforms)
@@ -124,7 +124,7 @@ envvault run --env production npm start
 
 ```bash
 # Team Admin:
-# 1. Sign up at https://envvault.com
+# 1. Sign up at https://envault.net
 # 2. Login to CLI
 envvault login
 
@@ -289,7 +289,7 @@ envvault sync --pull
 ### What if I forget my password?
 
 - Local secrets: Protected by OS keychain, still accessible
-- Team secrets: Use account recovery at envvault.com
+- Team secrets: Use account recovery at envault.net
 - **Important**: No one (including us) can decrypt your secrets without your master key
 
 ### Is EnvVault open source?
@@ -313,10 +313,10 @@ Yes! EnvVault is open source under the MIT license.
 
 ## Getting Help
 
-- 📚 **Documentation**: https://docs.envvault.com
+- 📚 **Documentation**: https://docs.envault.net
 - 💬 **Discord**: https://discord.gg/envvault
 - 🐛 **Report bugs**: https://github.com/dj-pearson/vault-verse/issues
-- 📧 **Email support**: support@envvault.com
+- 📧 **Email support**: support@envault.net
 
 ---
 

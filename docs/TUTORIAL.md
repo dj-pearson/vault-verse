@@ -284,7 +284,7 @@ rm .env.production
 **Team Owner:**
 
 ```bash
-# 1. Sign up at https://envvault.com
+# 1. Sign up at https://envault.net
 # (Use GitHub OAuth or email)
 
 # 2. Login to CLI
@@ -348,7 +348,7 @@ Team Members (4):
 ```bash
 # 1. Accept invitation email
 
-# 2. Sign up at https://envvault.com
+# 2. Sign up at https://envault.net
 
 # 3. Login to CLI
 envvault login
@@ -433,7 +433,7 @@ jobs:
           node-version: 18
 
       - name: Install EnvVault
-        run: curl -fsSL https://get.envvault.com | sh
+        run: curl -fsSL https://get.envault.net | sh
 
       - name: Login to EnvVault
         run: envvault login --token ${{ secrets.ENVVAULT_TOKEN }}
@@ -452,7 +452,7 @@ jobs:
 ```
 
 **Setup:**
-1. Get EnvVault token: https://envvault.com/settings/tokens
+1. Get EnvVault token: https://envault.net/settings/tokens
 2. Add to GitHub secrets: `ENVVAULT_TOKEN`
 
 **Now every push to main:**
@@ -523,7 +523,7 @@ envvault sync --push
 envvault team list
 
 # Upgrade developer to admin (temporarily)
-# Note: This is done via web dashboard at envvault.com
+# Note: This is done via web dashboard at envault.net
 
 # Or create production-readonly environment
 envvault env create production-readonly
@@ -628,7 +628,7 @@ git commit -m "Migrate to EnvVault for secret management"
 
 ```bash
 # Reinstall
-curl -fsSL https://get.envvault.com | sh
+curl -fsSL https://get.envault.net | sh
 
 # Or with Homebrew
 brew install envvault/tap/envvault
@@ -731,7 +731,7 @@ Now that you've completed the tutorial:
 
 - 💬 **Discord**: https://discord.gg/envvault
 - 🐛 **Issues**: https://github.com/dj-pearson/vault-verse/issues
-- 📧 **Support**: support@envvault.com
+- 📧 **Support**: support@envault.net
 
 ---
 

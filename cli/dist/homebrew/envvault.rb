@@ -3,7 +3,7 @@
 
 class Envvault < Formula
   desc "Secure, local-first environment variable management"
-  homepage "https://envvault.com"
+  homepage "https://envault.net"
   version "VERSION_PLACEHOLDER"
   license "MIT"
 

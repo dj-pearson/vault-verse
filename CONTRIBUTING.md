@@ -268,7 +268,7 @@ Releases are managed by maintainers:
 
 - **Issues**: https://github.com/dj-pearson/vault-verse/issues
 - **Discussions**: https://github.com/dj-pearson/vault-verse/discussions
-- **Documentation**: https://envvault.com/docs
+- **Documentation**: https://envault.net/docs
 
 ## Development Tips
 
