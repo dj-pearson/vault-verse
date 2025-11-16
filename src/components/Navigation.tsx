@@ -16,7 +16,7 @@ export const Navigation = () => {
             <div className="p-1.5 rounded-lg bg-gradient-primary">
               <Lock className="h-5 w-5 text-white" />
             </div>
-            <span>EnvVault</span>
+            <span>ENVault</span>
           </Link>
 
           <div className="hidden md:flex items-center gap-8">

@@ -23,7 +23,7 @@ var (
 var rootCmd = &cobra.Command{
 	Use:   "envault",
 	Short: "Secure, local-first environment variable management",
-	Long: `EnvVault is a secure, local-first environment variable management tool
+	Long: `ENVault is a secure, local-first environment variable management tool
 for developers and teams. It provides zero-knowledge encryption and optional
 team sync for managing .env files across multiple environments.
 
