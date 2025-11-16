@@ -1,0 +1,332 @@
+name: Release - CLI Distribution
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., v1.0.0)'
+        required: true
+
+env:
+  GO_VERSION: '1.22'
+
+jobs:
+  # Create GitHub Release
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      version: ${{ steps.get_version.outputs.version }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          # Get commits since last tag
+          PREVIOUS_TAG=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1) 2>/dev/null || echo "")
+
+          if [ -z "$PREVIOUS_TAG" ]; then
+            COMMITS=$(git log --pretty=format:"- %s (%h)" --reverse)
+          else
+            COMMITS=$(git log ${PREVIOUS_TAG}..HEAD --pretty=format:"- %s (%h)" --reverse)
+          fi
+
+          cat > release_notes.md << EOF
+          ## What's Changed
+
+          ${COMMITS}
+
+          ## Installation
+
+          ### macOS (Homebrew)
+          \`\`\`bash
+          brew tap envvault/tap
+          brew install envvault
+          \`\`\`
+
+          ### macOS/Linux (curl)
+          \`\`\`bash
+          curl -fsSL https://get.envvault.com | sh
+          \`\`\`
+
+          ### npm (all platforms)
+          \`\`\`bash
+          npm install -g @envvault/cli
+          \`\`\`
+
+          ### Manual Installation
+          Download the binary for your platform below and add it to your PATH.
+
+          ## Checksums
+          See checksums.txt for SHA256 hashes of all binaries.
+
+          **Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREVIOUS_TAG}...${{ steps.get_version.outputs.version }}
+          EOF
+
+          cat release_notes.md
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_version.outputs.version }}
+          release_name: EnvVault ${{ steps.get_version.outputs.version }}
+          body_path: release_notes.md
+          draft: false
+          prerelease: ${{ contains(steps.get_version.outputs.version, '-') }}
+
+  # Build binaries for all platforms
+  build-binaries:
+    name: Build ${{ matrix.name }}
+    needs: create-release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          # macOS Intel
+          - name: macOS-Intel
+            os: macos-latest
+            goos: darwin
+            goarch: amd64
+            output: envvault-darwin-amd64
+
+          # macOS Apple Silicon
+          - name: macOS-ARM
+            os: macos-latest
+            goos: darwin
+            goarch: arm64
+            output: envvault-darwin-arm64
+
+          # Linux x64
+          - name: Linux-x64
+            os: ubuntu-latest
+            goos: linux
+            goarch: amd64
+            output: envvault-linux-amd64
+
+          # Linux ARM64
+          - name: Linux-ARM64
+            os: ubuntu-latest
+            goos: linux
+            goarch: arm64
+            output: envvault-linux-arm64
+
+          # Windows x64
+          - name: Windows-x64
+            os: ubuntu-latest
+            goos: windows
+            goarch: amd64
+            output: envvault-windows-amd64.exe
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Build binary
+        working-directory: ./cli
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 0
+        run: |
+          VERSION="${{ needs.create-release.outputs.version }}"
+          BUILD_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+          go build \
+            -ldflags="-s -w -X main.Version=${VERSION} -X main.BuildTime=${BUILD_TIME}" \
+            -trimpath \
+            -o ${{ matrix.output }} \
+            .
+
+      - name: Create tarball (Unix)
+        if: matrix.goos != 'windows'
+        working-directory: ./cli
+        run: |
+          tar czf ${{ matrix.output }}.tar.gz ${{ matrix.output }}
+          shasum -a 256 ${{ matrix.output }}.tar.gz > ${{ matrix.output }}.tar.gz.sha256
+
+      - name: Create zip (Windows)
+        if: matrix.goos == 'windows'
+        working-directory: ./cli
+        run: |
+          zip ${{ matrix.output }}.zip ${{ matrix.output }}
+          sha256sum ${{ matrix.output }}.zip > ${{ matrix.output }}.zip.sha256
+
+      - name: Upload Release Asset (Unix)
+        if: matrix.goos != 'windows'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./cli/${{ matrix.output }}.tar.gz
+          asset_name: ${{ matrix.output }}.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Upload Release Asset (Windows)
+        if: matrix.goos == 'windows'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./cli/${{ matrix.output }}.zip
+          asset_name: ${{ matrix.output }}.zip
+          asset_content_type: application/zip
+
+      - name: Upload Checksum
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./cli/${{ matrix.output }}.${{ matrix.goos == 'windows' && 'zip' || 'tar.gz' }}.sha256
+          asset_name: ${{ matrix.output }}.${{ matrix.goos == 'windows' && 'zip' || 'tar.gz' }}.sha256
+          asset_content_type: text/plain
+
+  # Update Homebrew tap
+  update-homebrew:
+    name: Update Homebrew Formula
+    needs: [create-release, build-binaries]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout homebrew tap
+        uses: actions/checkout@v4
+        with:
+          repository: envvault/homebrew-tap
+          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          path: homebrew-tap
+
+      - name: Download macOS AMD64 artifact
+        run: |
+          VERSION="${{ needs.create-release.outputs.version }}"
+          curl -L -o envvault-darwin-amd64.tar.gz \
+            "https://github.com/${{ github.repository }}/releases/download/${VERSION}/envvault-darwin-amd64.tar.gz"
+          SHA256=$(sha256sum envvault-darwin-amd64.tar.gz | awk '{print $1}')
+          echo "SHA256_AMD64=${SHA256}" >> $GITHUB_ENV
+
+      - name: Download macOS ARM64 artifact
+        run: |
+          VERSION="${{ needs.create-release.outputs.version }}"
+          curl -L -o envvault-darwin-arm64.tar.gz \
+            "https://github.com/${{ github.repository }}/releases/download/${VERSION}/envvault-darwin-arm64.tar.gz"
+          SHA256=$(sha256sum envvault-darwin-arm64.tar.gz | awk '{print $1}')
+          echo "SHA256_ARM64=${SHA256}" >> $GITHUB_ENV
+
+      - name: Update Homebrew formula
+        run: |
+          VERSION="${{ needs.create-release.outputs.version }}"
+          VERSION_NUMBER="${VERSION#v}"  # Remove 'v' prefix
+
+          cat > homebrew-tap/Formula/envvault.rb << 'EOF'
+          class Envvault < Formula
+            desc "Secure environment variable management for developers and teams"
+            homepage "https://envvault.com"
+            version "$VERSION_NUMBER"
+
+            on_macos do
+              if Hardware::CPU.arm?
+                url "https://github.com/${{ github.repository }}/releases/download/$VERSION/envvault-darwin-arm64.tar.gz"
+                sha256 "${{ env.SHA256_ARM64 }}"
+              else
+                url "https://github.com/${{ github.repository }}/releases/download/$VERSION/envvault-darwin-amd64.tar.gz"
+                sha256 "${{ env.SHA256_AMD64 }}"
+              end
+            end
+
+            def install
+              bin.install "envvault-darwin-arm64" => "envvault" if Hardware::CPU.arm?
+              bin.install "envvault-darwin-amd64" => "envvault" if Hardware::CPU.intel?
+            end
+
+            test do
+              system "#{bin}/envvault", "--version"
+            end
+          end
+          EOF
+
+      - name: Commit and push formula update
+        working-directory: homebrew-tap
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/envvault.rb
+          git commit -m "Update envvault to ${{ needs.create-release.outputs.version }}"
+          git push
+
+  # Publish to npm (wrapper package)
+  publish-npm:
+    name: Publish to npm
+    needs: [create-release, build-binaries]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Create npm package
+        working-directory: ./cli/npm
+        run: |
+          VERSION="${{ needs.create-release.outputs.version }}"
+          VERSION_NUMBER="${VERSION#v}"  # Remove 'v' prefix
+
+          # Update package.json version
+          npm version $VERSION_NUMBER --no-git-tag-version
+
+      - name: Publish to npm
+        working-directory: ./cli/npm
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  # Notify release
+  notify-release:
+    name: Notify Release
+    needs: [create-release, build-binaries, update-homebrew, publish-npm]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Release Success
+        if: needs.build-binaries.result == 'success'
+        run: |
+          echo "🎉 Release ${{ needs.create-release.outputs.version }} published!"
+          echo "📦 Homebrew: brew install envvault/tap/envvault"
+          echo "📦 npm: npm install -g @envvault/cli"
+          echo "📦 GitHub: https://github.com/${{ github.repository }}/releases/tag/${{ needs.create-release.outputs.version }}"
+
+      - name: Send Discord/Slack notification
+        run: |
+          echo "TODO: Send notification to Discord/Slack about new release"

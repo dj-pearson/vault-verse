@@ -1,0 +1,201 @@
+name: CI - Continuous Integration
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+env:
+  GO_VERSION: '1.22'
+  NODE_VERSION: '18'
+
+jobs:
+  # Test CLI (Go)
+  test-cli:
+    name: Test CLI
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache-dependency-path: cli/go.sum
+
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('cli/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Download dependencies
+        working-directory: ./cli
+        run: go mod download
+
+      - name: Run go vet
+        working-directory: ./cli
+        run: go vet ./...
+
+      - name: Run tests
+        working-directory: ./cli
+        run: go test -v -race -coverprofile=coverage.out ./...
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./cli/coverage.out
+          flags: cli
+          name: cli-${{ matrix.os }}
+
+      - name: Build CLI
+        working-directory: ./cli
+        run: go build -v -o envvault ./
+
+      - name: Test CLI binary
+        working-directory: ./cli
+        run: ./envvault --version
+
+  # Lint CLI
+  lint-cli:
+    name: Lint CLI (Go)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: latest
+          working-directory: ./cli
+          args: --timeout=5m
+
+  # Test Frontend
+  test-frontend:
+    name: Test Frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run TypeScript check
+        run: npm run type-check
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test -- --coverage
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage/coverage-final.json
+          flags: frontend
+          name: frontend
+
+  # Security scanning
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Scan dependencies (npm)
+        run: npm audit --audit-level=moderate
+
+      - name: Scan dependencies (Go)
+        working-directory: ./cli
+        run: go list -json -m all | docker run --rm -i sonatypecommunity/nancy:latest sleuth
+
+  # Validate database migrations
+  validate-migrations:
+    name: Validate Database Migrations
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate SQL syntax
+        run: |
+          # Install sqlfluff for SQL linting
+          pip install sqlfluff
+          sqlfluff lint supabase/migrations/*.sql --dialect postgres
+
+      - name: Check migration order
+        run: |
+          # Ensure migrations are numbered sequentially
+          cd supabase/migrations
+          ls -1 *.sql | sort -n | awk '{print NR, $0}' | while read num file; do
+            if [[ ! $file =~ ^[0-9]{14}_ ]]; then
+              echo "Error: Migration file $file doesn't follow naming convention"
+              exit 1
+            fi
+          done
+
+  # Build summary
+  build-status:
+    name: Build Status
+    runs-on: ubuntu-latest
+    needs: [test-cli, lint-cli, test-frontend, security-scan, validate-migrations]
+    if: always()
+
+    steps:
+      - name: Check build status
+        run: |
+          if [ "${{ needs.test-cli.result }}" != "success" ] || \
+             [ "${{ needs.lint-cli.result }}" != "success" ] || \
+             [ "${{ needs.test-frontend.result }}" != "success" ] || \
+             [ "${{ needs.security-scan.result }}" != "success" ] || \
+             [ "${{ needs.validate-migrations.result }}" != "success" ]; then
+            echo "❌ Build failed"
+            exit 1
+          else
+            echo "✅ All checks passed"
+          fi
