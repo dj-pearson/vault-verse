@@ -3,11 +3,37 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Lock, Check } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useState, useEffect } from "react";
 
 export default function Signup() {
+  const { signUp, user } = useAuth();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    try {
+      await signUp(email, password, fullName);
+    } catch (error) {
+      // Error handled in auth context
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -20,35 +46,41 @@ export default function Signup() {
               <div className="max-w-md">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
                   <Lock className="h-4 w-4" />
-                  14-day free trial
+                  Get started free
                 </div>
                 
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                  Start Your Free Trial
+                  Create Account
                 </h1>
                 <p className="text-lg text-muted-foreground mb-8">
-                  No credit card required. Get your team syncing in minutes.
+                  Get started with secure environment variable management
                 </p>
 
                 <Card className="p-8">
-                  <form className="space-y-6">
+                  <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-2">
-                      <Label htmlFor="email">Work Email</Label>
+                      <Label htmlFor="fullName">Full Name</Label>
+                      <Input 
+                        id="fullName" 
+                        type="text" 
+                        placeholder="John Doe"
+                        className="h-11"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
                       <Input 
                         id="email" 
                         type="email" 
                         placeholder="you@company.com"
                         className="h-11"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="team">Team Name</Label>
-                      <Input 
-                        id="team" 
-                        type="text" 
-                        placeholder="Acme Inc"
-                        className="h-11"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
                       />
                     </div>
 
@@ -57,40 +89,20 @@ export default function Signup() {
                       <Input 
                         id="password" 
                         type="password"
-                        placeholder="At least 8 characters"
+                        placeholder="At least 6 characters"
                         className="h-11"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        minLength={6}
                       />
                       <p className="text-xs text-muted-foreground">
-                        Must be at least 8 characters with a mix of letters and numbers
+                        Must be at least 6 characters
                       </p>
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="members">How many team members?</Label>
-                      <Input 
-                        id="members" 
-                        type="number" 
-                        placeholder="5"
-                        min="2"
-                        className="h-11"
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        $8 per user/month after trial
-                      </p>
-                    </div>
-
-                    <div className="flex items-start gap-3">
-                      <Checkbox id="terms" className="mt-1" />
-                      <label htmlFor="terms" className="text-sm text-muted-foreground leading-relaxed">
-                        I agree to the{" "}
-                        <a href="#" className="text-primary hover:underline">Terms of Service</a>
-                        {" "}and{" "}
-                        <a href="#" className="text-primary hover:underline">Privacy Policy</a>
-                      </label>
-                    </div>
-
-                    <Button type="submit" className="w-full h-11" size="lg">
-                      Create Account
+                    <Button type="submit" className="w-full h-11" size="lg" disabled={loading}>
+                      {loading ? 'Creating account...' : 'Create Account'}
                     </Button>
                   </form>
 
