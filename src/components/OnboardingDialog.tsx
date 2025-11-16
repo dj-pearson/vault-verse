@@ -91,18 +91,8 @@ export const OnboardingDialog = ({ open, onOpenChange }: OnboardingDialogProps) 
   };
 
   const handleComplete = () => {
-    // Mark onboarding as completed in user preferences
-    if (userId) {
-      supabase
-        .from('profiles')
-        .update({ onboarding_completed: true })
-        .eq('id', userId)
-        .then(() => {
-          onOpenChange(false);
-        });
-    } else {
-      onOpenChange(false);
-    }
+    // Close onboarding dialog
+    onOpenChange(false);
   };
 
   const handleSkip = () => {

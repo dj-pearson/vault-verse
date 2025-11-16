@@ -148,11 +148,10 @@ export const SecretManager = ({ environmentId, environmentName, canEdit = true }
 
     // Create CSV content
     const csvContent = [
-      ['KEY', 'VALUE', 'DESCRIPTION'].join(','),
+      ['KEY', 'VALUE'].join(','),
       ...secrets.map(s => [
         s.key,
         `"${s.value.replace(/"/g, '""')}"`, // Escape quotes
-        `"${(s.description || '').replace(/"/g, '""')}"`,
       ].join(','))
     ].join('\n');
 
