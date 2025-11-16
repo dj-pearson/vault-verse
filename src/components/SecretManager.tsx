@@ -30,6 +30,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { useSecrets, useUpsertSecret, useDeleteSecret } from '@/hooks/useSecrets';
+import { usePlanLimits } from '@/hooks/usePlanLimits';
 import { Eye, EyeOff, Plus, Trash2, Copy, Check } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
@@ -43,6 +44,7 @@ export const SecretManager = ({ environmentId, environmentName, canEdit = true }
   const { data: secrets, isLoading } = useSecrets(environmentId);
   const upsertSecret = useUpsertSecret();
   const deleteSecret = useDeleteSecret();
+  const { checkCanAddSecret } = usePlanLimits();
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [visibleSecrets, setVisibleSecrets] = useState<Set<string>>(new Set());
@@ -72,6 +74,12 @@ export const SecretManager = ({ environmentId, environmentName, canEdit = true }
         description: 'Key must start with a letter and contain only uppercase letters, numbers, and underscores',
         variant: 'destructive',
       });
+      return;
+    }
+
+    // Check if adding a new secret (not updating existing)
+    const isNewSecret = !secrets?.some(s => s.key === newSecret.key);
+    if (isNewSecret && !checkCanAddSecret(secrets?.length || 0)) {
       return;
     }
 

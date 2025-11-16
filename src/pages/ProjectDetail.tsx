@@ -1,320 +1,218 @@
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { Lock, Copy, AlertCircle, Users, Settings, Activity, Database } from "lucide-react";
-import { Link } from "react-router-dom";
-import { TerminalWindow, TerminalLine } from "@/components/TerminalWindow";
+import { useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { Navigation } from '@/components/Navigation';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { SecretManager } from '@/components/SecretManager';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { Settings, Users, FileText, ChevronLeft, Loader2 } from 'lucide-react';
+import { ProjectSettingsTab } from '@/components/project/ProjectSettingsTab';
+import { ProjectTeamTab } from '@/components/project/ProjectTeamTab';
+import { ProjectAuditTab } from '@/components/project/ProjectAuditTab';
+
+interface Environment {
+  id: string;
+  name: string;
+  project_id: string;
+  created_at: string;
+}
+
+interface Project {
+  id: string;
+  name: string;
+  description: string | null;
+  owner_id: string;
+  created_at: string;
+  updated_at: string;
+}
 
 export default function ProjectDetail() {
+  const { id } = useParams<{ id: string }>();
+  const [activeTab, setActiveTab] = useState('environments');
+
+  const { data: project, isLoading: projectLoading } = useQuery({
+    queryKey: ['project', id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) throw error;
+      return data as Project;
+    },
+    enabled: !!id,
+  });
+
+  const { data: environments, isLoading: envsLoading } = useQuery({
+    queryKey: ['environments', id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('environments')
+        .select('*')
+        .eq('project_id', id)
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+      return data as Environment[];
+    },
+    enabled: !!id,
+  });
+
+  const { data: teamMembers } = useQuery({
+    queryKey: ['team-members', id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('team_members')
+        .select('*')
+        .eq('project_id', id);
+
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!id,
+  });
+
+  if (projectLoading || envsLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <main className="container mx-auto px-4 py-8 mt-16">
+          <div className="flex items-center justify-center h-64">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (!project) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <main className="container mx-auto px-4 py-8 mt-16">
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">Project not found</p>
+            <Button asChild className="mt-4">
+              <Link to="/dashboard">Back to Dashboard</Link>
+            </Button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Top Navigation */}
-      <nav className="border-b border-border bg-background">
-        <div className="container mx-auto px-4">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-2 font-semibold text-xl">
-              <div className="p-1.5 rounded-lg bg-gradient-primary">
-                <Lock className="h-5 w-5 text-white" />
-              </div>
-              <span>EnvVault</span>
-            </div>
-
-            <div className="flex items-center gap-6">
-              <Link to="/dashboard" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                ← Back to Projects
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <div className="container mx-auto px-4 py-8">
+      <Navigation />
+      
+      <main className="container mx-auto px-4 py-8 mt-16">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-start justify-between mb-4">
+          <Link to="/dashboard" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-4">
+            <ChevronLeft className="h-4 w-4 mr-1" />
+            Back to Projects
+          </Link>
+          <div className="flex items-start justify-between">
             <div>
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-3xl font-bold">my-saas-app</h1>
-                <Badge variant="secondary">Personal</Badge>
-              </div>
-              <p className="text-muted-foreground">Production web application</p>
+              <h1 className="text-3xl font-bold mb-2">{project.name}</h1>
+              {project.description && (
+                <p className="text-muted-foreground">{project.description}</p>
+              )}
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline">
-                <Users className="h-4 w-4 mr-2" />
-                Share
-              </Button>
-              <Button variant="outline">
-                <Settings className="h-4 w-4 mr-2" />
-                Settings
-              </Button>
+            <div className="flex items-center gap-2">
+              {teamMembers && teamMembers.length > 0 && (
+                <Badge variant="secondary">
+                  <Users className="h-3 w-3 mr-1" />
+                  {teamMembers.length + 1} members
+                </Badge>
+              )}
             </div>
-          </div>
-
-          <div className="flex items-center gap-6 text-sm text-muted-foreground">
-            <span>Last sync: 2 hours ago</span>
-            <span>•</span>
-            <span>Created: Oct 1, 2025</span>
           </div>
         </div>
 
-        <Tabs defaultValue="overview" className="space-y-6">
+        {/* Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="environments">Environments</TabsTrigger>
-            <TabsTrigger value="access">Access</TabsTrigger>
-            <TabsTrigger value="activity">Activity</TabsTrigger>
+            <TabsTrigger value="team">
+              <Users className="h-4 w-4 mr-2" />
+              Team
+            </TabsTrigger>
+            <TabsTrigger value="audit">
+              <FileText className="h-4 w-4 mr-2" />
+              Audit Log
+            </TabsTrigger>
+            <TabsTrigger value="settings">
+              <Settings className="h-4 w-4 mr-2" />
+              Settings
+            </TabsTrigger>
           </TabsList>
-
-          {/* Overview Tab */}
-          <TabsContent value="overview" className="space-y-6">
-            <Card className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
-              
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-sm font-medium mb-2">Clone this project:</h3>
-                  <TerminalWindow className="max-w-2xl">
-                    <TerminalLine prompt>envvault pull my-saas-app</TerminalLine>
-                  </TerminalWindow>
-                </div>
-
-                <div>
-                  <h3 className="text-sm font-medium mb-2">View variables (CLI only):</h3>
-                  <TerminalWindow className="max-w-2xl">
-                    <TerminalLine prompt>envvault list my-saas-app</TerminalLine>
-                  </TerminalWindow>
-                </div>
-
-                <div>
-                  <h3 className="text-sm font-medium mb-2">Add variable (CLI only):</h3>
-                  <TerminalWindow className="max-w-2xl">
-                    <TerminalLine prompt>envvault set KEY=value --env production</TerminalLine>
-                  </TerminalWindow>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-6 bg-primary/5 border-primary/20">
-              <div className="flex gap-4">
-                <AlertCircle className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold mb-2">Security Note</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Variable VALUES are never shown in the dashboard. This maintains zero-knowledge 
-                    encryption. Use the CLI to view or edit actual secret values.
-                  </p>
-                </div>
-              </div>
-            </Card>
-
-            <div className="grid md:grid-cols-3 gap-6">
-              <Card className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-lg bg-primary/10">
-                    <Database className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold">3</div>
-                    <div className="text-sm text-muted-foreground">Environments</div>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-lg bg-accent/10">
-                    <Lock className="h-5 w-5 text-accent" />
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold">24</div>
-                    <div className="text-sm text-muted-foreground">Total Variables</div>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-lg bg-primary/10">
-                    <Activity className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold">47</div>
-                    <div className="text-sm text-muted-foreground">Syncs Today</div>
-                  </div>
-                </div>
-              </Card>
-            </div>
-          </TabsContent>
 
           {/* Environments Tab */}
           <TabsContent value="environments" className="space-y-6">
-            {["development", "staging", "production"].map((env, i) => (
-              <Card key={env} className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-xl font-semibold capitalize">{env}</h3>
-                      {i === 0 && <Badge variant="secondary">Default</Badge>}
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      {i === 0 ? "12 variables" : i === 1 ? "15 variables" : "18 variables"}
-                    </p>
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    Last updated: {i === 0 ? "3 hours ago" : i === 1 ? "1 day ago" : "2 days ago"}
-                  </div>
-                </div>
+            {environments && environments.length > 0 ? (
+              <Tabs defaultValue={environments[0].id} className="space-y-6">
+                <TabsList>
+                  {environments.map((env) => (
+                    <TabsTrigger key={env.id} value={env.id} className="capitalize">
+                      {env.name}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
 
-                <div className="mb-4">
-                  <h4 className="text-sm font-medium mb-2">Variable Names (values hidden):</h4>
-                  <div className="space-y-2">
-                    {["DATABASE_URL", "API_KEY", "REDIS_URL", "STRIPE_SECRET_KEY"].map((varName) => (
-                      <div key={varName} className="flex items-center gap-2 text-sm">
-                        <div className="w-2 h-2 rounded-full bg-primary" />
-                        <code className="font-mono">{varName}</code>
-                      </div>
-                    ))}
-                    <div className="text-sm text-muted-foreground ml-4">
-                      ...and {i === 0 ? "8" : i === 1 ? "11" : "14"} more
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm">
-                    View in CLI
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <Copy className="h-4 w-4 mr-2" />
-                    Copy Pull Command
-                  </Button>
-                </div>
+                {environments.map((env) => (
+                  <TabsContent key={env.id} value={env.id}>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="capitalize">{env.name} Environment</CardTitle>
+                        <CardDescription>
+                          Manage environment variables for {env.name}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <SecretManager
+                          environmentId={env.id}
+                          environmentName={env.name}
+                          canEdit={true}
+                        />
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+                ))}
+              </Tabs>
+            ) : (
+              <Card>
+                <CardContent className="text-center py-12">
+                  <p className="text-muted-foreground">No environments found</p>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Environments are created automatically when you initialize a project
+                  </p>
+                </CardContent>
               </Card>
-            ))}
+            )}
           </TabsContent>
 
-          {/* Access Tab */}
-          <TabsContent value="access" className="space-y-6">
-            <Card className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="text-xl font-semibold mb-1">Team Members</h2>
-                  <p className="text-sm text-muted-foreground">Manage who can access this project</p>
-                </div>
-                <Button>
-                  <Users className="h-4 w-4 mr-2" />
-                  Invite Member
-                </Button>
-              </div>
-
-              <div className="space-y-4">
-                {[
-                  { email: "alice@acme.com", role: "Admin", you: true },
-                  { email: "bob@acme.com", role: "Developer", you: false },
-                  { email: "charlie@acme.com", role: "Developer", you: false },
-                ].map((member) => (
-                  <div key={member.email} className="flex items-center justify-between p-4 rounded-lg border border-border">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                        <span className="text-sm font-medium text-primary">
-                          {member.email[0].toUpperCase()}
-                        </span>
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">{member.email}</span>
-                          {member.you && (
-                            <Badge variant="secondary" className="text-xs">You</Badge>
-                          )}
-                        </div>
-                        <span className="text-sm text-muted-foreground">{member.role}</span>
-                      </div>
-                    </div>
-                    {!member.you && (
-                      <Button variant="ghost" size="sm" className="text-destructive">
-                        Remove
-                      </Button>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-6 p-4 rounded-lg bg-muted/30">
-                <h3 className="font-semibold mb-2">Roles & Permissions</h3>
-                <ul className="space-y-1 text-sm text-muted-foreground">
-                  <li>• <strong>Admin:</strong> Full access, can invite/remove members</li>
-                  <li>• <strong>Developer:</strong> Read/write dev/staging, read-only prod</li>
-                  <li>• <strong>Viewer:</strong> Read-only access to all environments</li>
-                </ul>
-              </div>
-            </Card>
+          {/* Team Tab */}
+          <TabsContent value="team">
+            <ProjectTeamTab projectId={id!} ownerId={project.owner_id} />
           </TabsContent>
 
-          {/* Activity Tab */}
-          <TabsContent value="activity" className="space-y-6">
-            <Card>
-              <div className="p-6 border-b border-border">
-                <h2 className="text-xl font-semibold">Audit Log</h2>
-                <p className="text-sm text-muted-foreground">Track all changes to this project</p>
-              </div>
+          {/* Audit Log Tab */}
+          <TabsContent value="audit">
+            <ProjectAuditTab projectId={id!} />
+          </TabsContent>
 
-              <div className="divide-y divide-border">
-                {[
-                  {
-                    user: "alice@acme.com",
-                    action: "updated variables",
-                    env: "production",
-                    count: "2 variables",
-                    time: "2 hours ago",
-                    ip: "192.168.1.100",
-                  },
-                  {
-                    user: "bob@acme.com",
-                    action: "synced project",
-                    env: "staging",
-                    count: "15 variables",
-                    time: "5 hours ago",
-                    ip: "192.168.1.101",
-                  },
-                  {
-                    user: "alice@acme.com",
-                    action: "created environment",
-                    env: "staging",
-                    count: null,
-                    time: "1 day ago",
-                    ip: "192.168.1.100",
-                  },
-                ].map((log, i) => (
-                  <div key={i} className="p-6">
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <p className="font-medium">
-                          {log.user} {log.action}
-                        </p>
-                        <div className="flex items-center gap-3 text-sm text-muted-foreground mt-1">
-                          <span>Environment: {log.env}</span>
-                          {log.count && (
-                            <>
-                              <span>•</span>
-                              <span>{log.count}</span>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                      <span className="text-sm text-muted-foreground">{log.time}</span>
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      IP: {log.ip} • CLI v1.2.0
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
+          {/* Settings Tab */}
+          <TabsContent value="settings">
+            <ProjectSettingsTab project={project} />
           </TabsContent>
         </Tabs>
-      </div>
+      </main>
     </div>
   );
 }
