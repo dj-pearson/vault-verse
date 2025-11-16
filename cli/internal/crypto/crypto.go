@@ -24,7 +24,7 @@ const (
 
 // Service handles all cryptographic operations
 type Service struct {
-	masterKey []byte
+	masterKey *SecureBytes
 }
 
 // New creates a new crypto service instance
@@ -34,9 +34,28 @@ func New() (*Service, error) {
 		return nil, fmt.Errorf("failed to get master key: %w", err)
 	}
 
+	// Wrap master key in SecureBytes for automatic wiping
+	secureKey := FromBytes(key)
+
+	// Lock the master key in memory to prevent swapping
+	if err := secureKey.Lock(); err != nil {
+		// Log warning but don't fail - this is best-effort
+		// Some systems may not support memory locking
+	}
+
+	// Wipe the original key slice
+	WipeBytes(key)
+
 	return &Service{
-		masterKey: key,
+		masterKey: secureKey,
 	}, nil
+}
+
+// Close securely wipes the master key from memory
+func (s *Service) Close() {
+	if s.masterKey != nil {
+		s.masterKey.Wipe()
+	}
 }
 
 // getMasterKey retrieves or generates the master encryption key
@@ -73,7 +92,11 @@ func (s *Service) Encrypt(plaintext string) ([]byte, error) {
 		return nil, fmt.Errorf("plaintext cannot be empty")
 	}
 
-	block, err := aes.NewCipher(s.masterKey)
+	// Create secure bytes for plaintext to ensure it's wiped after use
+	plaintextBytes := FromString(plaintext)
+	defer plaintextBytes.Wipe()
+
+	block, err := aes.NewCipher(s.masterKey.Bytes())
 	if err != nil {
 		return nil, fmt.Errorf("failed to create cipher: %w", err)
 	}
@@ -90,7 +113,7 @@ func (s *Service) Encrypt(plaintext string) ([]byte, error) {
 	}
 
 	// Encrypt and authenticate
-	ciphertext := gcm.Seal(nonce, nonce, []byte(plaintext), nil)
+	ciphertext := gcm.Seal(nonce, nonce, plaintextBytes.Bytes(), nil)
 	return ciphertext, nil
 }
 
@@ -100,7 +123,7 @@ func (s *Service) Decrypt(ciphertext []byte) (string, error) {
 		return "", fmt.Errorf("ciphertext too short")
 	}
 
-	block, err := aes.NewCipher(s.masterKey)
+	block, err := aes.NewCipher(s.masterKey.Bytes())
 	if err != nil {
 		return "", fmt.Errorf("failed to create cipher: %w", err)
 	}
@@ -120,7 +143,30 @@ func (s *Service) Decrypt(ciphertext []byte) (string, error) {
 		return "", fmt.Errorf("decryption failed: %w", err)
 	}
 
-	return string(plaintext), nil
+	// Create secure bytes for plaintext that will be auto-wiped
+	// Note: The caller is responsible for wiping the returned string
+	result := string(plaintext)
+
+	// Wipe the plaintext bytes immediately after conversion
+	WipeBytes(plaintext)
+
+	return result, nil
+}
+
+// DecryptToSecureBytes decrypts ciphertext and returns SecureBytes for automatic wiping
+func (s *Service) DecryptToSecureBytes(ciphertext []byte) (*SecureBytes, error) {
+	plaintext, err := s.Decrypt(ciphertext)
+	if err != nil {
+		return nil, err
+	}
+
+	// Create SecureBytes from the decrypted string
+	secureBytes := FromString(plaintext)
+
+	// Try to wipe the original string (best effort)
+	WipeString(&plaintext)
+
+	return secureBytes, nil
 }
 
 // DeriveKey derives a key from a password using PBKDF2

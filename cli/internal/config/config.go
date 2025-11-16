@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/dj-pearson/envvault/internal/utils"
 )
 
 const (
@@ -50,7 +52,7 @@ func New() (*Config, error) {
 	return cfg, nil
 }
 
-// EnsureDirectories creates all necessary directories
+// EnsureDirectories creates all necessary directories with secure permissions
 func (c *Config) EnsureDirectories() error {
 	dirs := []string{
 		c.ConfigDir,
@@ -61,8 +63,50 @@ func (c *Config) EnsureDirectories() error {
 	}
 
 	for _, dir := range dirs {
-		if err := os.MkdirAll(dir, 0700); err != nil {
+		// Create directory with secure permissions (owner only)
+		if err := os.MkdirAll(dir, utils.SecureDirMode); err != nil {
 			return fmt.Errorf("failed to create directory %s: %w", dir, err)
+		}
+
+		// Enforce secure permissions on existing directories
+		if err := utils.EnsureSecureDirPermissions(dir); err != nil {
+			return fmt.Errorf("failed to set secure permissions on %s: %w", dir, err)
+		}
+	}
+
+	return nil
+}
+
+// VerifySecurityPermissions checks that all sensitive files have secure permissions
+func (c *Config) VerifySecurityPermissions() error {
+	// Check database file if it exists
+	if _, err := os.Stat(c.DBPath); err == nil {
+		if secure, err := utils.CheckFilePermissions(c.DBPath); err != nil {
+			return fmt.Errorf("failed to check database permissions: %w", err)
+		} else if !secure {
+			return fmt.Errorf("database file has insecure permissions: %s", c.DBPath)
+		}
+	}
+
+	// Check auth directory
+	if err := utils.CheckParentDirPermissions(c.AuthDir); err != nil {
+		return fmt.Errorf("auth directory has insecure permissions: %w", err)
+	}
+
+	return nil
+}
+
+// EnforceSecurityPermissions fixes permissions on all sensitive files
+func (c *Config) EnforceSecurityPermissions() error {
+	// Enforce directory permissions
+	if err := c.EnsureDirectories(); err != nil {
+		return err
+	}
+
+	// Enforce database file permissions if it exists
+	if _, err := os.Stat(c.DBPath); err == nil {
+		if err := utils.EnsureSecureFilePermissions(c.DBPath); err != nil {
+			return fmt.Errorf("failed to secure database: %w", err)
 		}
 	}
 

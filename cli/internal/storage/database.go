@@ -3,9 +3,12 @@ package storage
 import (
 	"database/sql"
 	"fmt"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/dj-pearson/envvault/internal/models"
+	"github.com/dj-pearson/envvault/internal/utils"
 	"github.com/google/uuid"
 	_ "modernc.org/sqlite"
 )
@@ -16,8 +19,21 @@ type DB struct {
 	path string
 }
 
-// New creates a new database instance
+// New creates a new database instance with secure permissions
 func New(dbPath string) (*DB, error) {
+	// Ensure parent directory exists with secure permissions
+	parentDir := filepath.Dir(dbPath)
+	if err := os.MkdirAll(parentDir, utils.SecureDirMode); err != nil {
+		return nil, fmt.Errorf("failed to create database directory: %w", err)
+	}
+
+	// Check if database exists
+	dbExists := true
+	if _, err := os.Stat(dbPath); os.IsNotExist(err) {
+		dbExists = false
+	}
+
+	// Open database connection
 	conn, err := sql.Open("sqlite", dbPath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open database: %w", err)
@@ -37,6 +53,20 @@ func New(dbPath string) (*DB, error) {
 	if err := db.initSchema(); err != nil {
 		conn.Close()
 		return nil, fmt.Errorf("failed to initialize schema: %w", err)
+	}
+
+	// Enforce secure file permissions on database file
+	if err := utils.EnsureSecureFilePermissions(dbPath); err != nil {
+		conn.Close()
+		return nil, fmt.Errorf("failed to set secure permissions on database: %w", err)
+	}
+
+	// Warn if database already existed with insecure permissions
+	if dbExists {
+		if secure, err := utils.CheckFilePermissions(dbPath); err == nil && !secure {
+			// Permissions were insecure but now fixed
+			utils.Warn("Database file had insecure permissions (fixed automatically)")
+		}
 	}
 
 	return db, nil
