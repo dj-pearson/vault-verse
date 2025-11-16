@@ -66,7 +66,7 @@ go mod download
 make build
 
 # Run CLI
-./bin/envvault --help
+./bin/envault --help
 ```
 
 ### Database Setup
@@ -199,8 +199,8 @@ Before submitting a PR, test:
    ```bash
    cd cli
    make build
-   ./bin/envvault init test-project
-   ./bin/envvault set KEY=value
+   ./bin/envault init test-project
+   ./bin/envault set KEY=value
    ```
 
 ## Submitting Changes
@@ -281,7 +281,7 @@ Releases are managed by maintainers:
 
 ### Debugging CLI
 
-- Use `--debug` flag: `envvault --debug <command>`
+- Use `--debug` flag: `envault --debug <command>`
 - Add debug prints: `fmt.Printf("debug: %+v\n", data)`
 - Use Go debugger (Delve): `dlv debug`
 

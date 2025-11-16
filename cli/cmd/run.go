@@ -7,10 +7,10 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/dj-pearson/envvault/internal/config"
-	"github.com/dj-pearson/envvault/internal/crypto"
-	"github.com/dj-pearson/envvault/internal/storage"
-	"github.com/dj-pearson/envvault/internal/utils"
+	"github.com/dj-pearson/envault/internal/config"
+	"github.com/dj-pearson/envault/internal/crypto"
+	"github.com/dj-pearson/envault/internal/storage"
+	"github.com/dj-pearson/envault/internal/utils"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
@@ -29,10 +29,10 @@ Variables are loaded into the process environment and then the command is execut
 The variables only exist for that process and are not written to disk.
 
 Examples:
-  envvault run npm start
-  envvault run --env production node server.js
-  envvault run python manage.py migrate
-  envvault run bash  # Interactive shell with vars`,
+  envault run npm start
+  envault run --env production node server.js
+  envault run python manage.py migrate
+  envault run bash  # Interactive shell with vars`,
 	DisableFlagParsing: true,
 	RunE:               runRun,
 }
@@ -65,7 +65,7 @@ func runRun(cmd *cobra.Command, args []string) error {
 	}
 
 	if len(cmdArgs) == 0 {
-		return fmt.Errorf("usage: envvault run [flags] <command> [args...]")
+		return fmt.Errorf("usage: envault run [flags] <command> [args...]")
 	}
 
 	// Load project context

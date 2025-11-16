@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/dj-pearson/envvault/internal/api"
-	"github.com/dj-pearson/envvault/internal/auth"
-	"github.com/dj-pearson/envvault/internal/config"
-	"github.com/dj-pearson/envvault/internal/storage"
-	"github.com/dj-pearson/envvault/internal/utils"
+	"github.com/dj-pearson/envault/internal/api"
+	"github.com/dj-pearson/envault/internal/auth"
+	"github.com/dj-pearson/envault/internal/config"
+	"github.com/dj-pearson/envault/internal/storage"
+	"github.com/dj-pearson/envault/internal/utils"
 	"github.com/fatih/color"
 	"github.com/manifoldco/promptui"
 	"github.com/olekukonko/tablewriter"
@@ -27,9 +27,9 @@ Subcommands:
   remove EMAIL     Remove a team member
 
 Examples:
-  envvault team list
-  envvault team invite alice@company.com
-  envvault team remove bob@company.com`,
+  envault team list
+  envault team invite alice@company.com
+  envault team remove bob@company.com`,
 }
 
 var teamListCmd = &cobra.Command{
@@ -65,7 +65,7 @@ func runTeamList(cmd *cobra.Command, args []string) error {
 
 	// Check authentication
 	if !auth.IsLoggedIn() {
-		return red.Sprint("Error: Not logged in\nRun 'envvault login' first")
+		return red.Sprint("Error: Not logged in\nRun 'envault login' first")
 	}
 
 	session, err := auth.GetCurrentUser()
@@ -80,11 +80,11 @@ func runTeamList(cmd *cobra.Command, args []string) error {
 	}
 
 	// Get API client
-	apiKey := os.Getenv("ENVVAULT_API_KEY")
-	baseURL := os.Getenv("ENVVAULT_API_URL")
+	apiKey := os.Getenv("ENVAULT_API_KEY")
+	baseURL := os.Getenv("ENVAULT_API_URL")
 
 	if apiKey == "" {
-		return red.Sprint("Error: ENVVAULT_API_KEY not set")
+		return red.Sprint("Error: ENVAULT_API_KEY not set")
 	}
 
 	client := api.New(baseURL, apiKey)
@@ -124,7 +124,7 @@ func runTeamInvite(cmd *cobra.Command, args []string) error {
 
 	// Check authentication
 	if !auth.IsLoggedIn() {
-		return red.Sprint("Error: Not logged in\nRun 'envvault login' first")
+		return red.Sprint("Error: Not logged in\nRun 'envault login' first")
 	}
 
 	session, err := auth.GetCurrentUser()
@@ -166,11 +166,11 @@ func runTeamInvite(cmd *cobra.Command, args []string) error {
 	}
 
 	// Get API client
-	apiKey := os.Getenv("ENVVAULT_API_KEY")
-	baseURL := os.Getenv("ENVVAULT_API_URL")
+	apiKey := os.Getenv("ENVAULT_API_KEY")
+	baseURL := os.Getenv("ENVAULT_API_URL")
 
 	if apiKey == "" {
-		return red.Sprint("Error: ENVVAULT_API_KEY not set")
+		return red.Sprint("Error: ENVAULT_API_KEY not set")
 	}
 
 	client := api.New(baseURL, apiKey)
@@ -202,7 +202,7 @@ func runTeamRemove(cmd *cobra.Command, args []string) error {
 
 	// Check authentication
 	if !auth.IsLoggedIn() {
-		return red.Sprint("Error: Not logged in\nRun 'envvault login' first")
+		return red.Sprint("Error: Not logged in\nRun 'envault login' first")
 	}
 
 	session, err := auth.GetCurrentUser()
@@ -228,11 +228,11 @@ func runTeamRemove(cmd *cobra.Command, args []string) error {
 	}
 
 	// Get API client
-	apiKey := os.Getenv("ENVVAULT_API_KEY")
-	baseURL := os.Getenv("ENVVAULT_API_URL")
+	apiKey := os.Getenv("ENVAULT_API_KEY")
+	baseURL := os.Getenv("ENVAULT_API_URL")
 
 	if apiKey == "" {
-		return red.Sprint("Error: ENVVAULT_API_KEY not set")
+		return red.Sprint("Error: ENVAULT_API_KEY not set")
 	}
 
 	client := api.New(baseURL, apiKey)

@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/dj-pearson/envvault/internal/api"
-	"github.com/dj-pearson/envvault/internal/auth"
-	"github.com/dj-pearson/envvault/internal/config"
-	"github.com/dj-pearson/envvault/internal/crypto"
-	"github.com/dj-pearson/envvault/internal/storage"
-	"github.com/dj-pearson/envvault/internal/utils"
+	"github.com/dj-pearson/envault/internal/api"
+	"github.com/dj-pearson/envault/internal/auth"
+	"github.com/dj-pearson/envault/internal/config"
+	"github.com/dj-pearson/envault/internal/crypto"
+	"github.com/dj-pearson/envault/internal/storage"
+	"github.com/dj-pearson/envault/internal/utils"
 	"github.com/fatih/color"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
@@ -41,10 +41,10 @@ Your data is encrypted before being sent to the cloud. The server
 never sees your plaintext secrets (zero-knowledge encryption).
 
 Examples:
-  envvault sync              # Two-way sync
-  envvault sync --push       # Push only
-  envvault sync --pull       # Pull only
-  envvault sync --force      # Force sync (override conflicts)`,
+  envault sync              # Two-way sync
+  envault sync --push       # Push only
+  envault sync --pull       # Pull only
+  envault sync --force      # Force sync (override conflicts)`,
 	RunE: runSync,
 }
 
@@ -64,7 +64,7 @@ func runSync(cmd *cobra.Command, args []string) error {
 
 	// Check authentication
 	if !auth.IsLoggedIn() {
-		return red.Sprint("Error: Not logged in\nRun 'envvault login' first to enable team sync")
+		return red.Sprint("Error: Not logged in\nRun 'envault login' first to enable team sync")
 	}
 
 	session, err := auth.GetCurrentUser()
@@ -96,11 +96,11 @@ func runSync(cmd *cobra.Command, args []string) error {
 	}
 
 	// Get API client
-	apiKey := os.Getenv("ENVVAULT_API_KEY")
-	baseURL := os.Getenv("ENVVAULT_API_URL")
+	apiKey := os.Getenv("ENVAULT_API_KEY")
+	baseURL := os.Getenv("ENVAULT_API_URL")
 
 	if apiKey == "" {
-		return red.Sprint("Error: ENVVAULT_API_KEY not set")
+		return red.Sprint("Error: ENVAULT_API_KEY not set")
 	}
 
 	client := api.New(baseURL, apiKey)

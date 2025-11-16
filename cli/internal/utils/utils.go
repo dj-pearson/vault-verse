@@ -15,23 +15,23 @@ type ProjectContext struct {
 	ProjectName string
 }
 
-// LoadProjectContext loads project context from .envvault file
+// LoadProjectContext loads project context from .envault file
 func LoadProjectContext() (*ProjectContext, error) {
 	cwd, err := os.Getwd()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get current directory: %w", err)
 	}
 
-	envvaultFile := filepath.Join(cwd, ".envvault")
-	if _, err := os.Stat(envvaultFile); os.IsNotExist(err) {
-		return nil, fmt.Errorf("no envvault project found (run 'envvault init' first)")
+	envaultFile := filepath.Join(cwd, ".envault")
+	if _, err := os.Stat(envaultFile); os.IsNotExist(err) {
+		return nil, fmt.Errorf("no envault project found (run 'envault init' first)")
 	}
 
-	// Parse .envvault file
+	// Parse .envault file
 	ctx := &ProjectContext{}
-	file, err := os.Open(envvaultFile)
+	file, err := os.Open(envaultFile)
 	if err != nil {
-		return nil, fmt.Errorf("failed to open .envvault: %w", err)
+		return nil, fmt.Errorf("failed to open .envault: %w", err)
 	}
 	defer file.Close()
 
@@ -59,7 +59,7 @@ func LoadProjectContext() (*ProjectContext, error) {
 	}
 
 	if ctx.ProjectID == "" {
-		return nil, fmt.Errorf("invalid .envvault file: missing project_id")
+		return nil, fmt.Errorf("invalid .envault file: missing project_id")
 	}
 
 	return ctx, nil

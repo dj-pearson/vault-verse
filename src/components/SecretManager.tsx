@@ -300,7 +300,7 @@ export const SecretManager = ({ environmentId, environmentName, canEdit = true }
         <div className="text-sm text-muted-foreground bg-muted/50 p-4 rounded-lg">
           ℹ️ <strong>Read-only mode:</strong> Use the CLI to add or modify variables in this environment.
           <pre className="mt-2 bg-background p-2 rounded text-xs overflow-x-auto">
-            envvault set KEY=value --env {environmentName.toLowerCase()}
+            envault set KEY=value --env {environmentName.toLowerCase()}
           </pre>
         </div>
       )}

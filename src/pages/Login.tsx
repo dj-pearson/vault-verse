@@ -110,12 +110,12 @@ export default function Login() {
             {/* Right side - Terminal Demo */}
             <div className="hidden lg:block">
               <TerminalWindow>
-                <TerminalLine prompt>envvault login</TerminalLine>
+                <TerminalLine prompt>envault login</TerminalLine>
                 <TerminalLine>Opening browser for authentication...</TerminalLine>
                 <div className="h-2" />
                 <TerminalLine success>Logged in as alice@acme.com</TerminalLine>
                 <div className="h-4" />
-                <TerminalLine prompt>envvault projects</TerminalLine>
+                <TerminalLine prompt>envault projects</TerminalLine>
                 <div className="h-2" />
                 <TerminalLine>Personal Projects</TerminalLine>
                 <TerminalLine>my-saas-app       3 envs    Local + Synced</TerminalLine>

@@ -64,23 +64,23 @@ export default function Docs() {
                   <h3 className="text-xl font-semibold mb-4">1. Install CLI</h3>
                   <TerminalWindow>
                     <div className="text-terminal-text/50"># macOS</div>
-                    <TerminalLine prompt>brew install envvault</TerminalLine>
+                    <TerminalLine prompt>brew install envault</TerminalLine>
                     <div className="h-2" />
                     <div className="text-terminal-text/50"># Linux</div>
-                    <TerminalLine prompt>curl -sSL get.envvault.dev | sh</TerminalLine>
+                    <TerminalLine prompt>curl -sSL get.envault.dev | sh</TerminalLine>
                     <div className="h-2" />
                     <div className="text-terminal-text/50"># Windows</div>
-                    <TerminalLine prompt>scoop install envvault</TerminalLine>
+                    <TerminalLine prompt>scoop install envault</TerminalLine>
                     <div className="h-2" />
                     <div className="text-terminal-text/50"># npm (all platforms)</div>
-                    <TerminalLine prompt>npm install -g envvault</TerminalLine>
+                    <TerminalLine prompt>npm install -g envault</TerminalLine>
                   </TerminalWindow>
                 </Card>
 
                 <Card className="p-6">
                   <h3 className="text-xl font-semibold mb-4">2. Initialize Your First Project</h3>
                   <TerminalWindow>
-                    <TerminalLine prompt>envvault init my-app</TerminalLine>
+                    <TerminalLine prompt>envault init my-app</TerminalLine>
                     <TerminalLine success>Project 'my-app' initialized</TerminalLine>
                     <TerminalLine success>Created environments: development, production</TerminalLine>
                   </TerminalWindow>
@@ -89,10 +89,10 @@ export default function Docs() {
                 <Card className="p-6">
                   <h3 className="text-xl font-semibold mb-4">3. Add Environment Variables</h3>
                   <TerminalWindow>
-                    <TerminalLine prompt>envvault set DATABASE_URL=postgres://localhost/mydb</TerminalLine>
+                    <TerminalLine prompt>envault set DATABASE_URL=postgres://localhost/mydb</TerminalLine>
                     <TerminalLine success>Saved DATABASE_URL (encrypted)</TerminalLine>
                     <div className="h-2" />
-                    <TerminalLine prompt>envvault set API_KEY=sk_test_...</TerminalLine>
+                    <TerminalLine prompt>envault set API_KEY=sk_test_...</TerminalLine>
                     <TerminalLine success>Saved API_KEY (encrypted)</TerminalLine>
                   </TerminalWindow>
                 </Card>
@@ -100,7 +100,7 @@ export default function Docs() {
                 <Card className="p-6">
                   <h3 className="text-xl font-semibold mb-4">4. Use in Your Application</h3>
                   <TerminalWindow>
-                    <TerminalLine prompt>envvault run npm start</TerminalLine>
+                    <TerminalLine prompt>envault run npm start</TerminalLine>
                     <TerminalLine success>Starting with 2 environment variables</TerminalLine>
                     <div className="text-terminal-text/70">Server listening on port 3000...</div>
                   </TerminalWindow>
@@ -114,15 +114,15 @@ export default function Docs() {
                   <ul className="space-y-2 text-sm">
                     <li className="flex items-start gap-2">
                       <span className="text-primary mt-1">→</span>
-                      <span>Add more environments: <code className="bg-background px-1.5 py-0.5 rounded">envvault env create staging</code></span>
+                      <span>Add more environments: <code className="bg-background px-1.5 py-0.5 rounded">envault env create staging</code></span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-primary mt-1">→</span>
-                      <span>Import existing .env: <code className="bg-background px-1.5 py-0.5 rounded">envvault import .env</code></span>
+                      <span>Import existing .env: <code className="bg-background px-1.5 py-0.5 rounded">envault import .env</code></span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-primary mt-1">→</span>
-                      <span>Enable team sync: <code className="bg-background px-1.5 py-0.5 rounded">envvault init --team</code></span>
+                      <span>Enable team sync: <code className="bg-background px-1.5 py-0.5 rounded">envault init --team</code></span>
                     </li>
                   </ul>
                 </Card>
@@ -138,10 +138,10 @@ export default function Docs() {
                 </div>
 
                 <Card className="p-6">
-                  <h3 className="font-semibold mb-3">envvault init</h3>
+                  <h3 className="font-semibold mb-3">envault init</h3>
                   <p className="text-sm text-muted-foreground mb-3">Initialize a new project</p>
                   <div className="bg-terminal-bg text-terminal-text p-3 rounded font-mono text-sm">
-                    <div>envvault init [project-name] [flags]</div>
+                    <div>envault init [project-name] [flags]</div>
                     <div className="mt-2 text-terminal-comment">Flags:</div>
                     <div>  --team              Enable team sync</div>
                     <div>  --env ENVIRONMENTS  Comma-separated environments</div>
@@ -149,10 +149,10 @@ export default function Docs() {
                 </Card>
 
                 <Card className="p-6">
-                  <h3 className="font-semibold mb-3">envvault set</h3>
+                  <h3 className="font-semibold mb-3">envault set</h3>
                   <p className="text-sm text-muted-foreground mb-3">Set an environment variable</p>
                   <div className="bg-terminal-bg text-terminal-text p-3 rounded font-mono text-sm">
-                    <div>envvault set KEY=value [flags]</div>
+                    <div>envault set KEY=value [flags]</div>
                     <div className="mt-2 text-terminal-comment">Flags:</div>
                     <div>  --env ENVIRONMENT   Target environment (default: development)</div>
                     <div>  --file FILE         Import from .env file</div>
@@ -160,10 +160,10 @@ export default function Docs() {
                 </Card>
 
                 <Card className="p-6">
-                  <h3 className="font-semibold mb-3">envvault get</h3>
+                  <h3 className="font-semibold mb-3">envault get</h3>
                   <p className="text-sm text-muted-foreground mb-3">Get a variable value</p>
                   <div className="bg-terminal-bg text-terminal-text p-3 rounded font-mono text-sm">
-                    <div>envvault get KEY [flags]</div>
+                    <div>envault get KEY [flags]</div>
                     <div className="mt-2 text-terminal-comment">Flags:</div>
                     <div>  --env ENVIRONMENT   Target environment</div>
                     <div>  --format FORMAT     Output format: plain, json, export</div>
@@ -171,10 +171,10 @@ export default function Docs() {
                 </Card>
 
                 <Card className="p-6">
-                  <h3 className="font-semibold mb-3">envvault list</h3>
+                  <h3 className="font-semibold mb-3">envault list</h3>
                   <p className="text-sm text-muted-foreground mb-3">List all variables</p>
                   <div className="bg-terminal-bg text-terminal-text p-3 rounded font-mono text-sm">
-                    <div>envvault list [flags]</div>
+                    <div>envault list [flags]</div>
                     <div className="mt-2 text-terminal-comment">Flags:</div>
                     <div>  --env ENVIRONMENT   Filter by environment</div>
                     <div>  --show-values       Show actual values (default: hidden)</div>
@@ -182,20 +182,20 @@ export default function Docs() {
                 </Card>
 
                 <Card className="p-6">
-                  <h3 className="font-semibold mb-3">envvault run</h3>
+                  <h3 className="font-semibold mb-3">envault run</h3>
                   <p className="text-sm text-muted-foreground mb-3">Run command with injected variables</p>
                   <div className="bg-terminal-bg text-terminal-text p-3 rounded font-mono text-sm">
-                    <div>envvault run [command] [flags]</div>
+                    <div>envault run [command] [flags]</div>
                     <div className="mt-2 text-terminal-comment">Flags:</div>
                     <div>  --env ENVIRONMENT   Use variables from environment</div>
                   </div>
                 </Card>
 
                 <Card className="p-6">
-                  <h3 className="font-semibold mb-3">envvault import</h3>
+                  <h3 className="font-semibold mb-3">envault import</h3>
                   <p className="text-sm text-muted-foreground mb-3">Import variables from .env file</p>
                   <div className="bg-terminal-bg text-terminal-text p-3 rounded font-mono text-sm">
-                    <div>envvault import FILE [flags]</div>
+                    <div>envault import FILE [flags]</div>
                     <div className="mt-2 text-terminal-comment">Flags:</div>
                     <div>  --env ENVIRONMENT   Target environment</div>
                     <div>  --overwrite         Overwrite existing variables</div>
@@ -204,10 +204,10 @@ export default function Docs() {
                 </Card>
 
                 <Card className="p-6">
-                  <h3 className="font-semibold mb-3">envvault export</h3>
+                  <h3 className="font-semibold mb-3">envault export</h3>
                   <p className="text-sm text-muted-foreground mb-3">Export variables to file</p>
                   <div className="bg-terminal-bg text-terminal-text p-3 rounded font-mono text-sm">
-                    <div>envvault export [flags]</div>
+                    <div>envault export [flags]</div>
                     <div className="mt-2 text-terminal-comment">Flags:</div>
                     <div>  --env ENVIRONMENT   Export from environment</div>
                     <div>  --output FILE       Output file (default: stdout)</div>
@@ -216,10 +216,10 @@ export default function Docs() {
                 </Card>
 
                 <Card className="p-6">
-                  <h3 className="font-semibold mb-3">envvault login</h3>
+                  <h3 className="font-semibold mb-3">envault login</h3>
                   <p className="text-sm text-muted-foreground mb-3">Authenticate CLI for team features</p>
                   <div className="bg-terminal-bg text-terminal-text p-3 rounded font-mono text-sm">
-                    <div>envvault login [flags]</div>
+                    <div>envault login [flags]</div>
                     <div className="mt-2 text-terminal-comment">Flags:</div>
                     <div>  --token TOKEN      Use personal access token</div>
                     <div>  --manual           Manual authentication</div>
@@ -227,10 +227,10 @@ export default function Docs() {
                 </Card>
 
                 <Card className="p-6">
-                  <h3 className="font-semibold mb-3">envvault sync</h3>
+                  <h3 className="font-semibold mb-3">envault sync</h3>
                   <p className="text-sm text-muted-foreground mb-3">Sync project with team (encrypted)</p>
                   <div className="bg-terminal-bg text-terminal-text p-3 rounded font-mono text-sm">
-                    <div>envvault sync [flags]</div>
+                    <div>envault sync [flags]</div>
                     <div className="mt-2 text-terminal-comment">Flags:</div>
                     <div>  --push             Push local changes only</div>
                     <div>  --pull             Pull cloud changes only</div>
@@ -239,10 +239,10 @@ export default function Docs() {
                 </Card>
 
                 <Card className="p-6">
-                  <h3 className="font-semibold mb-3">envvault env</h3>
+                  <h3 className="font-semibold mb-3">envault env</h3>
                   <p className="text-sm text-muted-foreground mb-3">Manage environments</p>
                   <div className="bg-terminal-bg text-terminal-text p-3 rounded font-mono text-sm">
-                    <div>envvault env [subcommand]</div>
+                    <div>envault env [subcommand]</div>
                     <div className="mt-2 text-terminal-comment">Subcommands:</div>
                     <div>  list               List all environments</div>
                     <div>  create NAME        Create new environment</div>
@@ -252,10 +252,10 @@ export default function Docs() {
                 </Card>
 
                 <Card className="p-6">
-                  <h3 className="font-semibold mb-3">envvault team</h3>
+                  <h3 className="font-semibold mb-3">envault team</h3>
                   <p className="text-sm text-muted-foreground mb-3">Manage team members</p>
                   <div className="bg-terminal-bg text-terminal-text p-3 rounded font-mono text-sm">
-                    <div>envvault team [subcommand]</div>
+                    <div>envault team [subcommand]</div>
                     <div className="mt-2 text-terminal-comment">Subcommands:</div>
                     <div>  list               List team members</div>
                     <div>  invite EMAIL       Invite team member</div>
@@ -265,7 +265,7 @@ export default function Docs() {
 
                 <Card className="p-6 bg-muted/30">
                   <p className="text-sm">
-                    <strong>Pro tip:</strong> Use <code className="bg-background px-1.5 py-0.5 rounded">envvault [command] --help</code> for detailed information about any command.
+                    <strong>Pro tip:</strong> Use <code className="bg-background px-1.5 py-0.5 rounded">envault [command] --help</code> for detailed information about any command.
                   </p>
                 </Card>
               </TabsContent>
@@ -282,11 +282,11 @@ export default function Docs() {
                 <Card className="p-6">
                   <h3 className="text-xl font-semibold mb-4">1. Enable Team Sync</h3>
                   <TerminalWindow>
-                    <TerminalLine prompt>envvault login</TerminalLine>
+                    <TerminalLine prompt>envault login</TerminalLine>
                     <div className="text-terminal-text/70">Opening browser for authentication...</div>
                     <TerminalLine success>Logged in as you@company.com</TerminalLine>
                     <div className="h-2" />
-                    <TerminalLine prompt>envvault init my-team-project --team</TerminalLine>
+                    <TerminalLine prompt>envault init my-team-project --team</TerminalLine>
                     <TerminalLine success>Team sync enabled</TerminalLine>
                   </TerminalWindow>
                 </Card>
@@ -298,7 +298,7 @@ export default function Docs() {
                   </p>
                   <TerminalWindow>
                     <div className="text-terminal-text/50"># Or via CLI</div>
-                    <TerminalLine prompt>envvault team invite alice@company.com</TerminalLine>
+                    <TerminalLine prompt>envault team invite alice@company.com</TerminalLine>
                     <TerminalLine success>Invitation sent to alice@company.com</TerminalLine>
                   </TerminalWindow>
                 </Card>
@@ -306,8 +306,8 @@ export default function Docs() {
                 <Card className="p-6">
                   <h3 className="text-xl font-semibold mb-4">3. Team Members Pull Project</h3>
                   <TerminalWindow>
-                    <TerminalLine prompt>envvault login</TerminalLine>
-                    <TerminalLine prompt>envvault pull my-team-project</TerminalLine>
+                    <TerminalLine prompt>envault login</TerminalLine>
+                    <TerminalLine prompt>envault pull my-team-project</TerminalLine>
                     <TerminalLine success>Pulled 24 variables (encrypted)</TerminalLine>
                     <TerminalLine success>Project ready to use</TerminalLine>
                   </TerminalWindow>

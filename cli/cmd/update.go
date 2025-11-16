@@ -33,8 +33,8 @@ type GitHubRelease struct {
 // updateCmd represents the update command
 var updateCmd = &cobra.Command{
 	Use:   "update",
-	Short: "Update envvault to the latest version",
-	Long: `Check for and install the latest version of envvault.
+	Short: "Update envault to the latest version",
+	Long: `Check for and install the latest version of envault.
 
 This command will:
   1. Check GitHub for the latest release
@@ -97,7 +97,7 @@ func runUpdate(cmd *cobra.Command, args []string) error {
 			color.Yellow("! Update available: v%s → v%s", currentVersion, latestVersion)
 			fmt.Println()
 			fmt.Println("To update, run:")
-			fmt.Println("  envvault update")
+			fmt.Println("  envault update")
 		}
 		return nil
 	}
@@ -145,7 +145,7 @@ func fetchLatestRelease() (*GitHubRelease, error) {
 	}
 
 	// Set user agent (GitHub API requires it)
-	req.Header.Set("User-Agent", fmt.Sprintf("envvault/%s", Version))
+	req.Header.Set("User-Agent", fmt.Sprintf("envault/%s", Version))
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -179,7 +179,7 @@ func getBinaryName() string {
 	}
 
 	// Construct binary name
-	name := fmt.Sprintf("envvault-%s-%s", goos, arch)
+	name := fmt.Sprintf("envault-%s-%s", goos, arch)
 
 	// Add .exe for Windows
 	if goos == "windows" {
@@ -211,7 +211,7 @@ func downloadAndInstall(url string) error {
 	}
 
 	// Download to temporary file
-	tmpFile, err := os.CreateTemp("", "envvault-update-*")
+	tmpFile, err := os.CreateTemp("", "envault-update-*")
 	if err != nil {
 		return fmt.Errorf("failed to create temp file: %w", err)
 	}

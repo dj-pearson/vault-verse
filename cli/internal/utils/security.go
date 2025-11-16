@@ -220,16 +220,16 @@ func GetShellHistoryWarning() string {
 	return `⚠️  WARNING: This value may appear in your shell history!
 
 For better security, consider using one of these methods instead:
-  1. Use stdin: echo "value" | envvault set KEY
-  2. Use a file: envvault import .env
-  3. Use interactive mode: envvault set KEY (then enter value when prompted)
+  1. Use stdin: echo "value" | envault set KEY
+  2. Use a file: envault import .env
+  3. Use interactive mode: envault set KEY (then enter value when prompted)
 
 To prevent this warning, add to your shell configuration:
   # Bash/Zsh
-  export HISTIGNORE="*envvault set*:*envvault login*"
+  export HISTIGNORE="*envault set*:*envault login*"
 
   # Fish
-  set -U fish_history_ignore "envvault set*" "envvault login*"`
+  set -U fish_history_ignore "envault set*" "envault login*"`
 }
 
 // SanitizeForLog sanitizes a string for safe logging

@@ -37,7 +37,7 @@ Paste error logs here
 ## Environment
 
 **CLI Version** (if applicable):
-- Run `envvault --version` and paste output:
+- Run `envault --version` and paste output:
 
 **Frontend** (if applicable):
 - Browser: [e.g., Chrome 120, Safari 17]

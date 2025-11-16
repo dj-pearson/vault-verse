@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dj-pearson/envvault/internal/api"
-	"github.com/dj-pearson/envvault/internal/auth"
-	"github.com/dj-pearson/envvault/internal/config"
+	"github.com/dj-pearson/envault/internal/api"
+	"github.com/dj-pearson/envault/internal/auth"
+	"github.com/dj-pearson/envault/internal/config"
 	"github.com/fatih/color"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
@@ -30,13 +30,13 @@ You can authenticate using:
   3. Manual authentication (--manual flag)
 
 Once authenticated, you can use team sync features like:
-  - envvault sync (push/pull encrypted data)
-  - envvault team (manage team members)
+  - envault sync (push/pull encrypted data)
+  - envault team (manage team members)
 
 Examples:
-  envvault login
-  envvault login --token envt_a1b2c3d4...
-  envvault login --manual`,
+  envault login
+  envault login --token envt_a1b2c3d4...
+  envault login --manual`,
 	RunE: runLogin,
 }
 
@@ -82,11 +82,11 @@ func runLogin(cmd *cobra.Command, args []string) error {
 	}
 
 	// Get API key and base URL from environment or config
-	apiKey := os.Getenv("ENVVAULT_API_KEY")
-	baseURL := os.Getenv("ENVVAULT_API_URL")
+	apiKey := os.Getenv("ENVAULT_API_KEY")
+	baseURL := os.Getenv("ENVAULT_API_URL")
 
 	if apiKey == "" {
-		return red.Sprint("Error: ENVVAULT_API_KEY environment variable not set\n\nPlease set your Supabase API key:\n  export ENVVAULT_API_KEY=your_anon_key_here")
+		return red.Sprint("Error: ENVAULT_API_KEY environment variable not set\n\nPlease set your Supabase API key:\n  export ENVAULT_API_KEY=your_anon_key_here")
 	}
 
 	// Create API client
@@ -135,7 +135,7 @@ func runLogin(cmd *cobra.Command, args []string) error {
 		fmt.Println()
 		cyan.Println("1. Go to your EnvVault dashboard → Settings → CLI Access")
 		cyan.Println("2. Generate a new CLI token")
-		cyan.Println("3. Run: envvault login --token YOUR_TOKEN")
+		cyan.Println("3. Run: envault login --token YOUR_TOKEN")
 		fmt.Println()
 		return nil
 	}
@@ -143,7 +143,7 @@ func runLogin(cmd *cobra.Command, args []string) error {
 	// Manual token input
 	cyan.Println("Manual Authentication")
 	fmt.Println()
-	cyan.Println("1. Go to: https://your-envvault-dashboard/settings/cli")
+	cyan.Println("1. Go to: https://your-envault-dashboard/settings/cli")
 	cyan.Println("2. Generate a new personal access token")
 	cyan.Println("3. Copy the token and paste it below")
 	fmt.Println()
@@ -195,8 +195,8 @@ func runLogin(cmd *cobra.Command, args []string) error {
 
 	if !quiet {
 		cyan.Println("You can now use team features:")
-		fmt.Println("  envvault sync     # Sync with team")
-		fmt.Println("  envvault team     # Manage team members")
+		fmt.Println("  envault sync     # Sync with team")
+		fmt.Println("  envault team     # Manage team members")
 	}
 
 	return nil

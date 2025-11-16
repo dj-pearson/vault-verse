@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	KeyringService = "envvault"
+	KeyringService = "envault"
 	MasterKeyName  = "master-key"
 	KeySize        = 32 // 256 bits
 	NonceSize      = 12 // 96 bits for GCM

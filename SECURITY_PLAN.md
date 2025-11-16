@@ -124,7 +124,7 @@ func (s *SecureString) String() string {
 - [ ] Detect when secrets are passed as arguments vs stdin/file
 - [ ] Warn users about shell history risks
 - [ ] Recommend using `--` or stdin for sensitive values
-- [ ] Add `.envvault_history` exclusion pattern
+- [ ] Add `.envault_history` exclusion pattern
 - [ ] Implement `HISTIGNORE` recommendations in docs
 
 **Files to Modify**:

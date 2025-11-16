@@ -50,13 +50,13 @@ export default function Home() {
           </div>
 
           <TerminalWindow className="max-w-3xl mx-auto">
-            <TerminalLine prompt>envvault init myproject</TerminalLine>
+            <TerminalLine prompt>envault init myproject</TerminalLine>
             <TerminalLine success>Project initialized locally</TerminalLine>
             <div className="h-2" />
-            <TerminalLine prompt>envvault set DATABASE_URL postgres://...</TerminalLine>
+            <TerminalLine prompt>envault set DATABASE_URL postgres://...</TerminalLine>
             <TerminalLine success>Saved securely (encrypted at rest)</TerminalLine>
             <div className="h-2" />
-            <TerminalLine prompt>envvault run npm start</TerminalLine>
+            <TerminalLine prompt>envault run npm start</TerminalLine>
             <TerminalLine success>Starting with 12 environment variables</TerminalLine>
           </TerminalWindow>
         </div>
@@ -163,10 +163,10 @@ export default function Home() {
 
           <div className="space-y-8">
             {[
-              { step: "1", title: "Install CLI", command: "brew install envvault" },
-              { step: "2", title: "Initialize Project", command: "envvault init myapp" },
-              { step: "3", title: "Add Variables", command: "envvault set DATABASE_URL postgres://..." },
-              { step: "4", title: "Use Anywhere", command: "envvault run npm start" },
+              { step: "1", title: "Install CLI", command: "brew install envault" },
+              { step: "2", title: "Initialize Project", command: "envault init myapp" },
+              { step: "3", title: "Add Variables", command: "envault set DATABASE_URL postgres://..." },
+              { step: "4", title: "Use Anywhere", command: "envault run npm start" },
             ].map((item) => (
               <div key={item.step} className="flex gap-6 items-start">
                 <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-primary flex items-center justify-center text-white font-bold text-xl">
@@ -205,20 +205,20 @@ export default function Home() {
               </thead>
               <tbody>
                 {[
-                  { feature: "Local-First", envvault: true, doppler: false, onepass: false, dotenv: true },
-                  { feature: "Team Sync", envvault: true, doppler: true, onepass: true, dotenv: false },
-                  { feature: "Zero-Knowledge", envvault: true, doppler: false, onepass: true, dotenv: null },
-                  { feature: "Works Offline", envvault: true, doppler: false, onepass: "Partial", dotenv: true },
-                  { feature: "CLI-First", envvault: true, doppler: true, onepass: false, dotenv: null },
-                  { feature: "Open Source", envvault: true, doppler: false, onepass: false, dotenv: null },
+                  { feature: "Local-First", envault: true, doppler: false, onepass: false, dotenv: true },
+                  { feature: "Team Sync", envault: true, doppler: true, onepass: true, dotenv: false },
+                  { feature: "Zero-Knowledge", envault: true, doppler: false, onepass: true, dotenv: null },
+                  { feature: "Works Offline", envault: true, doppler: false, onepass: "Partial", dotenv: true },
+                  { feature: "CLI-First", envault: true, doppler: true, onepass: false, dotenv: null },
+                  { feature: "Open Source", envault: true, doppler: false, onepass: false, dotenv: null },
                 ].map((row, i) => (
                   <tr key={i} className="border-b border-border/50">
                     <td className="p-4 font-medium">{row.feature}</td>
                     <td className="text-center p-4">
-                      {row.envvault === true && <span className="text-primary font-bold">✓</span>}
-                      {row.envvault === false && <span className="text-muted-foreground">✗</span>}
-                      {typeof row.envvault === "string" && <span className="text-muted-foreground">{row.envvault}</span>}
-                      {row.envvault === null && <span className="text-muted-foreground">-</span>}
+                      {row.envault === true && <span className="text-primary font-bold">✓</span>}
+                      {row.envault === false && <span className="text-muted-foreground">✗</span>}
+                      {typeof row.envault === "string" && <span className="text-muted-foreground">{row.envault}</span>}
+                      {row.envault === null && <span className="text-muted-foreground">-</span>}
                     </td>
                     <td className="text-center p-4">
                       {row.doppler === true && <span className="text-primary font-bold">✓</span>}

@@ -274,8 +274,8 @@
 
 **Tasks**:
 1. ✅ Create Homebrew tap
-   - `brew tap envvault/tap`
-   - `brew install envvault`
+   - `brew tap envault/tap`
+   - `brew install envault`
 
 2. ✅ GitHub Releases
    - Automated releases on tag
@@ -283,7 +283,7 @@
    - Checksums and signatures
 
 3. ✅ npm package (wrapper)
-   - `npm install -g @envvault/cli`
+   - `npm install -g @envault/cli`
    - Downloads appropriate binary
 
 4. ✅ Installation documentation
@@ -292,7 +292,7 @@
    - Verification steps
 
 **Files**:
-- `homebrew/envvault.rb` - Homebrew formula
+- `homebrew/envault.rb` - Homebrew formula
 - `.github/workflows/release.yml` - Release automation
 - `npm/` - npm wrapper package
 

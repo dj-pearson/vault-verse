@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/dj-pearson/envvault/internal/auth"
+	"github.com/dj-pearson/envault/internal/auth"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
@@ -17,7 +17,7 @@ This will remove your authentication session from this machine.
 You will need to login again to use team sync features.
 
 Examples:
-  envvault logout`,
+  envault logout`,
 	RunE: runLogout,
 }
 

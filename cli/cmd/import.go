@@ -3,10 +3,10 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/dj-pearson/envvault/internal/config"
-	"github.com/dj-pearson/envvault/internal/crypto"
-	"github.com/dj-pearson/envvault/internal/storage"
-	"github.com/dj-pearson/envvault/internal/utils"
+	"github.com/dj-pearson/envault/internal/config"
+	"github.com/dj-pearson/envault/internal/crypto"
+	"github.com/dj-pearson/envault/internal/storage"
+	"github.com/dj-pearson/envault/internal/utils"
 	"github.com/fatih/color"
 	"github.com/joho/godotenv"
 	"github.com/manifoldco/promptui"
@@ -29,10 +29,10 @@ By default, existing variables are not overwritten. Use --overwrite to replace t
 Use --dry-run to preview what would be imported without making changes.
 
 Examples:
-  envvault import .env
-  envvault import .env.production --env production
-  envvault import .env --overwrite
-  envvault import .env --dry-run`,
+  envault import .env
+  envault import .env.production --env production
+  envault import .env --overwrite
+  envault import .env --dry-run`,
 	Args: cobra.ExactArgs(1),
 	RunE: runImport,
 }

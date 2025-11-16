@@ -10,19 +10,19 @@ import (
 var completionCmd = &cobra.Command{
 	Use:   "completion [bash|zsh|fish|powershell]",
 	Short: "Generate shell completion scripts",
-	Long: `Generate shell completion scripts for envvault.
+	Long: `Generate shell completion scripts for envault.
 
 To load completions:
 
 Bash:
 
-  $ source <(envvault completion bash)
+  $ source <(envault completion bash)
 
   # To load completions for each session, execute once:
   # Linux:
-  $ envvault completion bash > /etc/bash_completion.d/envvault
+  $ envault completion bash > /etc/bash_completion.d/envault
   # macOS:
-  $ envvault completion bash > $(brew --prefix)/etc/bash_completion.d/envvault
+  $ envault completion bash > $(brew --prefix)/etc/bash_completion.d/envault
 
 Zsh:
 
@@ -32,23 +32,23 @@ Zsh:
   $ echo "autoload -U compinit; compinit" >> ~/.zshrc
 
   # To load completions for each session, execute once:
-  $ envvault completion zsh > "${fpath[1]}/_envvault"
+  $ envault completion zsh > "${fpath[1]}/_envault"
 
   # You will need to start a new shell for this setup to take effect.
 
 Fish:
 
-  $ envvault completion fish | source
+  $ envault completion fish | source
 
   # To load completions for each session, execute once:
-  $ envvault completion fish > ~/.config/fish/completions/envvault.fish
+  $ envault completion fish > ~/.config/fish/completions/envault.fish
 
 PowerShell:
 
-  PS> envvault completion powershell | Out-String | Invoke-Expression
+  PS> envault completion powershell | Out-String | Invoke-Expression
 
   # To load completions for every new session, run:
-  PS> envvault completion powershell > envvault.ps1
+  PS> envault completion powershell > envault.ps1
   # and source this file from your PowerShell profile.
 `,
 	DisableFlagsInUseLine: true,

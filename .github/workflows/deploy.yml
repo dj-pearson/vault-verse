@@ -93,27 +93,27 @@ jobs:
           - os: macos-latest
             goos: darwin
             goarch: amd64
-            output: envvault-darwin-amd64
+            output: envault-darwin-amd64
           - os: macos-latest
             goos: darwin
             goarch: arm64
-            output: envvault-darwin-arm64
+            output: envault-darwin-arm64
 
           # Linux builds
           - os: ubuntu-latest
             goos: linux
             goarch: amd64
-            output: envvault-linux-amd64
+            output: envault-linux-amd64
           - os: ubuntu-latest
             goos: linux
             goarch: arm64
-            output: envvault-linux-arm64
+            output: envault-linux-arm64
 
           # Windows builds
           - os: ubuntu-latest
             goos: windows
             goarch: amd64
-            output: envvault-windows-amd64.exe
+            output: envault-windows-amd64.exe
 
     steps:
       - name: Checkout code

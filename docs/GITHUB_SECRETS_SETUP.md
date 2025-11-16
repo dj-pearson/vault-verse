@@ -115,7 +115,7 @@ GitHub Secrets are encrypted environment variables used in GitHub Actions workfl
   1. Go to https://www.npmjs.com/settings/YOUR_USERNAME/tokens
   2. Click "Generate New Token" > "Automation"
   3. Copy the token
-- **Note**: You must have an npm account and be added to the @envvault org
+- **Note**: You must have an npm account and be added to the @envault org
 
 ## Optional Secrets (For Enhanced Features)
 

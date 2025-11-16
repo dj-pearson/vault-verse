@@ -1,4 +1,4 @@
-module github.com/dj-pearson/envvault
+module github.com/dj-pearson/envault
 
 go 1.22
 

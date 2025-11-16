@@ -6,10 +6,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/dj-pearson/envvault/internal/config"
-	"github.com/dj-pearson/envvault/internal/crypto"
-	"github.com/dj-pearson/envvault/internal/storage"
-	"github.com/dj-pearson/envvault/internal/utils"
+	"github.com/dj-pearson/envault/internal/config"
+	"github.com/dj-pearson/envault/internal/crypto"
+	"github.com/dj-pearson/envault/internal/storage"
+	"github.com/dj-pearson/envault/internal/utils"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
@@ -31,11 +31,11 @@ WARNING: Exported files contain secrets in plaintext!
 Add exported files to .gitignore to prevent accidental commits.
 
 Examples:
-  envvault export
-  envvault export --output .env
-  envvault export --env production --output .env.production
-  envvault export --format json > config.json
-  envvault export --format yaml --output config.yml`,
+  envault export
+  envault export --output .env
+  envault export --env production --output .env.production
+  envault export --format json > config.json
+  envault export --format yaml --output config.yml`,
 	RunE: runExport,
 }
 

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/dj-pearson/envvault/internal/config"
-	"github.com/dj-pearson/envvault/internal/storage"
-	"github.com/dj-pearson/envvault/internal/utils"
+	"github.com/dj-pearson/envault/internal/config"
+	"github.com/dj-pearson/envault/internal/storage"
+	"github.com/dj-pearson/envault/internal/utils"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
@@ -22,7 +22,7 @@ var statusCmd = &cobra.Command{
   - Team information (if applicable)
 
 Examples:
-  envvault status`,
+  envault status`,
 	RunE: runStatus,
 }
 
@@ -120,11 +120,11 @@ func runStatus(cmd *cobra.Command, args []string) error {
 	// Helpful commands
 	if !quiet {
 		cyan.Println("Quick commands:")
-		fmt.Println("  Add variable:     envvault set KEY=value")
-		fmt.Println("  List variables:   envvault list")
-		fmt.Println("  Run with env:     envvault run npm start")
+		fmt.Println("  Add variable:     envault set KEY=value")
+		fmt.Println("  List variables:   envault list")
+		fmt.Println("  Run with env:     envault run npm start")
 		if !project.SyncEnabled {
-			fmt.Println("  Enable sync:      envvault login")
+			fmt.Println("  Enable sync:      envault login")
 		}
 	}
 

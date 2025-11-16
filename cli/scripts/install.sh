@@ -5,8 +5,8 @@
 set -e
 
 REPO="dj-pearson/vault-verse"
-INSTALL_DIR="${ENVVAULT_INSTALL_DIR:-$HOME/.local/bin}"
-BINARY_NAME="envvault"
+INSTALL_DIR="${ENVAULT_INSTALL_DIR:-$HOME/.local/bin}"
+BINARY_NAME="envault"
 
 # Colors
 RED='\033[0;31m'
@@ -42,7 +42,7 @@ detect_platform() {
 
     # Add .exe extension for Windows
     if [ "$OS" = "windows" ]; then
-        BINARY_NAME="envvault.exe"
+        BINARY_NAME="envault.exe"
     fi
 
     echo "${OS}-${ARCH}"
@@ -88,9 +88,9 @@ install() {
 
     # Construct download URL
     if [ "$PLATFORM" = "windows-amd64" ] || [ "$PLATFORM" = "windows-arm64" ]; then
-        URL="https://github.com/$REPO/releases/download/v$VERSION/envvault-$PLATFORM.exe"
+        URL="https://github.com/$REPO/releases/download/v$VERSION/envault-$PLATFORM.exe"
     else
-        URL="https://github.com/$REPO/releases/download/v$VERSION/envvault-$PLATFORM"
+        URL="https://github.com/$REPO/releases/download/v$VERSION/envault-$PLATFORM"
     fi
 
     # Create install directory
@@ -123,7 +123,7 @@ install() {
     # Check if install directory is in PATH
     case ":${PATH}:" in
         *":$INSTALL_DIR:"*)
-            echo "You can now use: ${GREEN}envvault --help${NC}"
+            echo "You can now use: ${GREEN}envault --help${NC}"
             ;;
         *)
             echo "${YELLOW}Note: $INSTALL_DIR is not in your PATH${NC}"
@@ -138,13 +138,13 @@ install() {
 
     echo ""
     echo "Quick start:"
-    echo "  envvault init my-app        # Initialize a new project"
-    echo "  envvault set KEY=value      # Set environment variable"
-    echo "  envvault list               # List all variables"
-    echo "  envvault --help             # Show all commands"
+    echo "  envault init my-app        # Initialize a new project"
+    echo "  envault set KEY=value      # Set environment variable"
+    echo "  envault list               # List all variables"
+    echo "  envault --help             # Show all commands"
     echo ""
     echo "For shell completions, run:"
-    echo "  envvault completion bash|zsh|fish"
+    echo "  envault completion bash|zsh|fish"
     echo ""
     echo "Documentation: https://envault.net/docs"
 }

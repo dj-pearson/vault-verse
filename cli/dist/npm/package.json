@@ -1,10 +1,10 @@
 {
-  "name": "@envvault/cli",
+  "name": "@envault/cli",
   "version": "0.1.0",
   "description": "Secure, local-first environment variable management CLI with zero-knowledge encryption",
   "main": "install.js",
   "bin": {
-    "envvault": "./bin/envvault"
+    "envault": "./bin/envault"
   },
   "scripts": {
     "postinstall": "node install.js",
@@ -43,7 +43,7 @@
   "homepage": "https://envault.net",
   "funding": {
     "type": "github",
-    "url": "https://github.com/sponsors/envvault"
+    "url": "https://github.com/sponsors/envault"
   },
   "engines": {
     "node": ">=14.0.0",

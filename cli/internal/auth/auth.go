@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/dj-pearson/envvault/internal/config"
-	"github.com/dj-pearson/envvault/internal/models"
+	"github.com/dj-pearson/envault/internal/config"
+	"github.com/dj-pearson/envault/internal/models"
 )
 
 // Session represents an authenticated session
@@ -55,7 +55,7 @@ func LoadSession() (*Session, error) {
 
 	// Check if session file exists
 	if _, err := os.Stat(sessionPath); os.IsNotExist(err) {
-		return nil, fmt.Errorf("not logged in (run 'envvault login' first)")
+		return nil, fmt.Errorf("not logged in (run 'envault login' first)")
 	}
 
 	data, err := os.ReadFile(sessionPath)
@@ -70,7 +70,7 @@ func LoadSession() (*Session, error) {
 
 	// Check if session is expired
 	if time.Now().After(session.ExpiresAt) {
-		return nil, fmt.Errorf("session expired (run 'envvault login' again)")
+		return nil, fmt.Errorf("session expired (run 'envault login' again)")
 	}
 
 	return &session, nil

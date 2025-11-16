@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/dj-pearson/envvault/internal/models"
-	"github.com/dj-pearson/envvault/internal/utils"
+	"github.com/dj-pearson/envault/internal/models"
+	"github.com/dj-pearson/envault/internal/utils"
 	"github.com/google/uuid"
 	_ "modernc.org/sqlite"
 )

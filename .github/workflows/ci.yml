@@ -60,11 +60,11 @@ jobs:
 
       - name: Build CLI
         working-directory: ./cli
-        run: go build -v -o envvault ./
+        run: go build -v -o envault ./
 
       - name: Test CLI binary
         working-directory: ./cli
-        run: ./envvault --version
+        run: ./envault --version
 
   # Lint CLI
   lint-cli:
