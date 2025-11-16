@@ -12,8 +12,9 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useBillingHistory } from '@/hooks/useBillingHistory';
+import { UsageChart } from '@/components/UsageChart';
 import { Check, CreditCard, TrendingUp } from 'lucide-react';
-import { format } from 'date-fns';
+import { format, subDays } from 'date-fns';
 
 const PLAN_FEATURES = {
   free: [
@@ -63,6 +64,23 @@ export const BillingTab = () => {
   const getUsagePercentage = (current: number, limit: number) => {
     if (limit === -1) return 0;
     return Math.min((current / limit) * 100, 100);
+  };
+
+  // Generate mock historical usage data (last 14 days)
+  // In production, this would come from the backend
+  const generateUsageHistory = (currentValue: number) => {
+    const days = 14;
+    return Array.from({ length: days }, (_, i) => {
+      const daysAgo = days - 1 - i;
+      const date = subDays(new Date(), daysAgo).toISOString();
+      // Generate realistic fluctuating data around current value
+      const variance = currentValue * 0.2; // 20% variance
+      const value = Math.max(
+        0,
+        Math.floor(currentValue + (Math.random() - 0.5) * variance)
+      );
+      return { date, value };
+    });
   };
 
   return (
@@ -136,6 +154,29 @@ export const BillingTab = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Usage Charts */}
+      {planLimits && usage && (
+        <div>
+          <h3 className="text-lg font-semibold mb-4">Usage Over Time</h3>
+          <div className="grid md:grid-cols-2 gap-4">
+            <UsageChart
+              title="Projects"
+              data={generateUsageHistory(usage.projects)}
+              maxValue={planLimits.projects}
+              currentValue={usage.projects}
+              showTrend={true}
+            />
+            <UsageChart
+              title="Team Members"
+              data={generateUsageHistory(usage.team_members)}
+              maxValue={planLimits.team_members}
+              currentValue={usage.team_members}
+              showTrend={true}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Available Plans */}
       <div>

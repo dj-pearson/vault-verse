@@ -5,7 +5,8 @@ import { BillingTab } from '@/components/settings/BillingTab';
 import { CLITokensTab } from '@/components/settings/CLITokensTab';
 import { ProfileTab } from '@/components/settings/ProfileTab';
 import { TeamTab } from '@/components/settings/TeamTab';
-import { CreditCard, Key, User, Users } from 'lucide-react';
+import { SessionsTab } from '@/components/settings/SessionsTab';
+import { CreditCard, Key, User, Users, Shield } from 'lucide-react';
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState('profile');
@@ -13,7 +14,7 @@ export default function Settings() {
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
-      
+
       <main className="container mx-auto px-4 py-8 mt-16">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Settings</h1>
@@ -23,7 +24,7 @@ export default function Settings() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:w-auto">
+          <TabsList className="grid w-full grid-cols-5 lg:w-auto">
             <TabsTrigger value="profile" className="gap-2">
               <User className="h-4 w-4" />
               <span className="hidden sm:inline">Profile</span>
@@ -35,6 +36,10 @@ export default function Settings() {
             <TabsTrigger value="cli-tokens" className="gap-2">
               <Key className="h-4 w-4" />
               <span className="hidden sm:inline">CLI Tokens</span>
+            </TabsTrigger>
+            <TabsTrigger value="sessions" className="gap-2">
+              <Shield className="h-4 w-4" />
+              <span className="hidden sm:inline">Sessions</span>
             </TabsTrigger>
             <TabsTrigger value="team" className="gap-2">
               <Users className="h-4 w-4" />
@@ -52,6 +57,10 @@ export default function Settings() {
 
           <TabsContent value="cli-tokens" className="space-y-6">
             <CLITokensTab />
+          </TabsContent>
+
+          <TabsContent value="sessions" className="space-y-6">
+            <SessionsTab />
           </TabsContent>
 
           <TabsContent value="team" className="space-y-6">
