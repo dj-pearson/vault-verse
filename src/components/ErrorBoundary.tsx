@@ -97,7 +97,7 @@ class ErrorBoundary extends Component<Props, State> {
 export const SentryErrorBoundary =
   import.meta.env.VITE_SENTRY_DSN
     ? Sentry.withErrorBoundary(ErrorBoundary, {
-        fallback: <ErrorBoundary hasError={true} error={null} children={null} />,
+        fallback: <div className="min-h-screen flex items-center justify-center p-4"><div className="text-center"><h2 className="text-2xl font-bold mb-2">Something went wrong</h2><p className="text-muted-foreground">Please refresh the page</p></div></div>,
         showDialog: false,
       })
     : ErrorBoundary;
