@@ -17,6 +17,11 @@ import Team from "./pages/Team";
 import ProjectDetail from "./pages/ProjectDetail";
 import Settings from "./pages/Settings";
 import Admin from "./pages/Admin";
+import { AdminBlog } from "./pages/AdminBlog";
+import { AdminSEO } from "./pages/AdminSEO";
+import { AdminSecurity } from "./pages/AdminSecurity";
+import { Blog } from "./pages/Blog";
+import { BlogArticle } from "./pages/BlogArticle";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,11 +40,16 @@ const App = () => (
             <Route path="/docs" element={<Docs />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogArticle />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/dashboard/team" element={<ProtectedRoute><Team /></ProtectedRoute>} />
             <Route path="/dashboard/projects/:id" element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
             <Route path="/dashboard/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
+            <Route path="/admin/blog" element={<AdminRoute><AdminBlog /></AdminRoute>} />
+            <Route path="/admin/seo" element={<AdminRoute><AdminSEO /></AdminRoute>} />
+            <Route path="/admin/security" element={<AdminRoute><AdminSecurity /></AdminRoute>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
