@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Shield, Users, FolderLock, Activity, Search, Crown } from 'lucide-react';
+import { Shield, Users, FolderLock, Activity, Search, Crown, FileText, Globe, ShieldAlert } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -171,6 +171,51 @@ export default function Admin() {
               </div>
             </div>
           </Card>
+        </div>
+
+        {/* Admin Tools Navigation */}
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
+          <Link to="/admin/blog">
+            <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer h-full">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-3 rounded-lg bg-blue-500/10">
+                  <FileText className="h-6 w-6 text-blue-500" />
+                </div>
+                <h3 className="text-lg font-semibold">Blog Management</h3>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Create and manage blog articles, categories, and tags
+              </p>
+            </Card>
+          </Link>
+
+          <Link to="/admin/seo">
+            <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer h-full">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-3 rounded-lg bg-green-500/10">
+                  <Globe className="h-6 w-6 text-green-500" />
+                </div>
+                <h3 className="text-lg font-semibold">SEO Management</h3>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Configure SEO settings, page metadata, and sitemap
+              </p>
+            </Card>
+          </Link>
+
+          <Link to="/admin/security">
+            <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer h-full">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-3 rounded-lg bg-red-500/10">
+                  <ShieldAlert className="h-6 w-6 text-red-500" />
+                </div>
+                <h3 className="text-lg font-semibold">Security Monitoring</h3>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Monitor database leaks and environment variable exposures
+              </p>
+            </Card>
+          </Link>
         </div>
 
         {/* User Management */}

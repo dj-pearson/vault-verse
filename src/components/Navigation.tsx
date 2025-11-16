@@ -28,6 +28,9 @@ export const Navigation = () => {
                 <Link to="/pricing" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">
                   Pricing
                 </Link>
+                <Link to="/blog" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">
+                  Blog
+                </Link>
                 <Link to="/docs" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">
                   Docs
                 </Link>
