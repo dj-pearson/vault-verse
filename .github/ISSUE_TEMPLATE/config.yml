@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 💬 Discussions
+    url: https://github.com/dj-pearson/vault-verse/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: 📚 Documentation
+    url: https://envvault.com/docs
+    about: Check out our documentation for guides and references
+  - name: 🐛 Security Issues
+    url: https://github.com/dj-pearson/vault-verse/security/advisories/new
+    about: Report security vulnerabilities privately
