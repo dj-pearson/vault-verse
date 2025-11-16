@@ -1,6 +1,6 @@
 # EnvVault CLI Makefile
 
-.PHONY: build install test clean help
+.PHONY: build install test clean help completions install-completions
 
 # Variables
 BINARY_NAME=envvault
@@ -60,7 +60,7 @@ test-coverage:
 # Clean build artifacts
 clean:
 	@echo "Cleaning..."
-	@rm -rf bin/ dist/ coverage.out coverage.html
+	@rm -rf bin/ dist/ coverage.out coverage.html completions/
 	@echo "✓ Cleaned build artifacts"
 
 # Download dependencies
@@ -87,21 +87,38 @@ dev:
 	@go build -race $(LDFLAGS) -o bin/$(BINARY_NAME)-dev .
 	@echo "✓ Built bin/$(BINARY_NAME)-dev"
 
+# Generate shell completions
+completions: build
+	@echo "Generating shell completions..."
+	@mkdir -p completions
+	@bin/$(BINARY_NAME) completion bash > completions/envvault.bash
+	@bin/$(BINARY_NAME) completion zsh > completions/envvault.zsh
+	@bin/$(BINARY_NAME) completion fish > completions/envvault.fish
+	@bin/$(BINARY_NAME) completion powershell > completions/envvault.ps1
+	@echo "✓ Generated completions in completions/"
+
+# Install shell completions
+install-completions:
+	@echo "Installing shell completions..."
+	@bash scripts/install-completions.sh
+
 # Show help
 help:
 	@echo "EnvVault CLI Build Commands:"
 	@echo ""
-	@echo "  make build         Build for current platform"
-	@echo "  make install       Install to GOPATH/bin"
-	@echo "  make build-all     Build for all platforms"
-	@echo "  make test          Run tests"
-	@echo "  make test-coverage Run tests with coverage"
-	@echo "  make clean         Clean build artifacts"
-	@echo "  make deps          Download dependencies"
-	@echo "  make lint          Run linter"
-	@echo "  make fmt           Format code"
-	@echo "  make dev           Build with race detector"
-	@echo "  make help          Show this help"
+	@echo "  make build              Build for current platform"
+	@echo "  make install            Install to GOPATH/bin"
+	@echo "  make build-all          Build for all platforms"
+	@echo "  make test               Run tests"
+	@echo "  make test-coverage      Run tests with coverage"
+	@echo "  make clean              Clean build artifacts"
+	@echo "  make deps               Download dependencies"
+	@echo "  make lint               Run linter"
+	@echo "  make fmt                Format code"
+	@echo "  make dev                Build with race detector"
+	@echo "  make completions        Generate shell completions"
+	@echo "  make install-completions Install completions for your shell"
+	@echo "  make help               Show this help"
 	@echo ""
 	@echo "Environment variables:"
-	@echo "  VERSION            Set version (default: dev)"
+	@echo "  VERSION                 Set version (default: dev)"

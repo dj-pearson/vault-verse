@@ -3,6 +3,7 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { setUser as setSentryUser } from '@/lib/sentry';
 
 interface AuthContextType {
   user: User | null;
@@ -28,6 +29,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
+
+        // Update Sentry user context
+        if (session?.user) {
+          setSentryUser({
+            id: session.user.id,
+            email: session.user.email,
+          });
+        } else {
+          setSentryUser(null);
+        }
       }
     );
 
@@ -36,6 +47,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+
+      // Update Sentry user context
+      if (session?.user) {
+        setSentryUser({
+          id: session.user.id,
+          email: session.user.email,
+        });
+      }
     });
 
     return () => subscription.unsubscribe();
