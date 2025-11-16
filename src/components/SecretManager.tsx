@@ -47,7 +47,7 @@ export const SecretManager = ({ environmentId, environmentName, canEdit = true }
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [visibleSecrets, setVisibleSecrets] = useState<Set<string>>(new Set());
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
-  const [secretToDelete, setSecretToDelete] = useState<{ key: string } | null>(null);
+  const [secretToDelete, setSecretToDelete] = useState<{ id: string; key: string } | null>(null);
 
   const [newSecret, setNewSecret] = useState({
     key: '',
@@ -90,8 +90,8 @@ export const SecretManager = ({ environmentId, environmentName, canEdit = true }
     if (!secretToDelete) return;
 
     await deleteSecret.mutateAsync({
+      secretId: secretToDelete.id,
       environmentId,
-      key: secretToDelete.key,
     });
 
     setSecretToDelete(null);
@@ -252,7 +252,7 @@ export const SecretManager = ({ environmentId, environmentName, canEdit = true }
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={() => setSecretToDelete({ key: secret.key })}
+                          onClick={() => setSecretToDelete({ id: secret.id, key: secret.key })}
                           title="Delete variable"
                         >
                           <Trash2 className="h-4 w-4 text-destructive" />

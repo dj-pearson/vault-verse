@@ -48,7 +48,7 @@ export const useGenerateCLIToken = () => {
       });
 
       if (error) throw error;
-      return data as GeneratedToken;
+      return data as unknown as GeneratedToken;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cli_tokens'] });
