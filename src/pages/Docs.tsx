@@ -191,6 +191,78 @@ export default function Docs() {
                   </div>
                 </Card>
 
+                <Card className="p-6">
+                  <h3 className="font-semibold mb-3">envvault import</h3>
+                  <p className="text-sm text-muted-foreground mb-3">Import variables from .env file</p>
+                  <div className="bg-terminal-bg text-terminal-text p-3 rounded font-mono text-sm">
+                    <div>envvault import FILE [flags]</div>
+                    <div className="mt-2 text-terminal-comment">Flags:</div>
+                    <div>  --env ENVIRONMENT   Target environment</div>
+                    <div>  --overwrite         Overwrite existing variables</div>
+                    <div>  --dry-run           Preview without importing</div>
+                  </div>
+                </Card>
+
+                <Card className="p-6">
+                  <h3 className="font-semibold mb-3">envvault export</h3>
+                  <p className="text-sm text-muted-foreground mb-3">Export variables to file</p>
+                  <div className="bg-terminal-bg text-terminal-text p-3 rounded font-mono text-sm">
+                    <div>envvault export [flags]</div>
+                    <div className="mt-2 text-terminal-comment">Flags:</div>
+                    <div>  --env ENVIRONMENT   Export from environment</div>
+                    <div>  --output FILE       Output file (default: stdout)</div>
+                    <div>  --format FORMAT     Format: dotenv, json, yaml</div>
+                  </div>
+                </Card>
+
+                <Card className="p-6">
+                  <h3 className="font-semibold mb-3">envvault login</h3>
+                  <p className="text-sm text-muted-foreground mb-3">Authenticate CLI for team features</p>
+                  <div className="bg-terminal-bg text-terminal-text p-3 rounded font-mono text-sm">
+                    <div>envvault login [flags]</div>
+                    <div className="mt-2 text-terminal-comment">Flags:</div>
+                    <div>  --token TOKEN      Use personal access token</div>
+                    <div>  --manual           Manual authentication</div>
+                  </div>
+                </Card>
+
+                <Card className="p-6">
+                  <h3 className="font-semibold mb-3">envvault sync</h3>
+                  <p className="text-sm text-muted-foreground mb-3">Sync project with team (encrypted)</p>
+                  <div className="bg-terminal-bg text-terminal-text p-3 rounded font-mono text-sm">
+                    <div>envvault sync [flags]</div>
+                    <div className="mt-2 text-terminal-comment">Flags:</div>
+                    <div>  --push             Push local changes only</div>
+                    <div>  --pull             Pull cloud changes only</div>
+                    <div>  --force            Force sync (override conflicts)</div>
+                  </div>
+                </Card>
+
+                <Card className="p-6">
+                  <h3 className="font-semibold mb-3">envvault env</h3>
+                  <p className="text-sm text-muted-foreground mb-3">Manage environments</p>
+                  <div className="bg-terminal-bg text-terminal-text p-3 rounded font-mono text-sm">
+                    <div>envvault env [subcommand]</div>
+                    <div className="mt-2 text-terminal-comment">Subcommands:</div>
+                    <div>  list               List all environments</div>
+                    <div>  create NAME        Create new environment</div>
+                    <div>  delete NAME        Delete environment</div>
+                    <div>  copy SRC DST       Copy variables between environments</div>
+                  </div>
+                </Card>
+
+                <Card className="p-6">
+                  <h3 className="font-semibold mb-3">envvault team</h3>
+                  <p className="text-sm text-muted-foreground mb-3">Manage team members</p>
+                  <div className="bg-terminal-bg text-terminal-text p-3 rounded font-mono text-sm">
+                    <div>envvault team [subcommand]</div>
+                    <div className="mt-2 text-terminal-comment">Subcommands:</div>
+                    <div>  list               List team members</div>
+                    <div>  invite EMAIL       Invite team member</div>
+                    <div>  remove EMAIL       Remove team member</div>
+                  </div>
+                </Card>
+
                 <Card className="p-6 bg-muted/30">
                   <p className="text-sm">
                     <strong>Pro tip:</strong> Use <code className="bg-background px-1.5 py-0.5 rounded">envvault [command] --help</code> for detailed information about any command.
