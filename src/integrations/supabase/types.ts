@@ -55,6 +55,53 @@ export type Database = {
           },
         ]
       }
+      billing_history: {
+        Row: {
+          amount: number
+          created_at: string | null
+          currency: string | null
+          description: string | null
+          id: string
+          invoice_date: string | null
+          status: string
+          stripe_invoice_id: string | null
+          subscription_id: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          currency?: string | null
+          description?: string | null
+          id?: string
+          invoice_date?: string | null
+          status: string
+          stripe_invoice_id?: string | null
+          subscription_id?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          currency?: string | null
+          description?: string | null
+          id?: string
+          invoice_date?: string | null
+          status?: string
+          stripe_invoice_id?: string | null
+          subscription_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "billing_history_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       environments: {
         Row: {
           created_at: string
@@ -176,6 +223,48 @@ export type Database = {
           },
         ]
       }
+      subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean | null
+          created_at: string | null
+          current_period_end: string | null
+          current_period_start: string | null
+          id: string
+          plan: Database["public"]["Enums"]["subscription_plan"]
+          status: Database["public"]["Enums"]["subscription_status"]
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          cancel_at_period_end?: boolean | null
+          created_at?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          plan?: Database["public"]["Enums"]["subscription_plan"]
+          status?: Database["public"]["Enums"]["subscription_status"]
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          cancel_at_period_end?: boolean | null
+          created_at?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          plan?: Database["public"]["Enums"]["subscription_plan"]
+          status?: Database["public"]["Enums"]["subscription_status"]
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       team_members: {
         Row: {
           created_at: string
@@ -211,6 +300,45 @@ export type Database = {
           },
         ]
       }
+      usage_metrics: {
+        Row: {
+          api_calls_count: number | null
+          created_at: string | null
+          id: string
+          period_end: string
+          period_start: string
+          projects_count: number | null
+          secrets_count: number | null
+          team_members_count: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          api_calls_count?: number | null
+          created_at?: string | null
+          id?: string
+          period_end: string
+          period_start: string
+          projects_count?: number | null
+          secrets_count?: number | null
+          team_members_count?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          api_calls_count?: number | null
+          created_at?: string | null
+          id?: string
+          period_end?: string
+          period_start?: string
+          projects_count?: number | null
+          secrets_count?: number | null
+          team_members_count?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -237,6 +365,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_plan_limits: { Args: { user_uuid: string }; Returns: Json }
+      get_plan_limits: {
+        Args: { plan_type: Database["public"]["Enums"]["subscription_plan"] }
+        Returns: Json
+      }
       has_project_access: {
         Args: { _project_id: string; _user_id: string }
         Returns: boolean
@@ -251,6 +384,8 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "member" | "viewer"
+      subscription_plan: "free" | "team" | "enterprise"
+      subscription_status: "active" | "canceled" | "past_due" | "trialing"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -379,6 +514,8 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "member", "viewer"],
+      subscription_plan: ["free", "team", "enterprise"],
+      subscription_status: ["active", "canceled", "past_due", "trialing"],
     },
   },
 } as const
