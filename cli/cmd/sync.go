@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"os"
 
@@ -140,10 +141,63 @@ func runSync(cmd *cobra.Command, args []string) error {
 				return fmt.Errorf("failed to decrypt blob: %w", err)
 			}
 
-			// TODO: Import decrypted data into local database
-			// This would involve parsing the JSON and updating secrets
+			// Parse JSON data
+			var importData map[string]map[string]string
+			if err := json.Unmarshal([]byte(decryptedJSON), &importData); err != nil {
+				return fmt.Errorf("failed to parse synced data: %w", err)
+			}
 
-			green.Printf("✓ Pulled version %d from cloud\n", pullResp.Version)
+			// Check if there's any data to import
+			if len(importData) == 0 {
+				if !quiet {
+					fmt.Println("  No data in cloud sync")
+				}
+				return nil
+			}
+
+			// Import secrets into local database
+			secretsImported := 0
+			envsCreated := 0
+			for envName, secrets := range importData {
+				// Get or create environment
+				env, err := db.GetEnvironment(ctx.ProjectID, envName)
+				if err != nil {
+					// Environment doesn't exist, create it
+					env, err = db.CreateEnvironment(ctx.ProjectID, envName)
+					if err != nil {
+						return fmt.Errorf("failed to create environment %s: %w", envName, err)
+					}
+					envsCreated++
+					if !quiet {
+						cyan.Printf("  Created environment: %s\n", envName)
+					}
+				}
+
+				// Import secrets for this environment
+				for key, value := range secrets {
+					// Encrypt the value
+					encryptedValue, err := cryptoSvc.Encrypt(value)
+					if err != nil {
+						return fmt.Errorf("failed to encrypt %s: %w", key, err)
+					}
+
+					// Create/update secret (CreateSecret has upsert logic)
+					_, err = db.CreateSecret(env.ID, key, encryptedValue, "")
+					if err != nil {
+						return fmt.Errorf("failed to import %s: %w", key, err)
+					}
+
+					secretsImported++
+				}
+			}
+
+			if envsCreated > 0 {
+				green.Printf("✓ Pulled version %d from cloud (%d secrets, %d new environments)\n",
+					pullResp.Version, secretsImported, envsCreated)
+			} else {
+				green.Printf("✓ Pulled version %d from cloud (%d secrets imported)\n",
+					pullResp.Version, secretsImported)
+			}
 		} else {
 			if !quiet {
 				fmt.Println("  Already up to date")
@@ -163,8 +217,17 @@ func runSync(cmd *cobra.Command, args []string) error {
 			return fmt.Errorf("failed to list environments: %w", err)
 		}
 
+		// Check if there's anything to push
+		if len(environments) == 0 {
+			if !quiet {
+				yellow.Println("  No environments to sync")
+			}
+			return nil
+		}
+
 		// Build export data structure
 		exportData := make(map[string]map[string]string)
+		totalSecrets := 0
 
 		for _, env := range environments {
 			secrets, err := db.ListSecrets(env.ID)
@@ -180,13 +243,22 @@ func runSync(cmd *cobra.Command, args []string) error {
 					return fmt.Errorf("failed to decrypt %s: %w", secret.Key, err)
 				}
 				envSecrets[secret.Key] = value
+				totalSecrets++
 			}
 
 			exportData[env.Name] = envSecrets
 		}
 
-		// Convert to JSON (in real implementation, use proper serialization)
-		jsonData := fmt.Sprintf("%v", exportData) // Placeholder
+		if !quiet && totalSecrets == 0 {
+			yellow.Println("  No secrets to sync")
+		}
+
+		// Convert to JSON
+		jsonBytes, err := json.Marshal(exportData)
+		if err != nil {
+			return fmt.Errorf("failed to serialize data: %w", err)
+		}
+		jsonData := string(jsonBytes)
 
 		// Encrypt the entire blob
 		encryptedBlob, err := cryptoSvc.Encrypt(jsonData)
@@ -206,7 +278,8 @@ func runSync(cmd *cobra.Command, args []string) error {
 			return fmt.Errorf("failed to push to cloud: %w", err)
 		}
 
-		green.Printf("✓ Pushed version %d to cloud\n", pushResp.Version)
+		green.Printf("✓ Pushed version %d to cloud (%d environments, %d secrets)\n",
+			pushResp.Version, len(environments), totalSecrets)
 	}
 
 	if !quiet {
