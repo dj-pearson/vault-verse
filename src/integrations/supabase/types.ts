@@ -102,6 +102,39 @@ export type Database = {
           },
         ]
       }
+      cli_tokens: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          last_used_at: string | null
+          name: string
+          token_hash: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          last_used_at?: string | null
+          name: string
+          token_hash: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          last_used_at?: string | null
+          name?: string
+          token_hash?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       environments: {
         Row: {
           created_at: string
@@ -366,6 +399,27 @@ export type Database = {
     }
     Functions: {
       check_plan_limits: { Args: { user_uuid: string }; Returns: Json }
+      copy_environment_secrets: {
+        Args: { p_source_env_id: string; p_target_env_id: string }
+        Returns: number
+      }
+      create_environment: {
+        Args: { p_name: string; p_project_id: string }
+        Returns: string
+      }
+      delete_environment: {
+        Args: { p_environment_id: string }
+        Returns: boolean
+      }
+      delete_secret: { Args: { p_secret_id: string }; Returns: boolean }
+      generate_cli_token: {
+        Args: { p_expires_in_days?: number; p_name: string }
+        Returns: Json
+      }
+      get_environment_secrets: {
+        Args: { p_environment_id: string }
+        Returns: Json
+      }
       get_plan_limits: {
         Args: { plan_type: Database["public"]["Enums"]["subscription_plan"] }
         Returns: Json
@@ -380,6 +434,11 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      revoke_cli_token: { Args: { p_token_id: string }; Returns: boolean }
+      upsert_secret: {
+        Args: { p_environment_id: string; p_key: string; p_value: string }
+        Returns: string
       }
     }
     Enums: {

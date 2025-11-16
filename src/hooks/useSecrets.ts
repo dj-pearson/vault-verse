@@ -18,8 +18,8 @@ export interface UpsertSecretParams {
 }
 
 export interface DeleteSecretParams {
+  secretId: string;
   environmentId: string;
-  key: string;
 }
 
 // Hook to get secrets for an environment
@@ -34,7 +34,7 @@ export const useSecrets = (environmentId: string | undefined) => {
       });
 
       if (error) throw error;
-      return (data || []) as Secret[];
+      return (data || []) as unknown as Secret[];
     },
     enabled: !!environmentId,
   });
@@ -78,10 +78,9 @@ export const useDeleteSecret = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ environmentId, key }: DeleteSecretParams) => {
+    mutationFn: async ({ secretId }: DeleteSecretParams) => {
       const { data, error } = await supabase.rpc('delete_secret', {
-        p_environment_id: environmentId,
-        p_key: key,
+        p_secret_id: secretId,
       });
 
       if (error) throw error;
@@ -91,7 +90,7 @@ export const useDeleteSecret = () => {
       queryClient.invalidateQueries({ queryKey: ['secrets', variables.environmentId] });
       toast({
         title: 'Success',
-        description: `Variable ${variables.key} deleted successfully`,
+        description: 'Variable deleted successfully',
       });
     },
     onError: (error: Error) => {

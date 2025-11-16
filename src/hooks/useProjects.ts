@@ -68,7 +68,8 @@ export const useProjects = () => {
   });
 
   return {
-    projects,
+    projects: projects || [],
+    data: projects || [], // Alias for compatibility
     isLoading,
     createProject: createProjectMutation.mutate,
     deleteProject: deleteProjectMutation.mutate,
