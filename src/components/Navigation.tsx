@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Lock, LogOut } from "lucide-react";
+import { Lock, LogOut, Shield } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useUserRole } from "@/hooks/useUserRole";
 
 export const Navigation = () => {
   const { user, signOut } = useAuth();
+  const { isAdmin } = useUserRole();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg">
@@ -42,6 +44,12 @@ export const Navigation = () => {
                 <Link to="/dashboard/settings" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">
                   Settings
                 </Link>
+                {isAdmin && (
+                  <Link to="/admin" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors flex items-center gap-1">
+                    <Shield className="h-4 w-4" />
+                    Admin
+                  </Link>
+                )}
               </>
             )}
           </div>
