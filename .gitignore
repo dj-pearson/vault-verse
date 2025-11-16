@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# CLI build artifacts
+cli/bin/
+cli/dist/
+cli/coverage.out
+cli/coverage.html
+cli/completions/

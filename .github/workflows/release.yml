@@ -163,50 +163,33 @@ jobs:
             -o ${{ matrix.output }} \
             .
 
-      - name: Create tarball (Unix)
-        if: matrix.goos != 'windows'
+      - name: Calculate checksums
         working-directory: ./cli
         run: |
-          tar czf ${{ matrix.output }}.tar.gz ${{ matrix.output }}
-          shasum -a 256 ${{ matrix.output }}.tar.gz > ${{ matrix.output }}.tar.gz.sha256
+          if [ "${{ matrix.goos }}" = "windows" ]; then
+            sha256sum ${{ matrix.output }} > ${{ matrix.output }}.sha256
+          else
+            shasum -a 256 ${{ matrix.output }} > ${{ matrix.output }}.sha256
+          fi
 
-      - name: Create zip (Windows)
-        if: matrix.goos == 'windows'
-        working-directory: ./cli
-        run: |
-          zip ${{ matrix.output }}.zip ${{ matrix.output }}
-          sha256sum ${{ matrix.output }}.zip > ${{ matrix.output }}.zip.sha256
-
-      - name: Upload Release Asset (Unix)
-        if: matrix.goos != 'windows'
+      - name: Upload binary
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ./cli/${{ matrix.output }}.tar.gz
-          asset_name: ${{ matrix.output }}.tar.gz
-          asset_content_type: application/gzip
+          asset_path: ./cli/${{ matrix.output }}
+          asset_name: ${{ matrix.output }}
+          asset_content_type: application/octet-stream
 
-      - name: Upload Release Asset (Windows)
-        if: matrix.goos == 'windows'
+      - name: Upload checksum
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ./cli/${{ matrix.output }}.zip
-          asset_name: ${{ matrix.output }}.zip
-          asset_content_type: application/zip
-
-      - name: Upload Checksum
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ./cli/${{ matrix.output }}.${{ matrix.goos == 'windows' && 'zip' || 'tar.gz' }}.sha256
-          asset_name: ${{ matrix.output }}.${{ matrix.goos == 'windows' && 'zip' || 'tar.gz' }}.sha256
+          asset_path: ./cli/${{ matrix.output }}.sha256
+          asset_name: ${{ matrix.output }}.sha256
           asset_content_type: text/plain
 
   # Update Homebrew tap
@@ -223,50 +206,78 @@ jobs:
           token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
           path: homebrew-tap
 
-      - name: Download macOS AMD64 artifact
+      - name: Download and calculate checksums
         run: |
           VERSION="${{ needs.create-release.outputs.version }}"
-          curl -L -o envvault-darwin-amd64.tar.gz \
-            "https://github.com/${{ github.repository }}/releases/download/${VERSION}/envvault-darwin-amd64.tar.gz"
-          SHA256=$(sha256sum envvault-darwin-amd64.tar.gz | awk '{print $1}')
-          echo "SHA256_AMD64=${SHA256}" >> $GITHUB_ENV
 
-      - name: Download macOS ARM64 artifact
-        run: |
-          VERSION="${{ needs.create-release.outputs.version }}"
-          curl -L -o envvault-darwin-arm64.tar.gz \
-            "https://github.com/${{ github.repository }}/releases/download/${VERSION}/envvault-darwin-arm64.tar.gz"
-          SHA256=$(sha256sum envvault-darwin-arm64.tar.gz | awk '{print $1}')
-          echo "SHA256_ARM64=${SHA256}" >> $GITHUB_ENV
+          # Download binaries
+          curl -L -o envvault-darwin-amd64 \
+            "https://github.com/${{ github.repository }}/releases/download/${VERSION}/envvault-darwin-amd64"
+          curl -L -o envvault-darwin-arm64 \
+            "https://github.com/${{ github.repository }}/releases/download/${VERSION}/envvault-darwin-arm64"
+          curl -L -o envvault-linux-amd64 \
+            "https://github.com/${{ github.repository }}/releases/download/${VERSION}/envvault-linux-amd64"
+          curl -L -o envvault-linux-arm64 \
+            "https://github.com/${{ github.repository }}/releases/download/${VERSION}/envvault-linux-arm64"
+
+          # Calculate SHA256
+          echo "SHA256_DARWIN_AMD64=$(sha256sum envvault-darwin-amd64 | awk '{print $1}')" >> $GITHUB_ENV
+          echo "SHA256_DARWIN_ARM64=$(sha256sum envvault-darwin-arm64 | awk '{print $1}')" >> $GITHUB_ENV
+          echo "SHA256_LINUX_AMD64=$(sha256sum envvault-linux-amd64 | awk '{print $1}')" >> $GITHUB_ENV
+          echo "SHA256_LINUX_ARM64=$(sha256sum envvault-linux-arm64 | awk '{print $1}')" >> $GITHUB_ENV
 
       - name: Update Homebrew formula
         run: |
           VERSION="${{ needs.create-release.outputs.version }}"
           VERSION_NUMBER="${VERSION#v}"  # Remove 'v' prefix
 
-          cat > homebrew-tap/Formula/envvault.rb << 'EOF'
+          cat > homebrew-tap/Formula/envvault.rb << EOF
+          # Homebrew Formula for EnvVault CLI
+          # Auto-generated by CI/CD on release
+
           class Envvault < Formula
-            desc "Secure environment variable management for developers and teams"
+            desc "Secure, local-first environment variable management"
             homepage "https://envvault.com"
-            version "$VERSION_NUMBER"
+            version "${VERSION_NUMBER}"
+            license "MIT"
 
             on_macos do
               if Hardware::CPU.arm?
-                url "https://github.com/${{ github.repository }}/releases/download/$VERSION/envvault-darwin-arm64.tar.gz"
-                sha256 "${{ env.SHA256_ARM64 }}"
+                url "https://github.com/${{ github.repository }}/releases/download/${VERSION}/envvault-darwin-arm64"
+                sha256 "${{ env.SHA256_DARWIN_ARM64 }}"
               else
-                url "https://github.com/${{ github.repository }}/releases/download/$VERSION/envvault-darwin-amd64.tar.gz"
-                sha256 "${{ env.SHA256_AMD64 }}"
+                url "https://github.com/${{ github.repository }}/releases/download/${VERSION}/envvault-darwin-amd64"
+                sha256 "${{ env.SHA256_DARWIN_AMD64 }}"
+              end
+            end
+
+            on_linux do
+              if Hardware::CPU.arm?
+                url "https://github.com/${{ github.repository }}/releases/download/${VERSION}/envvault-linux-arm64"
+                sha256 "${{ env.SHA256_LINUX_ARM64 }}"
+              else
+                url "https://github.com/${{ github.repository }}/releases/download/${VERSION}/envvault-linux-amd64"
+                sha256 "${{ env.SHA256_LINUX_AMD64 }}"
               end
             end
 
             def install
-              bin.install "envvault-darwin-arm64" => "envvault" if Hardware::CPU.arm?
-              bin.install "envvault-darwin-amd64" => "envvault" if Hardware::CPU.intel?
+              bin.install "envvault-#{OS.kernel_name.downcase}-#{Hardware::CPU.arch}" => "envvault"
+
+              # Generate shell completions
+              output = Utils.safe_popen_read("#{bin}/envvault", "completion", "bash")
+              (bash_completion/"envvault").write output
+
+              output = Utils.safe_popen_read("#{bin}/envvault", "completion", "zsh")
+              (zsh_completion/"_envvault").write output
+
+              output = Utils.safe_popen_read("#{bin}/envvault", "completion", "fish")
+              (fish_completion/"envvault.fish").write output
             end
 
             test do
               system "#{bin}/envvault", "--version"
+              assert_match "envvault version", shell_output("#{bin}/envvault --version")
             end
           end
           EOF
@@ -296,8 +307,8 @@ jobs:
           node-version: 18
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Create npm package
-        working-directory: ./cli/npm
+      - name: Update package version
+        working-directory: ./cli/dist/npm
         run: |
           VERSION="${{ needs.create-release.outputs.version }}"
           VERSION_NUMBER="${VERSION#v}"  # Remove 'v' prefix
@@ -306,8 +317,8 @@ jobs:
           npm version $VERSION_NUMBER --no-git-tag-version
 
       - name: Publish to npm
-        working-directory: ./cli/npm
-        run: npm publish
+        working-directory: ./cli/dist/npm
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

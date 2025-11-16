@@ -1,0 +1,37 @@
+# npm package ignore file
+# Only include what's necessary for installation
+
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# CI/CD
+.github
+.travis.yml
+.circleci
+
+# Development files
+*.test.js
+*.spec.js
+test/
+tests/
+__tests__/
+coverage/
+
+# Build artifacts (binaries are downloaded post-install)
+bin/
+dist/
+build/
+
+# Documentation (except README)
+docs/
+*.md
+!README.md
+
+# Misc
+.DS_Store
+*.log
+node_modules/
+.env
+.env.*

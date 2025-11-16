@@ -3,6 +3,8 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { setUser as setSentryUser } from '@/lib/sentry';
+import { identifyUser, resetUser, trackEvent, AnalyticsEvents } from '@/lib/analytics';
 
 interface AuthContextType {
   user: User | null;
@@ -28,6 +30,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
+
+        // Update Sentry and PostHog user context
+        if (session?.user) {
+          setSentryUser({
+            id: session.user.id,
+            email: session.user.email,
+          });
+          identifyUser(session.user.id, {
+            email: session.user.email,
+            created_at: session.user.created_at,
+          });
+        } else {
+          setSentryUser(null);
+          resetUser();
+        }
       }
     );
 
@@ -36,6 +53,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+
+      // Update Sentry and PostHog user context
+      if (session?.user) {
+        setSentryUser({
+          id: session.user.id,
+          email: session.user.email,
+        });
+        identifyUser(session.user.id, {
+          email: session.user.email,
+          created_at: session.user.created_at,
+        });
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -55,7 +84,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (error) throw error;
-      
+
+      trackEvent(AnalyticsEvents.SIGNUP_COMPLETED, { email });
       toast.success('Account created! Please check your email to verify.');
       navigate('/login');
     } catch (error: any) {
@@ -72,7 +102,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (error) throw error;
-      
+
+      trackEvent(AnalyticsEvents.LOGIN_COMPLETED, { email });
       toast.success('Welcome back!');
       navigate('/dashboard');
     } catch (error: any) {
@@ -85,7 +116,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-      
+
+      trackEvent(AnalyticsEvents.LOGOUT);
       toast.success('Signed out successfully');
       navigate('/');
     } catch (error: any) {
