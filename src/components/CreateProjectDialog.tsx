@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useProjects } from "@/hooks/useProjects";
+import { usePlanLimits } from "@/hooks/usePlanLimits";
 
 interface CreateProjectDialogProps {
   open: boolean;
@@ -22,9 +23,16 @@ export const CreateProjectDialog = ({ open, onOpenChange }: CreateProjectDialogP
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const { createProject, isCreating } = useProjects();
+  const { checkCanCreateProject } = usePlanLimits();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Check plan limits before creating
+    if (!checkCanCreateProject()) {
+      return;
+    }
+
     createProject(
       { name, description },
       {
