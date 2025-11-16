@@ -96,7 +96,7 @@ async function install() {
     // Get binary name for platform
     const binaryName = getBinaryName();
     const isWindows = process.platform === 'win32';
-    const outputName = isWindows ? 'envvault.exe' : 'envvault';
+    const outputName = isWindows ? 'envault.exe' : 'envault';
 
     // Create bin directory
     if (!fs.existsSync(BIN_DIR)) {
@@ -104,7 +104,7 @@ async function install() {
     }
 
     // Construct download URL
-    const url = `https://github.com/${GITHUB_REPO}/releases/download/v${VERSION}/envvault-${binaryName}`;
+    const url = `https://github.com/${GITHUB_REPO}/releases/download/v${VERSION}/envault-${binaryName}`;
     const dest = path.join(BIN_DIR, outputName);
 
     // Download binary
@@ -119,10 +119,10 @@ async function install() {
     console.log(`Binary location: ${dest}`);
     console.log('');
     console.log('To get started, run:');
-    console.log('  envvault --help');
+    console.log('  envault --help');
     console.log('');
     console.log('For shell completions, run:');
-    console.log('  envvault completion <bash|zsh|fish>');
+    console.log('  envault completion <bash|zsh|fish>');
 
   } catch (error) {
     console.error('Failed to install EnvVault CLI:');

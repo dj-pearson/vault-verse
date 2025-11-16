@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/dj-pearson/envvault/cmd"
-	"github.com/dj-pearson/envvault/internal/crypto"
+	"github.com/dj-pearson/envault/cmd"
+	"github.com/dj-pearson/envault/internal/crypto"
 )
 
 var (

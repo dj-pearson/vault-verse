@@ -6,9 +6,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/dj-pearson/envvault/internal/config"
-	"github.com/dj-pearson/envvault/internal/models"
-	"github.com/dj-pearson/envvault/internal/storage"
+	"github.com/dj-pearson/envault/internal/config"
+	"github.com/dj-pearson/envault/internal/models"
+	"github.com/dj-pearson/envault/internal/storage"
 	"github.com/fatih/color"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
@@ -21,14 +21,14 @@ var (
 var projectsCmd = &cobra.Command{
 	Use:   "projects",
 	Short: "List all projects",
-	Long: `List all envvault projects stored locally.
+	Long: `List all envault projects stored locally.
 
 This shows all projects that have been initialized on this machine,
 including their sync status and basic metadata.
 
 Examples:
-  envvault projects
-  envvault projects --format json`,
+  envault projects
+  envault projects --format json`,
 	RunE: runProjects,
 }
 
@@ -61,7 +61,7 @@ func runProjects(cmd *cobra.Command, args []string) error {
 	}
 
 	if len(projects) == 0 {
-		yellow.Println("No projects found. Run 'envvault init' to create one.")
+		yellow.Println("No projects found. Run 'envault init' to create one.")
 		return nil
 	}
 

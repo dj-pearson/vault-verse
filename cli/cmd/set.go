@@ -5,10 +5,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/dj-pearson/envvault/internal/config"
-	"github.com/dj-pearson/envvault/internal/crypto"
-	"github.com/dj-pearson/envvault/internal/storage"
-	"github.com/dj-pearson/envvault/internal/utils"
+	"github.com/dj-pearson/envault/internal/config"
+	"github.com/dj-pearson/envault/internal/crypto"
+	"github.com/dj-pearson/envault/internal/storage"
+	"github.com/dj-pearson/envault/internal/utils"
 	"github.com/fatih/color"
 	"github.com/joho/godotenv"
 	"github.com/manifoldco/promptui"
@@ -30,10 +30,10 @@ If only the key is provided, you'll be prompted to enter the value securely (hid
 Values are encrypted using AES-256-GCM before being stored locally.
 
 Examples:
-  envvault set DATABASE_URL=postgres://localhost/mydb
-  envvault set API_KEY=sk_live_... --env production
-  envvault set API_KEY  # Hidden input prompt
-  envvault set --file .env.production --env production`,
+  envault set DATABASE_URL=postgres://localhost/mydb
+  envault set API_KEY=sk_live_... --env production
+  envault set API_KEY  # Hidden input prompt
+  envault set --file .env.production --env production`,
 	RunE: runSet,
 }
 
@@ -53,7 +53,7 @@ func runSet(cmd *cobra.Command, args []string) error {
 	// Load project context
 	ctx, err := utils.LoadProjectContext()
 	if err != nil {
-		return red.Sprintf("Error: %v\nRun 'envvault init' first", err)
+		return red.Sprintf("Error: %v\nRun 'envault init' first", err)
 	}
 
 	// Initialize services
@@ -86,7 +86,7 @@ func runSet(cmd *cobra.Command, args []string) error {
 
 	// Handle single key-value pair
 	if len(args) == 0 {
-		return fmt.Errorf("usage: envvault set KEY=value or envvault set KEY")
+		return fmt.Errorf("usage: envault set KEY=value or envault set KEY")
 	}
 
 	arg := args[0]

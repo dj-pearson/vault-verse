@@ -83,8 +83,8 @@
 
 **Days 1-2: CLI Distribution**
 - Create GitHub Releases (binaries for all platforms)
-- Set up Homebrew tap (`brew install envvault`)
-- Create npm wrapper (`npm install -g @envvault/cli`)
+- Set up Homebrew tap (`brew install envault`)
+- Create npm wrapper (`npm install -g @envault/cli`)
 - Write installation docs
 
 **Days 3-4: Backend Security (Phase 2)**
@@ -287,7 +287,7 @@ jobs:
 **Environment Configuration**:
 - Production Supabase instance
 - Environment variables in GitHub Secrets
-- Custom domain (e.g., envvault.com)
+- Custom domain (e.g., envault.net)
 - SSL certificates
 
 **Estimated Time**: 2 days
@@ -317,10 +317,10 @@ Sentry.init({ dsn: "..." });
 ```
 
 **BetterUptime (Uptime Monitoring)**:
-- Monitor: https://api.envvault.com/health
-- Monitor: https://envvault.com
+- Monitor: https://api.envault.net/health
+- Monitor: https://envault.net
 - Alert channels: Email, Slack
-- Status page: status.envvault.com
+- Status page: status.envault.net
 
 **PostHog (Analytics)**:
 ```typescript
@@ -434,21 +434,21 @@ jobs:
       - Update Homebrew formula
 ```
 
-**Homebrew Tap** (`homebrew/envvault.rb`):
+**Homebrew Tap** (`homebrew/envault.rb`):
 ```ruby
-class Envvault < Formula
+class Envault < Formula
   desc "Secure environment variable management"
-  homepage "https://envvault.com"
-  url "https://github.com/dj-pearson/vault-verse/releases/download/v1.0.0/envvault-darwin-amd64.tar.gz"
+  homepage "https://envault.net"
+  url "https://github.com/dj-pearson/vault-verse/releases/download/v1.0.0/envault-darwin-amd64.tar.gz"
   sha256 "..."
   version "1.0.0"
 
   def install
-    bin.install "envvault"
+    bin.install "envault"
   end
 
   test do
-    system "#{bin}/envvault", "--version"
+    system "#{bin}/envault", "--version"
   end
 end
 ```
@@ -456,17 +456,17 @@ end
 **Installation Instructions**:
 ```bash
 # macOS (Homebrew)
-brew tap envvault/tap
-brew install envvault
+brew tap envault/tap
+brew install envault
 
 # macOS/Linux (curl)
-curl -fsSL https://get.envvault.com | sh
+curl -fsSL https://get.envault.net | sh
 
 # Windows (PowerShell)
-iwr -useb https://get.envvault.com/windows | iex
+iwr -useb https://get.envault.net/windows | iex
 
 # npm (all platforms)
-npm install -g @envvault/cli
+npm install -g @envault/cli
 ```
 
 **Estimated Time**: 4 hours

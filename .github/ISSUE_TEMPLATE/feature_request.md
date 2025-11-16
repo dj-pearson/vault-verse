@@ -33,7 +33,7 @@ Have you considered any alternative solutions or features? Please describe them.
 (If applicable) Show how the CLI command might look:
 
 ```bash
-envvault new-command --option value
+envault new-command --option value
 ```
 
 ## UI Mockup

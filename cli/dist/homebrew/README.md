@@ -7,20 +7,20 @@ This directory contains the Homebrew formula for EnvVault CLI.
 ### Installation
 
 ```bash
-brew tap envvault/tap
-brew install envvault
+brew tap envault/tap
+brew install envault
 ```
 
 Or install in one command:
 
 ```bash
-brew install envvault/tap/envvault
+brew install envault/tap/envault
 ```
 
 ### Usage
 
 ```bash
-envvault --help
+envault --help
 ```
 
 ## For Maintainers
@@ -30,24 +30,24 @@ envvault --help
 1. **Create GitHub repository**:
    ```bash
    # Repository name MUST be: homebrew-tap
-   # URL will be: https://github.com/envvault/homebrew-tap
+   # URL will be: https://github.com/envault/homebrew-tap
    ```
 
 2. **Initialize repository**:
    ```bash
-   git clone https://github.com/envvault/homebrew-tap.git
+   git clone https://github.com/envault/homebrew-tap.git
    cd homebrew-tap
    mkdir Formula
    ```
 
 3. **Copy formula**:
    ```bash
-   cp /path/to/vault-verse/cli/dist/homebrew/envvault.rb Formula/
+   cp /path/to/vault-verse/cli/dist/homebrew/envault.rb Formula/
    ```
 
 4. **Commit and push**:
    ```bash
-   git add Formula/envvault.rb
+   git add Formula/envault.rb
    git commit -m "Add EnvVault formula"
    git push origin main
    ```
@@ -62,11 +62,11 @@ The formula is automatically updated by CI/CD on each release. Manual updates:
 2. **Update SHA256 checksums**:
    ```bash
    # Download binaries
-   curl -LO https://github.com/dj-pearson/vault-verse/releases/download/v1.0.0/envvault-darwin-arm64
+   curl -LO https://github.com/dj-pearson/vault-verse/releases/download/v1.0.0/envault-darwin-arm64
 
    # Calculate checksum
-   shasum -a 256 envvault-darwin-arm64
-   # Output: abc123... envvault-darwin-arm64
+   shasum -a 256 envault-darwin-arm64
+   # Output: abc123... envault-darwin-arm64
 
    # Update SHA256_ARM64_PLACEHOLDER with the hash
    ```
@@ -79,14 +79,14 @@ The formula is automatically updated by CI/CD on each release. Manual updates:
 
 4. **Test locally**:
    ```bash
-   brew install --build-from-source Formula/envvault.rb
-   brew test envvault
-   brew audit --strict envvault
+   brew install --build-from-source Formula/envault.rb
+   brew test envault
+   brew audit --strict envault
    ```
 
 5. **Commit and push**:
    ```bash
-   git add Formula/envvault.rb
+   git add Formula/envault.rb
    git commit -m "Update to version 1.0.0"
    git push origin main
    ```
@@ -107,16 +107,16 @@ See `.github/workflows/release.yml` for details.
 
 ```bash
 # Install from local formula
-brew install --build-from-source Formula/envvault.rb
+brew install --build-from-source Formula/envault.rb
 
 # Test the formula
-brew test envvault
+brew test envault
 
 # Audit the formula
-brew audit --strict envvault
+brew audit --strict envault
 
 # Uninstall
-brew uninstall envvault
+brew uninstall envault
 ```
 
 ### Formula Template Variables
@@ -134,7 +134,7 @@ The formula template contains placeholders that are replaced during release:
 **Formula not found**:
 ```bash
 brew update
-brew tap envvault/tap
+brew tap envault/tap
 ```
 
 **Checksum mismatch**:
@@ -142,7 +142,7 @@ brew tap envvault/tap
 - Ensure version matches release tag
 
 **Installation fails**:
-- Check formula syntax: `brew audit Formula/envvault.rb`
+- Check formula syntax: `brew audit Formula/envault.rb`
 - Test locally before pushing
 - Review CI/CD logs for errors
 

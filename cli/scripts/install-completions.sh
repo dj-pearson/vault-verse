@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Shell completion installation script for envvault
+# Shell completion installation script for envault
 # Automatically detects your shell and installs completions
 
 set -e
@@ -38,14 +38,14 @@ detect_shell() {
     fi
 }
 
-# Check if envvault is installed
-check_envvault() {
-    if ! command -v envvault &> /dev/null; then
-        echo -e "${RED}Error: envvault is not installed or not in PATH${NC}"
-        echo "Please install envvault first:"
-        echo "  brew install envvault/tap/envvault"
+# Check if envault is installed
+check_envault() {
+    if ! command -v envault &> /dev/null; then
+        echo -e "${RED}Error: envault is not installed or not in PATH${NC}"
+        echo "Please install envault first:"
+        echo "  brew install envault/tap/envault"
         echo "  or"
-        echo "  npm install -g @envvault/cli"
+        echo "  npm install -g @envault/cli"
         exit 1
     fi
 }
@@ -75,12 +75,12 @@ install_bash() {
     mkdir -p "$COMPLETION_DIR"
 
     # Generate and install completion
-    envvault completion bash > "$COMPLETION_DIR/envvault"
+    envault completion bash > "$COMPLETION_DIR/envault"
 
-    echo -e "${GREEN}✓ Bash completion installed to $COMPLETION_DIR/envvault${NC}"
+    echo -e "${GREEN}✓ Bash completion installed to $COMPLETION_DIR/envault${NC}"
     echo ""
     echo "To use completions, reload your shell or run:"
-    echo "  source $COMPLETION_DIR/envvault"
+    echo "  source $COMPLETION_DIR/envault"
 }
 
 # Install zsh completion
@@ -98,9 +98,9 @@ install_zsh() {
     mkdir -p "$COMPLETION_DIR"
 
     # Generate and install completion
-    envvault completion zsh > "$COMPLETION_DIR/_envvault"
+    envault completion zsh > "$COMPLETION_DIR/_envault"
 
-    echo -e "${GREEN}✓ Zsh completion installed to $COMPLETION_DIR/_envvault${NC}"
+    echo -e "${GREEN}✓ Zsh completion installed to $COMPLETION_DIR/_envault${NC}"
     echo ""
     echo "Make sure the following is in your ~/.zshrc:"
     echo "  fpath=($COMPLETION_DIR \$fpath)"
@@ -121,9 +121,9 @@ install_fish() {
     mkdir -p "$COMPLETION_DIR"
 
     # Generate and install completion
-    envvault completion fish > "$COMPLETION_DIR/envvault.fish"
+    envault completion fish > "$COMPLETION_DIR/envault.fish"
 
-    echo -e "${GREEN}✓ Fish completion installed to $COMPLETION_DIR/envvault.fish${NC}"
+    echo -e "${GREEN}✓ Fish completion installed to $COMPLETION_DIR/envault.fish${NC}"
     echo ""
     echo "Completions are automatically loaded in fish."
     echo "Start a new shell to use them."
@@ -135,8 +135,8 @@ main() {
     echo "===================================="
     echo ""
 
-    # Check if envvault is installed
-    check_envvault
+    # Check if envault is installed
+    check_envault
 
     # Detect shell
     SHELL_TYPE=$(detect_shell)

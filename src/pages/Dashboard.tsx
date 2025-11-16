@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, Folder, Trash2 } from "lucide-react";
 import { CreateProjectDialog } from "@/components/CreateProjectDialog";
+import { OnboardingDialog } from "@/components/OnboardingDialog";
 import { useProjects } from "@/hooks/useProjects";
 import { Link } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
@@ -10,7 +11,27 @@ import { UsageLimitsBadge } from "@/components/UsageLimitsBadge";
 
 export default function Dashboard() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const { projects, isLoading, deleteProject } = useProjects();
+
+  useEffect(() => {
+    // Check if user has completed onboarding
+    const onboardingCompleted = localStorage.getItem('envault_onboarding_completed');
+    if (!onboardingCompleted && !isLoading) {
+      // Show onboarding after a small delay for better UX
+      const timer = setTimeout(() => {
+        setShowOnboarding(true);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading]);
+
+  const handleOnboardingClose = (open: boolean) => {
+    if (!open) {
+      localStorage.setItem('envault_onboarding_completed', 'true');
+    }
+    setShowOnboarding(open);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -84,6 +105,11 @@ export default function Dashboard() {
       <CreateProjectDialog
         open={isCreateDialogOpen}
         onOpenChange={setIsCreateDialogOpen}
+      />
+
+      <OnboardingDialog
+        open={showOnboarding}
+        onOpenChange={handleOnboardingClose}
       />
     </div>
   );

@@ -221,21 +221,21 @@ export default function Features() {
                 <Globe className="h-8 w-8 mx-auto mb-3 text-primary" />
                 <h3 className="font-semibold mb-2">macOS</h3>
                 <p className="text-sm text-muted-foreground mb-3">Intel & Apple Silicon</p>
-                <code className="text-xs bg-muted px-2 py-1 rounded">brew install envvault</code>
+                <code className="text-xs bg-muted px-2 py-1 rounded">brew install envault</code>
               </Card>
 
               <Card className="p-6 text-center">
                 <Globe className="h-8 w-8 mx-auto mb-3 text-primary" />
                 <h3 className="font-semibold mb-2">Linux</h3>
                 <p className="text-sm text-muted-foreground mb-3">x64 & ARM64</p>
-                <code className="text-xs bg-muted px-2 py-1 rounded">curl -sSL get.envvault.dev | sh</code>
+                <code className="text-xs bg-muted px-2 py-1 rounded">curl -sSL get.envault.dev | sh</code>
               </Card>
 
               <Card className="p-6 text-center">
                 <Globe className="h-8 w-8 mx-auto mb-3 text-primary" />
                 <h3 className="font-semibold mb-2">Windows</h3>
                 <p className="text-sm text-muted-foreground mb-3">x64</p>
-                <code className="text-xs bg-muted px-2 py-1 rounded">scoop install envvault</code>
+                <code className="text-xs bg-muted px-2 py-1 rounded">scoop install envault</code>
               </Card>
             </div>
           </div>

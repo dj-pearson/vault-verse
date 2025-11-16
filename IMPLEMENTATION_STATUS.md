@@ -11,12 +11,12 @@ EnvVault is now **95% complete** with a production-ready CLI, comprehensive back
 ### **1. Complete CLI Tool** (100% - ALL features complete!)
 
 #### Core Features
-- ✅ `envvault init` - Project initialization with multi-environment support
-- ✅ `envvault set/get/list/unset` - Full encrypted variable management
-- ✅ `envvault run` - Command execution with environment injection
-- ✅ `envvault import/export` - .env file compatibility (dotenv, JSON, YAML)
-- ✅ `envvault env list/create/delete/copy` - Complete environment CRUD
-- ✅ `envvault projects/status` - Project management
+- ✅ `envault init` - Project initialization with multi-environment support
+- ✅ `envault set/get/list/unset` - Full encrypted variable management
+- ✅ `envault run` - Command execution with environment injection
+- ✅ `envault import/export` - .env file compatibility (dotenv, JSON, YAML)
+- ✅ `envault env list/create/delete/copy` - Complete environment CRUD
+- ✅ `envault projects/status` - Project management
 
 #### Security Implementation
 - ✅ AES-256-GCM authenticated encryption
@@ -170,10 +170,10 @@ EnvVault is now **95% complete** with a production-ready CLI, comprehensive back
 ### **Critical Missing Features**
 
 #### 1. CLI Team Features ✅ COMPLETE
-- ✅ `envvault login` - Authenticate CLI with backend
-- ✅ `envvault logout` - Clear authentication session
-- ✅ `envvault sync` - Push/pull encrypted blobs
-- ✅ `envvault team` - Team member management (list, invite, remove)
+- ✅ `envault login` - Authenticate CLI with backend
+- ✅ `envault logout` - Clear authentication session
+- ✅ `envault sync` - Push/pull encrypted blobs
+- ✅ `envault team` - Team member management (list, invite, remove)
 
 **Status**: Complete!
 **Dependencies**: Backend API ✅ (complete)
@@ -239,20 +239,20 @@ EnvVault is now **95% complete** with a production-ready CLI, comprehensive back
 #### ✅ Solo Developer (100% functional)
 ```bash
 # 1. Initialize project
-envvault init my-app
+envault init my-app
 
 # 2. Add secrets
-envvault set DATABASE_URL=postgres://localhost/mydb
-envvault set API_KEY=sk_test_123
+envault set DATABASE_URL=postgres://localhost/mydb
+envault set API_KEY=sk_test_123
 
 # 3. List secrets
-envvault list --show-values
+envault list --show-values
 
 # 4. Run with env
-envvault run npm start
+envault run npm start
 
 # 5. Export for deployment
-envvault export --output .env.production
+envault export --output .env.production
 ```
 
 #### ✅ Web Dashboard (100% functional)
@@ -508,20 +508,20 @@ The project demonstrates **professional software engineering** with:
 ### CLI Team Features - COMPLETE
 Just implemented the final 3 CLI commands to reach 100% PRD completion:
 
-1. **`envvault login/logout`**
+1. **`envault login/logout`**
    - Token-based authentication
    - Session management with expiration
    - Manual and browser-based flows
    - Secure token storage
 
-2. **`envvault sync`**
+2. **`envault sync`**
    - Push/pull encrypted blobs to cloud
    - Checksum verification
    - Conflict detection
    - Zero-knowledge architecture maintained
    - Force sync option
 
-3. **`envvault team`**
+3. **`envault team`**
    - List team members
    - Invite with role selection (admin/developer/viewer)
    - Remove members with confirmation
@@ -605,10 +605,10 @@ Completed the sync command implementation with production-ready features:
    - ✅ Release notes generation
 
 **Distribution Channels Ready**:
-- ✅ Homebrew: `brew install envvault/tap/envvault`
-- ✅ npm: `npm install -g @envvault/cli`
+- ✅ Homebrew: `brew install envault/tap/envault`
+- ✅ npm: `npm install -g @envault/cli`
 - ✅ GitHub Releases: Direct downloads
-- ✅ curl installer: `curl -fsSL https://get.envvault.com | sh`
+- ✅ curl installer: `curl -fsSL https://get.envault.net | sh`
 
 **Status**: **Production deployment ready** 🚀
 
@@ -723,8 +723,8 @@ Completed the sync command implementation with production-ready features:
    - ✅ Global flags documentation
    - ✅ Each command: usage, flags, examples, output
    - ✅ Exit codes for scripting
-   - ✅ Configuration files (.envvault, config.yml)
-   - ✅ Environment variables (ENVVAULT_*)
+   - ✅ Configuration files (.envault, config.yml)
+   - ✅ Environment variables (ENVAULT_*)
    - ✅ Tips & tricks (shell aliases, Docker, Git hooks)
    - ✅ Troubleshooting guide
 

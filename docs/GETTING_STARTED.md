@@ -26,18 +26,18 @@ Choose your platform:
 
 #### macOS (Homebrew)
 ```bash
-brew tap envvault/tap
-brew install envvault
+brew tap envault/tap
+brew install envault
 ```
 
 #### macOS/Linux (curl)
 ```bash
-curl -fsSL https://get.envvault.com | sh
+curl -fsSL https://get.envault.net | sh
 ```
 
 #### npm (all platforms)
 ```bash
-npm install -g @envvault/cli
+npm install -g @envault/cli
 ```
 
 #### Manual Download
@@ -45,7 +45,7 @@ Download the binary for your platform from [GitHub Releases](https://github.com/
 
 **Verify installation:**
 ```bash
-envvault --version
+envault --version
 ```
 
 ---
@@ -57,7 +57,7 @@ envvault --version
 cd my-project
 
 # Initialize EnvVault
-envvault init
+envault init
 
 # You'll be prompted for:
 # - Project name (default: folder name)
@@ -65,9 +65,9 @@ envvault init
 ```
 
 This creates:
-- `.envvault` file (project configuration)
-- `~/.envvault/` directory (encrypted database)
-- Automatically adds `.envvault` to `.gitignore`
+- `.envault` file (project configuration)
+- `~/.envault/` directory (encrypted database)
+- Automatically adds `.envault` to `.gitignore`
 
 ---
 
@@ -75,16 +75,16 @@ This creates:
 
 ```bash
 # Add a secret
-envvault set DATABASE_URL "postgresql://localhost/mydb"
+envault set DATABASE_URL "postgresql://localhost/mydb"
 
 # View your secrets
-envvault list
+envault list
 
 # Get a specific secret
-envvault get DATABASE_URL
+envault get DATABASE_URL
 
 # Run a command with secrets injected
-envvault run npm start
+envault run npm start
 ```
 
 **That's it!** Your secrets are now encrypted and stored securely.
@@ -98,24 +98,24 @@ envvault run npm start
 ```bash
 # 1. Initialize project
 cd my-app
-envvault init
+envault init
 
 # 2. Add secrets
-envvault set API_KEY "sk_live_..."
-envvault set DATABASE_URL "postgresql://..."
+envault set API_KEY "sk_live_..."
+envault set DATABASE_URL "postgresql://..."
 
 # 3. Create different environments
-envvault env create staging
-envvault env create production
+envault env create staging
+envault env create production
 
 # 4. Add environment-specific secrets
-envvault set --env staging DATABASE_URL "postgresql://staging-db/app"
-envvault set --env production DATABASE_URL "postgresql://prod-db/app"
+envault set --env staging DATABASE_URL "postgresql://staging-db/app"
+envault set --env production DATABASE_URL "postgresql://prod-db/app"
 
 # 5. Run commands with the right environment
-envvault run --env development npm run dev
-envvault run --env staging npm run test
-envvault run --env production npm start
+envault run --env development npm run dev
+envault run --env staging npm run test
+envault run --env production npm start
 ```
 
 ---
@@ -124,34 +124,34 @@ envvault run --env production npm start
 
 ```bash
 # Team Admin:
-# 1. Sign up at https://envvault.com
+# 1. Sign up at https://envault.net
 # 2. Login to CLI
-envvault login
+envault login
 
 # 3. Initialize project with sync
 cd team-project
-envvault init --sync
+envault init --sync
 
 # 4. Add secrets and push to team
-envvault set DATABASE_URL "postgresql://..."
-envvault sync --push
+envault set DATABASE_URL "postgresql://..."
+envault sync --push
 
 # Team Members:
 # 1. Login to CLI
-envvault login
+envault login
 
 # 2. Clone the repo
 git clone <repo-url>
 cd team-project
 
 # 3. Pull secrets from team
-envvault sync --pull
+envault sync --pull
 
 # 4. Start working!
-envvault run npm start
+envault run npm start
 
 # Whenever secrets change:
-envvault sync  # Two-way sync
+envault sync  # Two-way sync
 ```
 
 ---
@@ -160,16 +160,16 @@ envvault sync  # Two-way sync
 
 ```bash
 # Import from .env file
-envvault import .env
+envault import .env
 
 # Import to specific environment
-envvault import .env.staging --env staging
+envault import .env.staging --env staging
 
 # Import from JSON
-envvault import secrets.json --format json
+envault import secrets.json --format json
 
 # Import from YAML
-envvault import config.yaml --format yaml
+envault import config.yaml --format yaml
 ```
 
 ---
@@ -178,16 +178,16 @@ envvault import config.yaml --format yaml
 
 ```bash
 # Export current environment to .env
-envvault export .env
+envault export .env
 
 # Export specific environment
-envvault export .env.production --env production
+envault export .env.production --env production
 
 # Export to JSON (all environments)
-envvault export secrets.json --format json --all-envs
+envault export secrets.json --format json --all-envs
 
 # Export to shell format
-envvault export vars.sh --format shell
+envault export vars.sh --format shell
 ```
 
 **⚠️ Warning**: Exported files contain plaintext secrets! Add them to `.gitignore`.
@@ -200,18 +200,18 @@ EnvVault supports multiple environments per project:
 
 ```bash
 # Create environments
-envvault env create development
-envvault env create staging
-envvault env create production
+envault env create development
+envault env create staging
+envault env create production
 
 # List all environments
-envvault env list
+envault env list
 
 # Copy secrets between environments
-envvault env copy development staging
+envault env copy development staging
 
 # Delete an environment
-envvault env delete old-env
+envault env delete old-env
 ```
 
 **Default environment**: `development`
@@ -235,7 +235,7 @@ envvault env delete old-env
 - ❌ Share secrets via Slack/email
 - ❌ Use the same secrets in development and production
 - ❌ Give everyone production access
-- ❌ Skip the `envvault run` command (secrets stay encrypted)
+- ❌ Skip the `envault run` command (secrets stay encrypted)
 
 ---
 
@@ -243,7 +243,7 @@ envvault env delete old-env
 
 ### Where are my secrets stored?
 
-**Locally**: Encrypted in `~/.envvault/data/projects.db` using AES-256-GCM
+**Locally**: Encrypted in `~/.envault/data/projects.db` using AES-256-GCM
 **Team sync**: Encrypted blobs in Supabase (server never sees plaintext)
 **Master key**: Stored in your OS keychain (macOS Keychain, Windows Credential Manager, Linux Secret Service)
 
@@ -251,7 +251,7 @@ envvault env delete old-env
 
 ```bash
 # Export all environments
-envvault export backup.json --format json --all-envs
+envault export backup.json --format json --all-envs
 
 # Store backup.json in a secure location (encrypted storage)
 ```
@@ -265,15 +265,15 @@ Yes! Two approaches:
 # GitHub Actions example
 - name: Load secrets
   run: |
-    envvault login --token ${{ secrets.ENVVAULT_TOKEN }}
-    envvault sync --pull
-    envvault run npm test
+    envault login --token ${{ secrets.ENVAULT_TOKEN }}
+    envault sync --pull
+    envault run npm test
 ```
 
 **Approach 2: Export to CI secrets**
 ```bash
 # Export and set as GitHub secrets manually
-envvault export --format shell
+envault export --format shell
 ```
 
 ### How do I share secrets with new team members?
@@ -281,15 +281,15 @@ envvault export --format shell
 ```bash
 # Admin adds team member in dashboard
 # Team member runs:
-envvault login
+envault login
 cd project
-envvault sync --pull
+envault sync --pull
 ```
 
 ### What if I forget my password?
 
 - Local secrets: Protected by OS keychain, still accessible
-- Team secrets: Use account recovery at envvault.com
+- Team secrets: Use account recovery at envault.net
 - **Important**: No one (including us) can decrypt your secrets without your master key
 
 ### Is EnvVault open source?
@@ -313,11 +313,11 @@ Yes! EnvVault is open source under the MIT license.
 
 ## Getting Help
 
-- 📚 **Documentation**: https://docs.envvault.com
-- 💬 **Discord**: https://discord.gg/envvault
+- 📚 **Documentation**: https://docs.envault.net
+- 💬 **Discord**: https://discord.gg/envault
 - 🐛 **Report bugs**: https://github.com/dj-pearson/vault-verse/issues
-- 📧 **Email support**: support@envvault.com
+- 📧 **Email support**: support@envault.net
 
 ---
 
-**Ready to secure your secrets?** `envvault init` 🚀
+**Ready to secure your secrets?** `envault init` 🚀

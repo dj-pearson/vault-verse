@@ -23,39 +23,39 @@ make install
 
 ### Pre-built Binaries
 
-Download from the [releases page](https://github.com/dj-pearson/envvault/releases).
+Download from the [releases page](https://github.com/dj-pearson/envault/releases).
 
 ### Package Managers (Coming Soon)
 
 ```bash
 # Homebrew
-brew install envvault
+brew install envault
 
 # npm
-npm install -g envvault
+npm install -g envault
 ```
 
 ## Quick Start
 
 ```bash
 # Initialize a new project
-envvault init my-app
+envault init my-app
 
 # Add environment variables
-envvault set DATABASE_URL=postgres://localhost/mydb
-envvault set API_KEY  # Hidden input for secrets
+envault set DATABASE_URL=postgres://localhost/mydb
+envault set API_KEY  # Hidden input for secrets
 
 # List all variables (values masked by default)
-envvault list
+envault list
 
 # Get a specific variable
-envvault get DATABASE_URL
+envault get DATABASE_URL
 
 # Run a command with variables injected
-envvault run npm start
+envault run npm start
 
 # Export to .env file
-envvault export --output .env
+envault export --output .env
 ```
 
 ## Commands
@@ -63,42 +63,42 @@ envvault export --output .env
 ### Project Management
 
 ```bash
-envvault init [name]        # Initialize new project
-envvault status             # Show project status
-envvault projects           # List all projects
+envault init [name]        # Initialize new project
+envault status             # Show project status
+envault projects           # List all projects
 ```
 
 ### Variable Management
 
 ```bash
-envvault set KEY=value      # Set a variable
-envvault get KEY            # Get a variable value
-envvault list               # List all variables
-envvault unset KEY          # Remove a variable
+envault set KEY=value      # Set a variable
+envault get KEY            # Get a variable value
+envault list               # List all variables
+envault unset KEY          # Remove a variable
 ```
 
 ### Environment Management
 
 ```bash
-envvault env list           # List environments
-envvault env create NAME    # Create environment
-envvault env delete NAME    # Delete environment
-envvault env copy SRC DST   # Copy variables between environments
+envault env list           # List environments
+envault env create NAME    # Create environment
+envault env delete NAME    # Delete environment
+envault env copy SRC DST   # Copy variables between environments
 ```
 
 ### Import/Export
 
 ```bash
-envvault import .env        # Import from .env file
-envvault export             # Export to stdout
-envvault export -o .env     # Export to file
+envault import .env        # Import from .env file
+envault export             # Export to stdout
+envault export -o .env     # Export to file
 ```
 
 ### Run Commands
 
 ```bash
-envvault run <command>      # Run command with env vars
-envvault run --env prod node server.js
+envault run <command>      # Run command with env vars
+envault run --env prod node server.js
 ```
 
 ## Security Features
@@ -125,7 +125,7 @@ The CLI includes multiple safety features:
 ### Local Storage
 
 ```
-~/.envvault/
+~/.envault/
 ├── config.yml              # Global configuration
 ├── auth/
 │   ├── session.json        # Authentication session
@@ -169,8 +169,8 @@ sync_metadata     # Sync state tracking
 
 The CLI respects these environment variables:
 
-- `ENVVAULT_CONFIG`: Custom config file path
-- `ENVVAULT_DEBUG`: Enable debug logging
+- `ENVAULT_CONFIG`: Custom config file path
+- `ENVAULT_DEBUG`: Enable debug logging
 
 ## Development
 
@@ -213,6 +213,6 @@ MIT
 
 ## Support
 
-- Documentation: https://envvault.dev/docs
-- Issues: https://github.com/dj-pearson/envvault/issues
-- Email: support@envvault.dev
+- Documentation: https://envault.dev/docs
+- Issues: https://github.com/dj-pearson/envault/issues
+- Email: support@envault.dev

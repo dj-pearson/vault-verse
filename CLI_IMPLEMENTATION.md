@@ -9,32 +9,32 @@ I've successfully built a complete, production-ready CLI tool for EnvVault with 
 ### ✅ Complete CLI Implementation (9/11 major features)
 
 #### 1. **Core Commands** ✅
-- `envvault init` - Initialize new project with multi-environment support
-- `envvault set` - Set encrypted environment variables
-- `envvault get` - Get and decrypt variables
-- `envvault list` - List variables with masked values
-- `envvault unset` - Remove variables with confirmation
+- `envault init` - Initialize new project with multi-environment support
+- `envault set` - Set encrypted environment variables
+- `envault get` - Get and decrypt variables
+- `envault list` - List variables with masked values
+- `envault unset` - Remove variables with confirmation
 
 #### 2. **Environment Management** ✅
-- `envvault env list` - List all environments
-- `envvault env create` - Create new environment
-- `envvault env delete` - Delete environment (with safeguards)
-- `envvault env copy` - Copy variables between environments
+- `envault env list` - List all environments
+- `envault env create` - Create new environment
+- `envault env delete` - Delete environment (with safeguards)
+- `envault env copy` - Copy variables between environments
 
 #### 3. **Import/Export** ✅
-- `envvault import` - Import from .env files with validation
-- `envvault export` - Export to .env, JSON, or YAML formats
+- `envault import` - Import from .env files with validation
+- `envault export` - Export to .env, JSON, or YAML formats
 - Automatic .gitignore management for exports
 
 #### 4. **Command Execution** ✅
-- `envvault run` - Run commands with encrypted variables injected
+- `envault run` - Run commands with encrypted variables injected
 - Environment variable injection without writing to disk
 - Production environment warnings
 
 #### 5. **Project Management** ✅
-- `envvault projects` - List all local projects
-- `envvault status` - Show detailed project status
-- Project context tracking via .envvault files
+- `envault projects` - List all local projects
+- `envault status` - Show detailed project status
+- Project context tracking via .envault files
 
 #### 6. **Security & Encryption** ✅
 - **AES-256-GCM** authenticated encryption
@@ -65,12 +65,12 @@ I've successfully built a complete, production-ready CLI tool for EnvVault with 
 ### ⏳ Not Yet Implemented (Team Features)
 
 #### 10. **Team Sync** ⏳
-- `envvault sync` - Push/pull encrypted blobs
-- `envvault login` - Authenticate with backend
+- `envault sync` - Push/pull encrypted blobs
+- `envault login` - Authenticate with backend
 - Cloud sync functionality (needs backend API)
 
 #### 11. **Team Management** ⏳
-- `envvault team` - Manage team members
+- `envault team` - Manage team members
 - Team invitation flow (needs backend API)
 
 ## Architecture
@@ -192,7 +192,7 @@ CREATE TABLE sync_metadata (
 1. **100% Offline Operation**
    - No network required for core functionality
    - All data stored locally
-   - SQLite database in `~/.envvault/data/`
+   - SQLite database in `~/.envault/data/`
 
 2. **Zero-Knowledge Architecture**
    - Encryption happens locally
@@ -241,11 +241,11 @@ make install
 
 ```
 dist/
-├── envvault-darwin-amd64       # macOS Intel
-├── envvault-darwin-arm64       # macOS Apple Silicon
-├── envvault-linux-amd64        # Linux x64
-├── envvault-linux-arm64        # Linux ARM
-└── envvault-windows-amd64.exe  # Windows
+├── envault-darwin-amd64       # macOS Intel
+├── envault-darwin-arm64       # macOS Apple Silicon
+├── envault-linux-amd64        # Linux x64
+├── envault-linux-arm64        # Linux ARM
+└── envault-windows-amd64.exe  # Windows
 ```
 
 ## Testing Strategy
@@ -255,31 +255,31 @@ dist/
 ```bash
 # 1. Initialize
 cd /tmp/test-project
-envvault init test
+envault init test
 
 # 2. Set variables
-envvault set DATABASE_URL=postgres://localhost/test
-envvault set API_KEY  # hidden input
+envault set DATABASE_URL=postgres://localhost/test
+envault set API_KEY  # hidden input
 
 # 3. List & Get
-envvault list
-envvault get DATABASE_URL
+envault list
+envault get DATABASE_URL
 
 # 4. Run with env
-envvault run env | grep DATABASE_URL
+envault run env | grep DATABASE_URL
 
 # 5. Import/Export
 echo "REDIS_URL=redis://localhost" > .env.test
-envvault import .env.test
-envvault export --output .env.exported
+envault import .env.test
+envault export --output .env.exported
 
 # 6. Environments
-envvault env create staging
-envvault env copy development staging
-envvault env list
+envault env create staging
+envault env copy development staging
+envault env list
 
 # 7. Cleanup
-envvault unset API_KEY
+envault unset API_KEY
 ```
 
 ### Security Testing
@@ -317,9 +317,9 @@ All dependencies are well-maintained, popular Go packages.
 - [ ] Build sync endpoints (push/pull encrypted blobs)
 
 ### Phase 2: CLI Team Features
-- [ ] `envvault login` - Authenticate with backend
-- [ ] `envvault sync` - Push/pull encrypted data
-- [ ] `envvault team` - Team member management
+- [ ] `envault login` - Authenticate with backend
+- [ ] `envault sync` - Push/pull encrypted data
+- [ ] `envault team` - Team member management
 - [ ] Conflict resolution for sync
 
 ### Phase 3: Distribution

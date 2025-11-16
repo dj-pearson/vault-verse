@@ -3,7 +3,7 @@
 .PHONY: build install test clean help completions install-completions
 
 # Variables
-BINARY_NAME=envvault
+BINARY_NAME=envault
 VERSION?=dev
 BUILD_TIME=$(shell date -u '+%Y-%m-%d_%H:%M:%S')
 LDFLAGS=-ldflags "-X main.Version=$(VERSION) -X main.BuildTime=$(BUILD_TIME)"
@@ -91,10 +91,10 @@ dev:
 completions: build
 	@echo "Generating shell completions..."
 	@mkdir -p completions
-	@bin/$(BINARY_NAME) completion bash > completions/envvault.bash
-	@bin/$(BINARY_NAME) completion zsh > completions/envvault.zsh
-	@bin/$(BINARY_NAME) completion fish > completions/envvault.fish
-	@bin/$(BINARY_NAME) completion powershell > completions/envvault.ps1
+	@bin/$(BINARY_NAME) completion bash > completions/envault.bash
+	@bin/$(BINARY_NAME) completion zsh > completions/envault.zsh
+	@bin/$(BINARY_NAME) completion fish > completions/envault.fish
+	@bin/$(BINARY_NAME) completion powershell > completions/envault.ps1
 	@echo "✓ Generated completions in completions/"
 
 # Install shell completions

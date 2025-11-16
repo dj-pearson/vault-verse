@@ -120,7 +120,7 @@ We successfully completed all critical infrastructure tasks (skipping payment an
 - `.gitignore` - Ignore generated completions
 
 **Features Implemented**:
-- ✅ `envvault completion` command
+- ✅ `envault completion` command
 - ✅ Support for bash, zsh, fish, powershell
 - ✅ Auto-install script
 - ✅ Platform-aware installation
@@ -135,15 +135,15 @@ make completions
 make install-completions
 
 # Manual installation
-envvault completion bash > /etc/bash_completion.d/envvault
-envvault completion zsh > "${fpath[1]}/_envvault"
-envvault completion fish > ~/.config/fish/completions/envvault.fish
+envault completion bash > /etc/bash_completion.d/envault
+envault completion zsh > "${fpath[1]}/_envault"
+envault completion fish > ~/.config/fish/completions/envault.fish
 ```
 
 ### 5. CLI Distribution Infrastructure
 
 **Files Created**:
-- `cli/dist/homebrew/envvault.rb` - Homebrew formula template
+- `cli/dist/homebrew/envault.rb` - Homebrew formula template
 - `cli/dist/npm/package.json` - npm package metadata
 - `cli/dist/npm/install.js` - Post-install binary downloader
 - `cli/dist/npm/README.md` - npm package documentation
@@ -169,16 +169,16 @@ envvault completion fish > ~/.config/fish/completions/envvault.fish
    - Checksum verification
 
 4. **curl Installer** (Quick install)
-   - `curl -fsSL https://get.envvault.com | sh`
+   - `curl -fsSL https://get.envault.net | sh`
    - Platform detection
    - Latest version fetching
    - PATH configuration help
 
 **Actions Required**:
 - [ ] Create GitHub repository: `homebrew-tap`
-- [ ] Create npm organization: `@envvault`
+- [ ] Create npm organization: `@envault`
 - [ ] Configure GitHub release workflow
-- [ ] Set up `get.envvault.com` redirect/hosting
+- [ ] Set up `get.envault.net` redirect/hosting
 
 ### 6. CLI Update Mechanism
 
@@ -186,7 +186,7 @@ envvault completion fish > ~/.config/fish/completions/envvault.fish
 - `cli/cmd/update.go` - Update command
 
 **Features Implemented**:
-- ✅ `envvault update` command
+- ✅ `envault update` command
 - ✅ Check for latest GitHub release
 - ✅ Version comparison
 - ✅ Automatic binary download
@@ -199,13 +199,13 @@ envvault completion fish > ~/.config/fish/completions/envvault.fish
 **Usage**:
 ```bash
 # Check for updates
-envvault update --check
+envault update --check
 
 # Update to latest version
-envvault update
+envault update
 
 # Force update (even if on latest)
-envvault update --force
+envault update --force
 ```
 
 ---
@@ -392,7 +392,7 @@ From LTS_PLATFORM_STATE.md, these items are still pending:
    - Test installation
 
 4. **Publish npm Package**
-   - Create `@envvault` organization
+   - Create `@envault` organization
    - Publish first version
    - Test installation
 
@@ -430,7 +430,7 @@ cli/cmd/completion.go
 cli/cmd/update.go
 cli/scripts/install-completions.sh
 cli/scripts/install.sh
-cli/dist/homebrew/envvault.rb
+cli/dist/homebrew/envault.rb
 cli/dist/npm/package.json
 cli/dist/npm/install.js
 cli/dist/npm/README.md
@@ -465,7 +465,7 @@ LTS_PLATFORM_STATE.md
 - [ ] Build CLI: `cd cli && make build`
 - [ ] Generate completions: `make completions`
 - [ ] Test completion installation: `make install-completions`
-- [ ] Test update command: `./bin/envvault update --check`
+- [ ] Test update command: `./bin/envault update --check`
 
 ### Analytics
 - [ ] Verify PostHog key is configured

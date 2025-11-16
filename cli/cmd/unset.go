@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/dj-pearson/envvault/internal/config"
-	"github.com/dj-pearson/envvault/internal/storage"
-	"github.com/dj-pearson/envvault/internal/utils"
+	"github.com/dj-pearson/envault/internal/config"
+	"github.com/dj-pearson/envault/internal/storage"
+	"github.com/dj-pearson/envault/internal/utils"
 	"github.com/fatih/color"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
@@ -27,9 +27,9 @@ By default, this command will prompt for confirmation before deleting.
 Use --force to skip confirmation.
 
 Examples:
-  envvault unset OLD_API_KEY
-  envvault unset TEMP_VAR --env staging --force
-  envvault unset DEPRECATED_KEY --all-envs`,
+  envault unset OLD_API_KEY
+  envault unset TEMP_VAR --env staging --force
+  envault unset DEPRECATED_KEY --all-envs`,
 	Args: cobra.ExactArgs(1),
 	RunE: runUnset,
 }

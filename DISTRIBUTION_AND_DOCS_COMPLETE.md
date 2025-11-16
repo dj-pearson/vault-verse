@@ -31,12 +31,12 @@ We've completed **all infrastructure work** needed for EnvVault's multi-channel 
 
 **Installation Command**:
 ```bash
-brew tap envvault/tap
-brew install envvault
+brew tap envault/tap
+brew install envault
 ```
 
 **Files Created**:
-- `cli/dist/homebrew/envvault.rb` - Formula template
+- `cli/dist/homebrew/envault.rb` - Formula template
 - `cli/dist/homebrew/README.md` - Maintainer guide
 - `cli/dist/homebrew/update-formula.sh` - Update automation script
 
@@ -48,10 +48,10 @@ brew install envvault
 - ✅ Platform detection (installs correct binary)
 
 **Setup Required**:
-1. Create GitHub repository: `envvault/homebrew-tap`
-2. Copy `cli/dist/homebrew/envvault.rb` to `Formula/envvault.rb`
+1. Create GitHub repository: `envault/homebrew-tap`
+2. Copy `cli/dist/homebrew/envault.rb` to `Formula/envault.rb`
 3. Configure `HOMEBREW_TAP_TOKEN` in GitHub secrets
-4. Test: `brew install --build-from-source Formula/envvault.rb`
+4. Test: `brew install --build-from-source Formula/envault.rb`
 
 **Documentation**: See `cli/dist/homebrew/README.md`
 
@@ -61,7 +61,7 @@ brew install envvault
 
 **Installation Command**:
 ```bash
-npm install -g @envvault/cli
+npm install -g @envault/cli
 ```
 
 **Files Created**:
@@ -81,7 +81,7 @@ npm install -g @envvault/cli
 - ✅ Auto-published by CI/CD
 
 **Setup Required**:
-1. Create npm organization: `@envvault`
+1. Create npm organization: `@envault`
 2. Add team members to organization
 3. Configure `NPM_TOKEN` in GitHub secrets
 4. Test: `npm publish --dry-run`
@@ -94,15 +94,15 @@ npm install -g @envvault/cli
 
 **Download URL Format**:
 ```
-https://github.com/dj-pearson/vault-verse/releases/download/v1.0.0/envvault-darwin-arm64
+https://github.com/dj-pearson/vault-verse/releases/download/v1.0.0/envault-darwin-arm64
 ```
 
 **Platforms Supported**:
-- macOS Intel: `envvault-darwin-amd64`
-- macOS Apple Silicon: `envvault-darwin-arm64`
-- Linux x64: `envvault-linux-amd64`
-- Linux ARM64: `envvault-linux-arm64`
-- Windows x64: `envvault-windows-amd64.exe`
+- macOS Intel: `envault-darwin-amd64`
+- macOS Apple Silicon: `envault-darwin-arm64`
+- Linux x64: `envault-linux-amd64`
+- Linux ARM64: `envault-linux-arm64`
+- Windows x64: `envault-windows-amd64.exe`
 
 **Features**:
 - ✅ SHA256 checksums for all binaries
@@ -119,7 +119,7 @@ https://github.com/dj-pearson/vault-verse/releases/download/v1.0.0/envvault-darw
 
 **Installation Command**:
 ```bash
-curl -fsSL https://get.envvault.com | sh
+curl -fsSL https://get.envault.net | sh
 ```
 
 **File Created**:
@@ -134,7 +134,7 @@ curl -fsSL https://get.envvault.com | sh
 - ✅ Installation verification
 
 **Setup Required**:
-1. Create domain/subdomain: `get.envvault.com`
+1. Create domain/subdomain: `get.envault.net`
 2. Host `install.sh` or redirect to GitHub raw URL
 3. Options:
    - GitHub Pages (free)
@@ -180,7 +180,7 @@ git push origin v1.0.0
 4. **Publish to npm**
    - Update package version
    - Publish to npm registry
-   - Accessible via `npm install -g @envvault/cli`
+   - Accessible via `npm install -g @envault/cli`
 
 5. **Notify**
    - Print release summary
@@ -360,19 +360,19 @@ git push origin v1.0.0
 
 1. **Create Homebrew Tap Repository** (30 minutes)
    ```bash
-   # Create repo: envvault/homebrew-tap
-   git clone https://github.com/envvault/homebrew-tap.git
+   # Create repo: envault/homebrew-tap
+   git clone https://github.com/envault/homebrew-tap.git
    cd homebrew-tap
    mkdir Formula
-   cp /path/to/cli/dist/homebrew/envvault.rb Formula/
-   git add Formula/envvault.rb
+   cp /path/to/cli/dist/homebrew/envault.rb Formula/
+   git add Formula/envault.rb
    git commit -m "Add EnvVault formula"
    git push origin main
    ```
 
 2. **Create npm Organization** (30 minutes)
    - Go to https://www.npmjs.com/org/create
-   - Create `@envvault` organization
+   - Create `@envault` organization
    - Add team members
 
 3. **Configure GitHub Secrets** (1 hour)
@@ -380,7 +380,7 @@ git push origin v1.0.0
    - `NPM_TOKEN` - npm automation token
    - Test workflow: `git tag v0.1.0-beta && git push origin v0.1.0-beta`
 
-4. **Set up get.envvault.com** (30 minutes)
+4. **Set up get.envault.net** (30 minutes)
    - Option A: GitHub Pages
    - Option B: Cloudflare Pages
    - Option C: Redirect to GitHub raw URL
@@ -411,7 +411,7 @@ git push origin v1.0.0
 
 2. **Create Homebrew Tap**
    - Follow instructions in "Required Before First Release"
-   - Test installation: `brew install envvault/tap/envvault`
+   - Test installation: `brew install envault/tap/envault`
 
 3. **Publish to npm**
    - Create organization
@@ -426,7 +426,7 @@ git push origin v1.0.0
    - Fix any installation issues
 
 5. **Documentation Website**
-   - Deploy docs to envvault.com/docs
+   - Deploy docs to envault.net/docs
    - Add installation guides
    - Create getting started tutorial
 

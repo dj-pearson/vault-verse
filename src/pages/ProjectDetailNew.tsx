@@ -107,21 +107,21 @@ export default function ProjectDetailNew() {
                 <div>
                   <h3 className="text-sm font-medium mb-2">Clone this project:</h3>
                   <TerminalWindow className="max-w-2xl">
-                    <TerminalLine prompt>envvault pull {project.name}</TerminalLine>
+                    <TerminalLine prompt>envault pull {project.name}</TerminalLine>
                   </TerminalWindow>
                 </div>
 
                 <div>
                   <h3 className="text-sm font-medium mb-2">View variables (CLI only):</h3>
                   <TerminalWindow className="max-w-2xl">
-                    <TerminalLine prompt>envvault list {project.name}</TerminalLine>
+                    <TerminalLine prompt>envault list {project.name}</TerminalLine>
                   </TerminalWindow>
                 </div>
 
                 <div>
                   <h3 className="text-sm font-medium mb-2">Add variable (CLI only):</h3>
                   <TerminalWindow className="max-w-2xl">
-                    <TerminalLine prompt>envvault set KEY=value --env production</TerminalLine>
+                    <TerminalLine prompt>envault set KEY=value --env production</TerminalLine>
                   </TerminalWindow>
                 </div>
               </div>

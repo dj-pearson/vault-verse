@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/dj-pearson/envvault/internal/config"
-	"github.com/dj-pearson/envvault/internal/crypto"
-	"github.com/dj-pearson/envvault/internal/storage"
+	"github.com/dj-pearson/envault/internal/config"
+	"github.com/dj-pearson/envault/internal/crypto"
+	"github.com/dj-pearson/envault/internal/storage"
 	"github.com/fatih/color"
 	"github.com/google/uuid"
 	"github.com/manifoldco/promptui"
@@ -23,16 +23,16 @@ var (
 
 var initCmd = &cobra.Command{
 	Use:   "init [project-name]",
-	Short: "Initialize a new envvault project",
-	Long: `Initialize a new envvault project in the current directory.
+	Short: "Initialize a new envault project",
+	Long: `Initialize a new envault project in the current directory.
 
 This command creates a new project with default environments (development, staging, production)
 and sets up local encrypted storage for your environment variables.
 
 Examples:
-  envvault init my-app
-  envvault init my-app --team
-  envvault init my-app --env dev,staging,prod`,
+  envault init my-app
+  envault init my-app --team
+  envault init my-app --env dev,staging,prod`,
 	RunE: runInit,
 }
 
@@ -50,7 +50,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 	red := color.New(color.FgRed)
 
 	// Check if already initialized
-	if _, err := os.Stat(".envvault"); err == nil {
+	if _, err := os.Stat(".envault"); err == nil {
 		return red.Sprint("Error: Project already initialized in this directory")
 	}
 
@@ -131,15 +131,15 @@ func runInit(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	// Create .envvault file in current directory
-	envvaultFile := filepath.Join(".", ".envvault")
+	// Create .envault file in current directory
+	envaultFile := filepath.Join(".", ".envault")
 	content := fmt.Sprintf("project_id=%s\nproject_name=%s\n", project.ID, projectName)
-	if err := os.WriteFile(envvaultFile, []byte(content), 0600); err != nil {
-		return fmt.Errorf("failed to create .envvault file: %w", err)
+	if err := os.WriteFile(envaultFile, []byte(content), 0600); err != nil {
+		return fmt.Errorf("failed to create .envault file: %w", err)
 	}
 
 	// Add to .gitignore
-	if err := addToGitignore(".envvault"); err != nil {
+	if err := addToGitignore(".envault"); err != nil {
 		yellow.Println("Warning: Could not update .gitignore")
 	}
 
@@ -154,11 +154,11 @@ func runInit(cmd *cobra.Command, args []string) error {
 
 	if !quiet {
 		fmt.Println("Next steps:")
-		fmt.Println("  Add variables:    envvault set KEY=value")
-		fmt.Println("  View variables:   envvault list")
-		fmt.Println("  Run with env:     envvault run npm start")
+		fmt.Println("  Add variables:    envault set KEY=value")
+		fmt.Println("  View variables:   envault list")
+		fmt.Println("  Run with env:     envault run npm start")
 		if initTeam {
-			yellow.Println("\nTeam sync requires login: envvault login")
+			yellow.Println("\nTeam sync requires login: envault login")
 		}
 	}
 

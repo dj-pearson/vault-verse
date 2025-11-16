@@ -4,7 +4,7 @@ contact_links:
     url: https://github.com/dj-pearson/vault-verse/discussions
     about: Ask questions and discuss ideas with the community
   - name: 📚 Documentation
-    url: https://envvault.com/docs
+    url: https://envault.net/docs
     about: Check out our documentation for guides and references
   - name: 🐛 Security Issues
     url: https://github.com/dj-pearson/vault-verse/security/advisories/new

@@ -1,40 +1,40 @@
-# @envvault/cli
+# @envault/cli
 
 > Secure, local-first environment variable management
 
-[![npm version](https://badge.fury.io/js/%40envvault%2Fcli.svg)](https://www.npmjs.com/package/@envvault/cli)
+[![npm version](https://badge.fury.io/js/%40envault%2Fcli.svg)](https://www.npmjs.com/package/@envault/cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Installation
 
 ```bash
-npm install -g @envvault/cli
+npm install -g @envault/cli
 ```
 
 Or use npx without installing:
 
 ```bash
-npx @envvault/cli --help
+npx @envault/cli --help
 ```
 
 ## Quick Start
 
 ```bash
 # Initialize a new project
-envvault init my-app
+envault init my-app
 
 # Set environment variables
-envvault set DATABASE_URL=postgresql://localhost/mydb
-envvault set API_KEY=your-secret-key
+envault set DATABASE_URL=postgresql://localhost/mydb
+envault set API_KEY=your-secret-key
 
 # List variables (masked by default)
-envvault list
+envault list
 
 # Export to .env file
-envvault export -o .env
+envault export -o .env
 
 # Run command with injected environment
-envvault run npm start
+envault run npm start
 ```
 
 ## Features
@@ -48,21 +48,21 @@ envvault run npm start
 
 ## Documentation
 
-Full documentation available at [envvault.com/docs](https://envvault.com/docs)
+Full documentation available at [envault.net/docs](https://envault.net/docs)
 
 ### Commands
 
-- `envvault init` - Initialize a new project
-- `envvault set KEY=value` - Set an environment variable
-- `envvault get KEY` - Get a variable value
-- `envvault list` - List all variables
-- `envvault unset KEY` - Remove a variable
-- `envvault run <command>` - Run command with env vars
-- `envvault import <file>` - Import from .env file
-- `envvault export` - Export variables
-- `envvault env` - Manage environments
-- `envvault sync` - Push/pull encrypted team data
-- `envvault team` - Manage team members
+- `envault init` - Initialize a new project
+- `envault set KEY=value` - Set an environment variable
+- `envault get KEY` - Get a variable value
+- `envault list` - List all variables
+- `envault unset KEY` - Remove a variable
+- `envault run <command>` - Run command with env vars
+- `envault import <file>` - Import from .env file
+- `envault export` - Export variables
+- `envault env` - Manage environments
+- `envault sync` - Push/pull encrypted team data
+- `envault team` - Manage team members
 
 ### Shell Completions
 
@@ -70,13 +70,13 @@ Install shell completions for better CLI experience:
 
 ```bash
 # Bash
-envvault completion bash > /etc/bash_completion.d/envvault
+envault completion bash > /etc/bash_completion.d/envault
 
 # Zsh
-envvault completion zsh > "${fpath[1]}/_envvault"
+envault completion zsh > "${fpath[1]}/_envault"
 
 # Fish
-envvault completion fish > ~/.config/fish/completions/envvault.fish
+envault completion fish > ~/.config/fish/completions/envault.fish
 ```
 
 ## Platform Support
@@ -90,7 +90,7 @@ envvault completion fish > ~/.config/fish/completions/envvault.fish
 ### Homebrew (macOS & Linux)
 
 ```bash
-brew install envvault/tap/envvault
+brew install envault/tap/envault
 ```
 
 ### Direct Download
@@ -100,12 +100,12 @@ Download binaries from [GitHub Releases](https://github.com/dj-pearson/vault-ver
 ### curl Installer
 
 ```bash
-curl -fsSL https://get.envvault.com | sh
+curl -fsSL https://get.envault.net | sh
 ```
 
 ## Support
 
-- 📖 Documentation: https://envvault.com/docs
+- 📖 Documentation: https://envault.net/docs
 - 🐛 Issues: https://github.com/dj-pearson/vault-verse/issues
 - 💬 Discussions: https://github.com/dj-pearson/vault-verse/discussions
 

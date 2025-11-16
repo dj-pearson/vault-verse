@@ -6,17 +6,17 @@ This document explains how to set up and manage EnvVault CLI distribution across
 
 EnvVault CLI is distributed through:
 
-1. **Homebrew** (macOS & Linux) - `brew install envvault/tap/envvault`
-2. **npm** (All platforms) - `npm install -g @envvault/cli`
+1. **Homebrew** (macOS & Linux) - `brew install envault/tap/envault`
+2. **npm** (All platforms) - `npm install -g @envault/cli`
 3. **GitHub Releases** (Direct downloads) - Manual binary downloads
-4. **curl Installer** (Quick install) - `curl -fsSL https://get.envvault.com | sh`
+4. **curl Installer** (Quick install) - `curl -fsSL https://get.envault.net | sh`
 
 ## Prerequisites
 
 Before setting up distribution:
 
 - [ ] GitHub repository with releases enabled
-- [ ] npm account with organization access (@envvault)
+- [ ] npm account with organization access (@envault)
 - [ ] GitHub Personal Access Token for Homebrew tap
 - [ ] npm auth token for publishing
 - [ ] Versioning strategy established
@@ -28,12 +28,12 @@ Before setting up distribution:
 1. **Create new GitHub repository**:
    ```bash
    # Repository name: homebrew-tap
-   # URL: https://github.com/envvault/homebrew-tap
+   # URL: https://github.com/envault/homebrew-tap
    ```
 
 2. **Clone and set up**:
    ```bash
-   git clone https://github.com/envvault/homebrew-tap.git
+   git clone https://github.com/envault/homebrew-tap.git
    cd homebrew-tap
    mkdir Formula
    ```
@@ -41,17 +41,17 @@ Before setting up distribution:
 3. **Add formula**:
    ```bash
    # Copy template
-   cp /path/to/vault-verse/cli/dist/homebrew/envvault.rb Formula/envvault.rb
+   cp /path/to/vault-verse/cli/dist/homebrew/envault.rb Formula/envault.rb
 
    # Initial commit
-   git add Formula/envvault.rb
+   git add Formula/envault.rb
    git commit -m "Add EnvVault formula"
    git push origin main
    ```
 
 ### Formula Structure
 
-The Homebrew formula (`Formula/envvault.rb`) includes:
+The Homebrew formula (`Formula/envault.rb`) includes:
 
 - Version and metadata
 - Platform-specific binary URLs
@@ -76,22 +76,22 @@ If you need to update manually:
 
 ```bash
 # 1. Download the binary
-curl -LO https://github.com/dj-pearson/vault-verse/releases/download/v1.0.0/envvault-darwin-arm64
+curl -LO https://github.com/dj-pearson/vault-verse/releases/download/v1.0.0/envault-darwin-arm64
 
 # 2. Calculate SHA256
-shasum -a 256 envvault-darwin-arm64
+shasum -a 256 envault-darwin-arm64
 
-# 3. Update Formula/envvault.rb with:
+# 3. Update Formula/envault.rb with:
 #    - New version number
 #    - New SHA256 checksums
 #    - New download URLs
 
 # 4. Test formula
-brew install --build-from-source Formula/envvault.rb
-brew test envvault
+brew install --build-from-source Formula/envault.rb
+brew test envault
 
 # 5. Commit and push
-git add Formula/envvault.rb
+git add Formula/envault.rb
 git commit -m "Update to version 1.0.0"
 git push origin main
 ```
@@ -100,17 +100,17 @@ git push origin main
 
 ```bash
 # Uninstall if already installed
-brew uninstall envvault
+brew uninstall envault
 
 # Install from tap
-brew install envvault/tap/envvault
+brew install envault/tap/envault
 
 # Verify installation
-which envvault
-envvault --version
+which envault
+envault --version
 
 # Test completions
-envvault completion bash
+envault completion bash
 ```
 
 ## 2. npm Package Setup
@@ -119,11 +119,11 @@ envvault completion bash
 
 1. **Create npm account**: https://www.npmjs.com/signup
 2. **Create organization**: https://www.npmjs.com/org/create
-   - Organization name: `envvault`
+   - Organization name: `envault`
    - Make it public (free)
 
 3. **Invite team members**:
-   - Go to https://www.npmjs.com/settings/envvault/members
+   - Go to https://www.npmjs.com/settings/envault/members
    - Add team members with appropriate permissions
 
 ### Package Structure
@@ -152,7 +152,7 @@ npm whoami
 npm publish --access public
 
 # 4. Verify publication
-npm view @envvault/cli
+npm view @envault/cli
 ```
 
 **Subsequent publishes** (automated by CI/CD):
@@ -165,17 +165,17 @@ npm view @envvault/cli
 
 ```bash
 # Uninstall if already installed
-npm uninstall -g @envvault/cli
+npm uninstall -g @envault/cli
 
 # Install from npm
-npm install -g @envvault/cli
+npm install -g @envault/cli
 
 # Verify installation
-which envvault
-envvault --version
+which envault
+envault --version
 
 # Test that binary works
-envvault --help
+envault --help
 ```
 
 ### npm Package Versioning
@@ -225,12 +225,12 @@ git push origin v1.0.0
 
 Each release includes:
 
-- `envvault-darwin-amd64` - macOS Intel binary
-- `envvault-darwin-arm64` - macOS Apple Silicon binary
-- `envvault-linux-amd64` - Linux x64 binary
-- `envvault-linux-arm64` - Linux ARM64 binary
-- `envvault-windows-amd64.exe` - Windows x64 binary
-- `envvault-windows-arm64.exe` - Windows ARM64 binary
+- `envault-darwin-amd64` - macOS Intel binary
+- `envault-darwin-arm64` - macOS Apple Silicon binary
+- `envault-linux-amd64` - Linux x64 binary
+- `envault-linux-arm64` - Linux ARM64 binary
+- `envault-windows-amd64.exe` - Windows x64 binary
+- `envault-windows-arm64.exe` - Windows ARM64 binary
 - `checksums.txt` - SHA256 checksums for all binaries
 
 ### Manual GitHub Release
@@ -259,12 +259,12 @@ If you need to create a release manually:
 
 ## 4. curl Installer Setup
 
-### Create get.envvault.com
+### Create get.envault.net
 
 The curl installer provides a quick one-line installation:
 
 ```bash
-curl -fsSL https://get.envvault.com | sh
+curl -fsSL https://get.envault.net | sh
 ```
 
 **Setup**:
@@ -282,7 +282,7 @@ curl -fsSL https://get.envvault.com | sh
    - Option 3: Custom domain with CDN
 
 3. **Set up redirect**:
-   - `get.envvault.com` → GitHub raw URL or CDN
+   - `get.envault.net` → GitHub raw URL or CDN
    - Or serve directly from CDN
 
 ### Installer Script
@@ -294,10 +294,10 @@ Create `cli/scripts/install.sh`:
 set -e
 
 # EnvVault CLI Installer
-# Usage: curl -fsSL https://get.envvault.com | sh
+# Usage: curl -fsSL https://get.envault.net | sh
 
 REPO="dj-pearson/vault-verse"
-INSTALL_DIR="${ENVVAULT_INSTALL_DIR:-$HOME/.local/bin}"
+INSTALL_DIR="${ENVAULT_INSTALL_DIR:-$HOME/.local/bin}"
 
 # Detect platform
 detect_platform() {
@@ -335,12 +335,12 @@ main() {
     echo "Version: $VERSION"
 
     # Download binary
-    URL="https://github.com/$REPO/releases/download/v$VERSION/envvault-$PLATFORM"
+    URL="https://github.com/$REPO/releases/download/v$VERSION/envault-$PLATFORM"
     mkdir -p "$INSTALL_DIR"
-    curl -fsSL "$URL" -o "$INSTALL_DIR/envvault"
-    chmod +x "$INSTALL_DIR/envvault"
+    curl -fsSL "$URL" -o "$INSTALL_DIR/envault"
+    chmod +x "$INSTALL_DIR/envault"
 
-    echo "✓ EnvVault CLI installed to $INSTALL_DIR/envvault"
+    echo "✓ EnvVault CLI installed to $INSTALL_DIR/envault"
     echo ""
     echo "Add to PATH by adding this to your ~/.bashrc or ~/.zshrc:"
     echo "  export PATH=\"$INSTALL_DIR:\$PATH\""
@@ -452,25 +452,25 @@ jobs:
 Before each release, test all distribution methods:
 
 **Homebrew**:
-- [ ] `brew uninstall envvault` (if installed)
-- [ ] `brew install envvault/tap/envvault`
-- [ ] `envvault --version` shows correct version
-- [ ] Completions work: `envvault completion bash`
+- [ ] `brew uninstall envault` (if installed)
+- [ ] `brew install envault/tap/envault`
+- [ ] `envault --version` shows correct version
+- [ ] Completions work: `envault completion bash`
 
 **npm**:
-- [ ] `npm uninstall -g @envvault/cli` (if installed)
-- [ ] `npm install -g @envvault/cli`
-- [ ] `envvault --version` shows correct version
+- [ ] `npm uninstall -g @envault/cli` (if installed)
+- [ ] `npm install -g @envault/cli`
+- [ ] `envault --version` shows correct version
 - [ ] Binary downloads correctly for platform
 
 **Direct Download**:
 - [ ] Download binary from GitHub Releases
 - [ ] Verify checksum matches
 - [ ] Binary is executable
-- [ ] `./envvault --version` works
+- [ ] `./envault --version` works
 
 **curl Installer**:
-- [ ] `curl -fsSL https://get.envvault.com | sh`
+- [ ] `curl -fsSL https://get.envault.net | sh`
 - [ ] Binary installs to correct location
 - [ ] PATH instructions are correct
 
@@ -482,8 +482,8 @@ Before each release, test all distribution methods:
 **Solution**:
 ```bash
 brew update
-brew tap envvault/tap
-brew install envvault
+brew tap envault/tap
+brew install envault
 ```
 
 **Issue**: Checksum mismatch
@@ -504,7 +504,7 @@ brew install envvault
 **Solution**:
 ```bash
 # Use sudo or install locally
-npm install -g @envvault/cli --unsafe-perm
+npm install -g @envault/cli --unsafe-perm
 # Or use nvm for per-user npm
 ```
 
@@ -518,10 +518,10 @@ npm install -g @envvault/cli --unsafe-perm
 
 ## Support & Resources
 
-- **Homebrew Tap**: https://github.com/envvault/homebrew-tap
-- **npm Package**: https://www.npmjs.com/package/@envvault/cli
+- **Homebrew Tap**: https://github.com/envault/homebrew-tap
+- **npm Package**: https://www.npmjs.com/package/@envault/cli
 - **GitHub Releases**: https://github.com/dj-pearson/vault-verse/releases
-- **Documentation**: https://envvault.com/docs
+- **Documentation**: https://envault.net/docs
 
 ---
 

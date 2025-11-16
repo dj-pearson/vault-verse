@@ -3,10 +3,10 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/dj-pearson/envvault/internal/config"
-	"github.com/dj-pearson/envvault/internal/crypto"
-	"github.com/dj-pearson/envvault/internal/storage"
-	"github.com/dj-pearson/envvault/internal/utils"
+	"github.com/dj-pearson/envault/internal/config"
+	"github.com/dj-pearson/envault/internal/crypto"
+	"github.com/dj-pearson/envault/internal/storage"
+	"github.com/dj-pearson/envault/internal/utils"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
@@ -26,9 +26,9 @@ The value is decrypted from local storage and displayed in plaintext.
 Be careful when using this command in shared terminals or logs.
 
 Examples:
-  envvault get DATABASE_URL
-  envvault get API_KEY --env production
-  envvault get DATABASE_URL --format export`,
+  envault get DATABASE_URL
+  envault get API_KEY --env production
+  envault get DATABASE_URL --format export`,
 	Args: cobra.ExactArgs(1),
 	RunE: runGet,
 }

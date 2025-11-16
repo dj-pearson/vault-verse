@@ -215,37 +215,37 @@
 #### All 16 Commands (100% Complete)
 
 **Project Management**:
-- `envvault init [name]` - Initialize project with environments
-- `envvault status` - Show project status and sync state
-- `envvault projects` - List all local projects
+- `envault init [name]` - Initialize project with environments
+- `envault status` - Show project status and sync state
+- `envault projects` - List all local projects
 
 **Variable Management**:
-- `envvault set KEY=value` - Set encrypted variable
-- `envvault get KEY` - Get variable value
-- `envvault list` - List all variables (masked by default)
-- `envvault unset KEY` - Remove variable
+- `envault set KEY=value` - Set encrypted variable
+- `envault get KEY` - Get variable value
+- `envault list` - List all variables (masked by default)
+- `envault unset KEY` - Remove variable
 
 **Environment Management**:
-- `envvault env list` - List environments
-- `envvault env create NAME` - Create environment
-- `envvault env delete NAME` - Delete environment
-- `envvault env copy SRC DST` - Copy variables between environments
+- `envault env list` - List environments
+- `envault env create NAME` - Create environment
+- `envault env delete NAME` - Delete environment
+- `envault env copy SRC DST` - Copy variables between environments
 
 **Import/Export**:
-- `envvault import .env` - Import from .env file
-- `envvault export` - Export to stdout
-- `envvault export -o FILE` - Export to file (dotenv, JSON, YAML)
+- `envault import .env` - Import from .env file
+- `envault export` - Export to stdout
+- `envault export -o FILE` - Export to file (dotenv, JSON, YAML)
 
 **Command Execution**:
-- `envvault run <command>` - Run command with env vars injected
+- `envault run <command>` - Run command with env vars injected
 
 **Team Collaboration**:
-- `envvault login` - Authenticate with backend
-- `envvault logout` - Clear session
-- `envvault sync` - Push/pull encrypted blobs
-- `envvault team list` - List team members
-- `envvault team invite EMAIL` - Invite member
-- `envvault team remove EMAIL` - Remove member
+- `envault login` - Authenticate with backend
+- `envault logout` - Clear session
+- `envault sync` - Push/pull encrypted blobs
+- `envault team list` - List team members
+- `envault team invite EMAIL` - Invite member
+- `envault team remove EMAIL` - Remove member
 
 #### Security Features
 - AES-256-GCM encryption
@@ -281,7 +281,7 @@
    - **Estimate**: 4 hours
 
 2. **Update Mechanism** ⚠️ HIGH PRIORITY
-   - No `envvault update` command
+   - No `envault update` command
    - No auto-update check on startup
    - No version comparison with remote
    - **Impact**: Users stuck on old versions
@@ -290,7 +290,7 @@
 3. **First-Run Experience** ⚠️ MEDIUM PRIORITY
    - No welcome message
    - No guided setup wizard
-   - No suggestion to run `envvault init`
+   - No suggestion to run `envault init`
    - **Impact**: Confusing for new users
    - **Estimate**: 4 hours
 
@@ -304,7 +304,7 @@
    - **Estimate**: 1 day
 
 5. **Configuration Management** 🟡 MEDIUM PRIORITY
-   - No `envvault config` command
+   - No `envault config` command
    - Cannot set default environment
    - Cannot configure default export format
    - No global preferences
@@ -312,23 +312,23 @@
    - **Estimate**: 1 day
 
 6. **Secret Management Enhancements**
-   - No `envvault edit KEY` command (interactive editor)
-   - No `envvault diff` command (compare environments)
-   - No `envvault validate` command (check for issues)
+   - No `envault edit KEY` command (interactive editor)
+   - No `envault diff` command (compare environments)
+   - No `envault validate` command (check for issues)
    - No secret templates
    - **Impact**: Limited workflow options
    - **Estimate**: 2 days
 
 7. **Team Features**
-   - No `envvault team role` command (change roles)
+   - No `envault team role` command (change roles)
    - No pending invitation status
    - No team member details (last active, etc.)
    - **Impact**: Limited team management
    - **Estimate**: 1 day
 
 8. **Backup & Recovery**
-   - No `envvault backup` command
-   - No `envvault restore` command
+   - No `envault backup` command
+   - No `envault restore` command
    - No automatic backups before destructive operations
    - **Impact**: Risk of data loss
    - **Estimate**: 1 day
@@ -350,8 +350,8 @@
 #### Nice-to-Have Features
 
 11. **Advanced Features** 🟢 LOW PRIORITY
-    - No `envvault watch` command (monitor changes)
-    - No `envvault search` command (search across all projects)
+    - No `envault watch` command (monitor changes)
+    - No `envault search` command (search across all projects)
     - No secret expiration/rotation warnings
     - No secret strength validator
     - **Estimate**: 1 week
@@ -370,7 +370,7 @@
     - **Estimate**: 1 week
 
 14. **Performance Features** 🟢 LOW PRIORITY
-    - No caching for `envvault list` (always hits DB)
+    - No caching for `envault list` (always hits DB)
     - No batch operations
     - No parallel sync
     - **Estimate**: 3 days
@@ -824,7 +824,7 @@
    - Interactive walkthrough
 
 2. **CLI Update Mechanism** (1 day)
-   - `envvault update` command
+   - `envault update` command
    - Auto-update check
    - Version comparison
 

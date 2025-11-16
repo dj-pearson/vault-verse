@@ -114,7 +114,7 @@ plaintext := aes256gcm.Open(nil, nonce, ciphertext[12:], nil)
 
 ### Master Key Generation
 
-When you run `envvault init` for the first time:
+When you run `envault init` for the first time:
 
 ```go
 1. Generate 256-bit random key
@@ -258,7 +258,7 @@ derivedKey := argon2id.Key(
 ### Authentication
 
 **Personal Access Tokens** (PAT):
-- Generated at https://envvault.com/settings/tokens
+- Generated at https://envault.net/settings/tokens
 - SHA-256 hashed before storage
 - 90-day expiration (default)
 - Revocable anytime
@@ -442,7 +442,7 @@ Content-Security-Policy:
   script-src 'self';
   style-src 'self' 'unsafe-inline';
   img-src 'self' data: https:;
-  connect-src 'self' https://api.envvault.com;
+  connect-src 'self' https://api.envault.net;
 ```
 
 ---
@@ -513,7 +513,7 @@ func ConstantTimeCompare(a, b []byte) bool {
 7. **Review audit logs** monthly
 8. **Don't share accounts** - Each team member should have their own
 9. **Protect your master key** - It's stored in OS keychain
-10. **Use `envvault run`** - Don't export to .env files
+10. **Use `envault run`** - Don't export to .env files
 
 ### For Admins
 
@@ -530,14 +530,14 @@ func ConstantTimeCompare(a, b []byte) bool {
 
 ### For Developers
 
-1. **Never commit .envvault** - Already in .gitignore
+1. **Never commit .envault** - Already in .gitignore
 2. **Never commit .env files** - Add to .gitignore
 3. **Never hardcode secrets** - Use environment variables
 4. **Use secure logging** - Redact secrets automatically
-5. **Validate input** - Before passing to envvault commands
+5. **Validate input** - Before passing to envault commands
 6. **Handle errors securely** - Don't leak secrets in error messages
 7. **Use HTTPS only** - For all API communication
-8. **Keep CLI updated** - `brew upgrade envvault`
+8. **Keep CLI updated** - `brew upgrade envault`
 9. **Review dependencies** - Check for vulnerabilities
 10. **Test security** - Include in CI/CD pipeline
 
@@ -602,8 +602,8 @@ EnvVault is designed to help you achieve compliance with:
 
 **Instead:**
 
-1. **Email**: security@envvault.com
-2. **PGP Key**: https://envvault.com/security/pgp.asc
+1. **Email**: security@envault.net
+2. **PGP Key**: https://envault.net/security/pgp.asc
 3. **Include**:
    - Description of vulnerability
    - Steps to reproduce
@@ -631,10 +631,10 @@ We appreciate responsible disclosure and may offer:
 
 ### Notification Channels
 
-- **Email**: security-announce@envvault.com
-- **Twitter**: @envvault
+- **Email**: security-announce@envault.net
+- **Twitter**: @envault
 - **GitHub**: https://github.com/dj-pearson/vault-verse/security/advisories
-- **Discord**: https://discord.gg/envvault (security-announcements channel)
+- **Discord**: https://discord.gg/envault (security-announcements channel)
 
 ### Update Policy
 
@@ -653,8 +653,8 @@ Use this checklist to verify your EnvVault security:
 - [ ] Strong password (20+ characters)
 - [ ] 2FA enabled (when available)
 - [ ] Master key stored in OS keychain
-- [ ] `.envvault` in `.gitignore`
-- [ ] CLI up to date (`envvault --version`)
+- [ ] `.envault` in `.gitignore`
+- [ ] CLI up to date (`envault --version`)
 
 ### Ongoing
 - [ ] Secrets rotated quarterly
@@ -711,10 +711,10 @@ Self-hosting guide: Coming soon.
 
 ## Resources
 
-- 🔒 **Security Policy**: https://envvault.com/security
-- 🐛 **Report Vulnerability**: security@envvault.com
-- 📚 **Security Blog**: https://envvault.com/blog/security
-- 🔑 **PGP Key**: https://envvault.com/security/pgp.asc
+- 🔒 **Security Policy**: https://envault.net/security
+- 🐛 **Report Vulnerability**: security@envault.net
+- 📚 **Security Blog**: https://envault.net/blog/security
+- 🔑 **PGP Key**: https://envault.net/security/pgp.asc
 - 📜 **Security Advisories**: https://github.com/dj-pearson/vault-verse/security/advisories
 
 ---

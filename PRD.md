@@ -36,11 +36,11 @@ Subheading: "Local-first, encrypted, and actually affordable.
 [Primary CTA: "Download CLI - Free"] [Secondary CTA: "Try Team Sync - $8/user"]
 
 Visual: Terminal window showing:
-$ envvault init myproject
+$ envault init myproject
 ✓ Project initialized locally
-$ envvault set DATABASE_URL postgres://...
+$ envault set DATABASE_URL postgres://...
 ✓ Saved securely (encrypted at rest)
-$ envvault run npm start
+$ envault run npm start
 ✓ Starting with 12 environment variables
 ```
 
@@ -95,11 +95,11 @@ The Solution:
 
 **How It Works**
 ```
-1. Install CLI → brew install envvault
-2. Initialize Project → envvault init myapp
-3. Add Variables → envvault set DATABASE_URL postgres://...
-4. Use Anywhere → envvault run npm start
-[Optional] Team Sync → envvault sync --team
+1. Install CLI → brew install envault
+2. Initialize Project → envault init myapp
+3. Add Variables → envault set DATABASE_URL postgres://...
+4. Use Anywhere → envault run npm start
+[Optional] Team Sync → envault sync --team
 ```
 
 **Feature Comparison**
@@ -194,8 +194,8 @@ Download CLI:
 [Windows]  [Linux (x64)]
 
 Or install via package manager:
-$ brew install envvault
-$ npm install -g envvault
+$ brew install envault
+$ npm install -g envault
 ```
 
 **Team Plan Signup**
@@ -218,7 +218,7 @@ No credit card required
 **Onboarding Flow**
 ```
 Step 1: Install CLI
-Step 2: Authenticate CLI (envvault login)
+Step 2: Authenticate CLI (envault login)
 Step 3: Create First Project
 ```
 
@@ -332,13 +332,13 @@ Project: my-saas-app
 Quick Actions:
 ────────────────────────────────────────
 Clone this project:
-$ envvault pull my-saas-app
+$ envault pull my-saas-app
 
 View variables (CLI only):
-$ envvault list my-saas-app
+$ envault list my-saas-app
 
 Add variable (CLI only):
-$ envvault set KEY=value --env production
+$ envault set KEY=value --env production
 ```
 
 **Environments Tab**
@@ -360,7 +360,7 @@ $ envvault set KEY=value --env production
 ℹ️  Security Note: 
 Variable VALUES are never shown in dashboard.
 Use CLI to view/edit:
-$ envvault get DATABASE_URL --env production
+$ envault get DATABASE_URL --env production
 ```
 
 **Access Tab (Team Projects)**
@@ -517,7 +517,7 @@ Personal Access Token
     access your projects.
 
 Usage:
-$ envvault login --token envt_a1b2c3...
+$ envault login --token envt_a1b2c3...
 ```
 
 ---
@@ -526,11 +526,11 @@ $ envvault login --token envt_a1b2c3...
 
 ## 3.1 CLI Overview
 
-**Name:** `envvault`  
+**Name:** `envault`  
 **Language:** Go (single binary, cross-platform)  
 **Installation:**
-- `brew install envvault`
-- `npm install -g envvault`
+- `brew install envault`
+- `npm install -g envault`
 - Direct download
 
 **Core Features:**
@@ -555,12 +555,12 @@ $ envvault login --token envt_a1b2c3...
 
 ---
 
-### 3.2.1 `envvault init`
+### 3.2.1 `envault init`
 
 **Initialize new project**
 
 ```bash
-envvault init [project-name] [flags]
+envault init [project-name] [flags]
 
 Flags:
   --team              Initialize for team sync
@@ -568,14 +568,14 @@ Flags:
   --env ENVIRONMENTS  Comma-separated environments
 
 Examples:
-$ envvault init my-app
-$ envvault init my-app --team
-$ envvault init my-app --env dev,staging,prod
+$ envault init my-app
+$ envault init my-app --team
+$ envault init my-app --env dev,staging,prod
 ```
 
 **Interactive Flow:**
 ```bash
-$ envvault init
+$ envault init
 
 ? Project name: my-saas-app
 ? Environments [development,production]: development,staging,production
@@ -586,20 +586,20 @@ $ envvault init
 ✓ Team sync enabled
 
 Next steps:
-  Add variables:    envvault set KEY=value
-  View variables:   envvault list
-  Run with env:     envvault run npm start
+  Add variables:    envault set KEY=value
+  View variables:   envault list
+  Run with env:     envault run npm start
 ```
 
 ---
 
-### 3.2.2 `envvault set`
+### 3.2.2 `envault set`
 
 **Set environment variable**
 
 ```bash
-envvault set KEY=value [flags]
-envvault set KEY [flags]  # Prompts for value (hidden)
+envault set KEY=value [flags]
+envault set KEY [flags]  # Prompts for value (hidden)
 
 Flags:
   --env ENVIRONMENT   Environment (default: development)
@@ -607,20 +607,20 @@ Flags:
   --description DESC  Add description
 
 Examples:
-$ envvault set DATABASE_URL=postgres://localhost/mydb
-$ envvault set API_KEY=sk_live_... --env production
-$ envvault set API_KEY  # Hidden input prompt
-$ envvault set --file .env.production --env production
+$ envault set DATABASE_URL=postgres://localhost/mydb
+$ envault set API_KEY=sk_live_... --env production
+$ envault set API_KEY  # Hidden input prompt
+$ envault set --file .env.production --env production
 ```
 
 ---
 
-### 3.2.3 `envvault get`
+### 3.2.3 `envault get`
 
 **Get variable value**
 
 ```bash
-envvault get KEY [flags]
+envault get KEY [flags]
 
 Flags:
   --env ENVIRONMENT   Environment (default: development)
@@ -628,24 +628,24 @@ Flags:
   --format FORMAT     Output: plain, json, export
 
 Examples:
-$ envvault get DATABASE_URL
+$ envault get DATABASE_URL
 postgres://localhost/mydb
 
-$ envvault get API_KEY --env production
+$ envault get API_KEY --env production
 sk_live_a1b2c3d4...
 
-$ envvault get DATABASE_URL --format export
+$ envault get DATABASE_URL --format export
 export DATABASE_URL="postgres://localhost/mydb"
 ```
 
 ---
 
-### 3.2.4 `envvault list`
+### 3.2.4 `envault list`
 
 **List all variables**
 
 ```bash
-envvault list [flags]
+envault list [flags]
 
 Flags:
   --env ENVIRONMENT   Environment (default: all)
@@ -654,7 +654,7 @@ Flags:
   --filter PATTERN    Filter by regex
 
 Examples:
-$ envvault list
+$ envault list
 
 Environment: development (12 variables)
 ──────────────────────────────────────────
@@ -662,11 +662,11 @@ DATABASE_URL         postgres://localhost/***
 API_KEY              sk_test_***
 REDIS_URL            redis://localhost/***
 
-$ envvault list --show-values
+$ envault list --show-values
 DATABASE_URL=postgres://localhost/mydb
 API_KEY=sk_test_a1b2c3d4
 
-$ envvault list --format json
+$ envault list --format json
 {
   "development": {
     "DATABASE_URL": "postgres://localhost/mydb"
@@ -676,12 +676,12 @@ $ envvault list --format json
 
 ---
 
-### 3.2.5 `envvault unset`
+### 3.2.5 `envault unset`
 
 **Remove variable**
 
 ```bash
-envvault unset KEY [flags]
+envault unset KEY [flags]
 
 Flags:
   --env ENVIRONMENT   Environment (default: development)
@@ -689,37 +689,37 @@ Flags:
   --force             Skip confirmation
 
 Examples:
-$ envvault unset OLD_API_KEY
+$ envault unset OLD_API_KEY
 ? Remove OLD_API_KEY from development? (y/n): y
 ✓ Removed OLD_API_KEY
 
-$ envvault unset TEMP_VAR --env staging --force
-$ envvault unset DEPRECATED_KEY --all-envs
+$ envault unset TEMP_VAR --env staging --force
+$ envault unset DEPRECATED_KEY --all-envs
 ```
 
 ---
 
-### 3.2.6 `envvault run`
+### 3.2.6 `envault run`
 
 **Run command with variables injected**
 
 ```bash
-envvault run [command] [flags]
+envault run [command] [flags]
 
 Flags:
   --env ENVIRONMENT   Environment (default: development)
   --preserve-env      Keep existing env vars
 
 Examples:
-$ envvault run npm start
-$ envvault run --env production node server.js
-$ envvault run python manage.py migrate
-$ envvault run bash  # Interactive shell with vars
+$ envault run npm start
+$ envault run --env production node server.js
+$ envault run python manage.py migrate
+$ envault run bash  # Interactive shell with vars
 ```
 
 **How it works:**
 ```bash
-$ envvault run --env production npm start
+$ envault run --env production npm start
 
 1. Read production variables
 2. Inject into process environment
@@ -730,12 +730,12 @@ $ envvault run --env production npm start
 
 ---
 
-### 3.2.7 `envvault export`
+### 3.2.7 `envault export`
 
 **Export to .env format**
 
 ```bash
-envvault export [flags]
+envault export [flags]
 
 Flags:
   --env ENVIRONMENT   Environment to export
@@ -743,23 +743,23 @@ Flags:
   --format FORMAT     Format: dotenv, json, yaml
 
 Examples:
-$ envvault export
+$ envault export
 DATABASE_URL=postgres://localhost/mydb
 API_KEY=sk_test_a1b2c3d4
 
-$ envvault export --output .env
-$ envvault export --env production --output .env.production
-$ envvault export --format json > config.json
+$ envault export --output .env
+$ envault export --env production --output .env.production
+$ envault export --format json > config.json
 ```
 
 ---
 
-### 3.2.8 `envvault import`
+### 3.2.8 `envault import`
 
 **Import from .env file**
 
 ```bash
-envvault import FILE [flags]
+envault import FILE [flags]
 
 Flags:
   --env ENVIRONMENT   Target environment
@@ -767,9 +767,9 @@ Flags:
   --dry-run           Preview without importing
 
 Examples:
-$ envvault import .env
-$ envvault import .env.production --env production
-$ envvault import .env --dry-run
+$ envault import .env
+$ envault import .env.production --env production
+$ envault import .env --dry-run
 Would import 12 variables:
   DATABASE_URL (new)
   API_KEY (exists, would skip)
@@ -777,12 +777,12 @@ Would import 12 variables:
 
 ---
 
-### 3.2.9 `envvault sync`
+### 3.2.9 `envault sync`
 
 **Sync with cloud (team feature)**
 
 ```bash
-envvault sync [flags]
+envault sync [flags]
 
 Flags:
   --push              Push local to cloud
@@ -790,19 +790,19 @@ Flags:
   --force             Force sync (override conflicts)
 
 Examples:
-$ envvault sync
+$ envault sync
 ↓ Pulling from cloud...
 ✓ Pulled 2 updates
 ↑ Pushing local changes...
 ✓ Pushed 1 new variable
 
-$ envvault sync --push
-$ envvault sync --pull
+$ envault sync --push
+$ envault sync --pull
 ```
 
 **Conflict Resolution:**
 ```bash
-$ envvault sync
+$ envault sync
 
 ⚠ Conflicts detected:
   DATABASE_URL modified both locally and remotely
@@ -817,40 +817,40 @@ $ envvault sync
 
 ---
 
-### 3.2.10 `envvault login`
+### 3.2.10 `envault login`
 
 **Authenticate CLI**
 
 ```bash
-envvault login [flags]
+envault login [flags]
 
 Flags:
   --token TOKEN       Use personal access token
   --manual            Manual auth (no browser)
 
 Examples:
-$ envvault login
+$ envault login
 Opening browser for authentication...
 ✓ Logged in as alice@acme.com
 
-$ envvault login --token envt_a1b2c3d4...
+$ envault login --token envt_a1b2c3d4...
 ✓ Logged in as alice@acme.com
 ```
 
 ---
 
-### 3.2.11 `envvault projects`
+### 3.2.11 `envault projects`
 
 **List all projects**
 
 ```bash
-envvault projects [flags]
+envault projects [flags]
 
 Flags:
   --format FORMAT     Output: table, json
 
 Examples:
-$ envvault projects
+$ envault projects
 
 Personal Projects
 ─────────────────────────────────────────
@@ -865,12 +865,12 @@ mobile-backend    3 envs    Synced
 
 ---
 
-### 3.2.12 `envvault env`
+### 3.2.12 `envault env`
 
 **Manage environments**
 
 ```bash
-envvault env [subcommand]
+envault env [subcommand]
 
 Subcommands:
   list        List environments
@@ -880,30 +880,30 @@ Subcommands:
   copy        Copy variables between envs
 
 Examples:
-$ envvault env list
+$ envault env list
 development  (12 variables)
 staging      (15 variables)
 production   (18 variables)
 
-$ envvault env create qa
+$ envault env create qa
 ✓ Created environment 'qa'
 
-$ envvault env copy development staging
+$ envault env copy development staging
 ? Copy all 12 variables? (y/n): y
 ✓ Copied 12 variables
 ```
 
 ---
 
-### 3.2.13 `envvault status`
+### 3.2.13 `envault status`
 
 **Show project status**
 
 ```bash
-envvault status
+envault status
 
 Example:
-$ envvault status
+$ envault status
 
 Project: my-saas-app
 Status: Synced with cloud ✓
@@ -920,12 +920,12 @@ Team: Acme Inc (5 members)
 
 ---
 
-### 3.2.14 `envvault team`
+### 3.2.14 `envault team`
 
 **Manage team**
 
 ```bash
-envvault team [subcommand]
+envault team [subcommand]
 
 Subcommands:
   list            List members
@@ -933,12 +933,12 @@ Subcommands:
   remove EMAIL    Remove member
 
 Examples:
-$ envvault team list
+$ envault team list
 Acme Inc (5 members)
 alice@acme.com      Owner
 bob@acme.com        Admin
 
-$ envvault team invite frank@acme.com
+$ envault team invite frank@acme.com
 ? Role: Developer
 ✓ Invitation sent
 ```
@@ -949,7 +949,7 @@ $ envvault team invite frank@acme.com
 
 ### Local Storage
 ```
-~/.envvault/
+~/.envault/
 ├── config.yml              Global CLI config
 ├── auth/
 │   ├── session.json        Auth session

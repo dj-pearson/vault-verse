@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: production
-      url: https://envvault.com
+      url: https://envault.net
 
     steps:
       - name: Checkout code
@@ -37,7 +37,7 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-          VITE_APP_URL: https://envvault.com
+          VITE_APP_URL: https://envault.net
 
       - name: Deploy to Vercel/Lovable
         run: |
@@ -53,7 +53,7 @@ jobs:
           # Wait for deployment to be live
           sleep 30
           # Test that the site is accessible
-          curl -f https://envvault.com || exit 1
+          curl -f https://envault.net || exit 1
           echo "✅ Frontend deployed successfully"
 
   # Deploy Backend (Supabase Migrations)
@@ -93,27 +93,27 @@ jobs:
           - os: macos-latest
             goos: darwin
             goarch: amd64
-            output: envvault-darwin-amd64
+            output: envault-darwin-amd64
           - os: macos-latest
             goos: darwin
             goarch: arm64
-            output: envvault-darwin-arm64
+            output: envault-darwin-arm64
 
           # Linux builds
           - os: ubuntu-latest
             goos: linux
             goarch: amd64
-            output: envvault-linux-amd64
+            output: envault-linux-amd64
           - os: ubuntu-latest
             goos: linux
             goarch: arm64
-            output: envvault-linux-arm64
+            output: envault-linux-arm64
 
           # Windows builds
           - os: ubuntu-latest
             goos: windows
             goarch: amd64
-            output: envvault-windows-amd64.exe
+            output: envault-windows-amd64.exe
 
     steps:
       - name: Checkout code
@@ -170,7 +170,7 @@ jobs:
         if: needs.deploy-frontend.result == 'success' && needs.deploy-backend.result == 'success'
         run: |
           echo "🎉 Deployment successful!"
-          echo "Frontend: https://envvault.com"
+          echo "Frontend: https://envault.net"
           echo "Backend: Migrations applied"
           echo "CLI: Binaries built"
 

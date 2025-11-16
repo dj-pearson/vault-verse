@@ -5,11 +5,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/dj-pearson/envvault/internal/utils"
+	"github.com/dj-pearson/envault/internal/utils"
 )
 
 const (
-	AppName     = "envvault"
+	AppName     = "envault"
 	ConfigFile  = "config.yml"
 	DBFile      = "projects.db"
 	AuthFile    = "auth/session.json"
@@ -122,16 +122,16 @@ type ProjectContext struct {
 
 // CurrentProject returns the current project context from working directory
 func CurrentProject() (*ProjectContext, error) {
-	// Try to read from .envvault file in current directory
+	// Try to read from .envault file in current directory
 	cwd, err := os.Getwd()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get current directory: %w", err)
 	}
 
-	// Look for .envvault file
-	envvaultFile := filepath.Join(cwd, ".envvault")
-	if _, err := os.Stat(envvaultFile); os.IsNotExist(err) {
-		return nil, fmt.Errorf("no envvault project found in current directory (run 'envvault init' first)")
+	// Look for .envault file
+	envaultFile := filepath.Join(cwd, ".envault")
+	if _, err := os.Stat(envaultFile); os.IsNotExist(err) {
+		return nil, fmt.Errorf("no envault project found in current directory (run 'envault init' first)")
 	}
 
 	// Read project context from file

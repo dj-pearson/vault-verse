@@ -3,10 +3,10 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/dj-pearson/envvault/internal/config"
-	"github.com/dj-pearson/envvault/internal/crypto"
-	"github.com/dj-pearson/envvault/internal/storage"
-	"github.com/dj-pearson/envvault/internal/utils"
+	"github.com/dj-pearson/envault/internal/config"
+	"github.com/dj-pearson/envault/internal/crypto"
+	"github.com/dj-pearson/envault/internal/storage"
+	"github.com/dj-pearson/envault/internal/utils"
 	"github.com/fatih/color"
 	"github.com/manifoldco/promptui"
 	"github.com/olekukonko/tablewriter"

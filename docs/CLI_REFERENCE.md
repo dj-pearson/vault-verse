@@ -8,29 +8,29 @@ Complete reference for all EnvVault CLI commands.
 
 - [Global Flags](#global-flags)
 - [Project Management](#project-management)
-  - [init](#envvault-init)
-  - [status](#envvault-status)
-  - [projects](#envvault-projects)
+  - [init](#envault-init)
+  - [status](#envault-status)
+  - [projects](#envault-projects)
 - [Secret Management](#secret-management)
-  - [set](#envvault-set)
-  - [get](#envvault-get)
-  - [list](#envvault-list)
-  - [unset](#envvault-unset)
+  - [set](#envault-set)
+  - [get](#envault-get)
+  - [list](#envault-list)
+  - [unset](#envault-unset)
 - [Environment Management](#environment-management)
-  - [env list](#envvault-env-list)
-  - [env create](#envvault-env-create)
-  - [env delete](#envvault-env-delete)
-  - [env copy](#envvault-env-copy)
+  - [env list](#envault-env-list)
+  - [env create](#envault-env-create)
+  - [env delete](#envault-env-delete)
+  - [env copy](#envault-env-copy)
 - [Import/Export](#importexport)
-  - [import](#envvault-import)
-  - [export](#envvault-export)
+  - [import](#envault-import)
+  - [export](#envault-export)
 - [Execution](#execution)
-  - [run](#envvault-run)
+  - [run](#envault-run)
 - [Team Collaboration](#team-collaboration)
-  - [login](#envvault-login)
-  - [logout](#envvault-logout)
-  - [sync](#envvault-sync)
-  - [team](#envvault-team)
+  - [login](#envault-login)
+  - [logout](#envault-logout)
+  - [sync](#envault-sync)
+  - [team](#envault-team)
 
 ---
 
@@ -40,71 +40,71 @@ These flags work with any command:
 
 | Flag | Description | Example |
 |------|-------------|---------|
-| `--env <name>` | Specify environment | `envvault set KEY=value --env production` |
-| `--quiet` | Suppress output | `envvault list --quiet` |
-| `--json` | Output in JSON format | `envvault list --json` |
-| `--debug` | Enable debug logging | `envvault sync --debug` |
-| `--help` | Show command help | `envvault set --help` |
-| `--version` | Show CLI version | `envvault --version` |
+| `--env <name>` | Specify environment | `envault set KEY=value --env production` |
+| `--quiet` | Suppress output | `envault list --quiet` |
+| `--json` | Output in JSON format | `envault list --json` |
+| `--debug` | Enable debug logging | `envault sync --debug` |
+| `--help` | Show command help | `envault set --help` |
+| `--version` | Show CLI version | `envault --version` |
 
 ---
 
 ## Project Management
 
-### `envvault init`
+### `envault init`
 
 Initialize a new EnvVault project in the current directory.
 
 **Usage:**
 ```bash
-envvault init [flags]
+envault init [flags]
 ```
 
 **Flags:**
 - `--name <string>` - Project name (default: directory name)
 - `--sync` - Enable team synchronization
-- `--force` - Overwrite existing `.envvault` file
+- `--force` - Overwrite existing `.envault` file
 
 **Examples:**
 ```bash
 # Basic initialization
-envvault init
+envault init
 
 # Custom name with sync enabled
-envvault init --name "My API" --sync
+envault init --name "My API" --sync
 
 # Force re-initialization
-envvault init --force
+envault init --force
 ```
 
 **What it does:**
-1. Creates `.envvault` file with project configuration
-2. Initializes local encrypted database in `~/.envvault/`
+1. Creates `.envault` file with project configuration
+2. Initializes local encrypted database in `~/.envault/`
 3. Creates default `development` environment
-4. Adds `.envvault` to `.gitignore` (if exists)
+4. Adds `.envault` to `.gitignore` (if exists)
 5. Generates master encryption key (stored in OS keychain)
 
 **Output:**
 ```
 ✓ Project initialized: my-app (id: 550e8400...)
 ✓ Created environment: development
-✓ Added .envvault to .gitignore
+✓ Added .envault to .gitignore
 
 Next steps:
-  envvault set API_KEY "your-secret-key"
-  envvault list
-  envvault run npm start
+  envault set API_KEY "your-secret-key"
+  envault list
+  envault run npm start
 ```
 
 ---
 
-### `envvault status`
+### `envault status`
 
 Show project status and statistics.
 
 **Usage:**
 ```bash
-envvault status [flags]
+envault status [flags]
 ```
 
 **Flags:**
@@ -113,10 +113,10 @@ envvault status [flags]
 **Examples:**
 ```bash
 # Show project status
-envvault status
+envault status
 
 # Get status as JSON
-envvault status --json
+envault status --json
 ```
 
 **Output:**
@@ -134,13 +134,13 @@ Environment Breakdown:
 
 ---
 
-### `envvault projects`
+### `envault projects`
 
 List all EnvVault projects on this machine.
 
 **Usage:**
 ```bash
-envvault projects [flags]
+envault projects [flags]
 ```
 
 **Flags:**
@@ -149,7 +149,7 @@ envvault projects [flags]
 **Examples:**
 ```bash
 # List all projects
-envvault projects
+envault projects
 ```
 
 **Output:**
@@ -164,14 +164,14 @@ Projects:
 
 ## Secret Management
 
-### `envvault set`
+### `envault set`
 
 Set or update an environment variable.
 
 **Usage:**
 ```bash
-envvault set <KEY> <value> [flags]
-envvault set <KEY=value> [KEY2=value2...] [flags]
+envault set <KEY> <value> [flags]
+envault set <KEY=value> [KEY2=value2...] [flags]
 ```
 
 **Flags:**
@@ -182,22 +182,22 @@ envvault set <KEY=value> [KEY2=value2...] [flags]
 **Examples:**
 ```bash
 # Set a secret
-envvault set API_KEY "sk_live_abc123"
+envault set API_KEY "sk_live_abc123"
 
 # Set with description
-envvault set DATABASE_URL "postgresql://..." --description "Production database"
+envault set DATABASE_URL "postgresql://..." --description "Production database"
 
 # Set for specific environment
-envvault set API_KEY "sk_test_xyz" --env staging
+envault set API_KEY "sk_test_xyz" --env staging
 
 # Set multiple secrets
-envvault set API_KEY=abc123 SECRET_KEY=def456
+envault set API_KEY=abc123 SECRET_KEY=def456
 
 # Read from stdin (safe from shell history)
-echo "super-secret-value" | envvault set PASSWORD
+echo "super-secret-value" | envault set PASSWORD
 
 # Read from file
-envvault set SSH_KEY "$(cat ~/.ssh/id_rsa)"
+envault set SSH_KEY "$(cat ~/.ssh/id_rsa)"
 ```
 
 **Security Warnings:**
@@ -209,20 +209,20 @@ envvault set SSH_KEY "$(cat ~/.ssh/id_rsa)"
 **Interactive Mode:**
 ```bash
 # Set secret interactively (value not shown)
-envvault set DATABASE_PASSWORD
+envault set DATABASE_PASSWORD
 # Prompts: Enter value for DATABASE_PASSWORD:
 # (input hidden)
 ```
 
 ---
 
-### `envvault get`
+### `envault get`
 
 Retrieve an environment variable value.
 
 **Usage:**
 ```bash
-envvault get <KEY> [flags]
+envault get <KEY> [flags]
 ```
 
 **Flags:**
@@ -232,16 +232,16 @@ envvault get <KEY> [flags]
 **Examples:**
 ```bash
 # Get a secret
-envvault get API_KEY
+envault get API_KEY
 
 # Get from specific environment
-envvault get DATABASE_URL --env production
+envault get DATABASE_URL --env production
 
 # Use in scripts (quiet mode)
-export DB_URL=$(envvault get DATABASE_URL --quiet)
+export DB_URL=$(envault get DATABASE_URL --quiet)
 
 # Pipe to another command
-envvault get SSH_PRIVATE_KEY --quiet | ssh-add -
+envault get SSH_PRIVATE_KEY --quiet | ssh-add -
 ```
 
 **Output:**
@@ -255,13 +255,13 @@ sk_live_abc123defghi
 
 ---
 
-### `envvault list`
+### `envault list`
 
 List all environment variables for an environment.
 
 **Usage:**
 ```bash
-envvault list [flags]
+envault list [flags]
 ```
 
 **Flags:**
@@ -273,19 +273,19 @@ envvault list [flags]
 **Examples:**
 ```bash
 # List all secrets (values hidden)
-envvault list
+envault list
 
 # List for specific environment
-envvault list --env production
+envault list --env production
 
 # Show actual values
-envvault list --show-values
+envault list --show-values
 
 # Get only keys
-envvault list --keys-only
+envault list --keys-only
 
 # JSON output
-envvault list --json
+envault list --json
 ```
 
 **Output:**
@@ -308,13 +308,13 @@ STRIPE_KEY       pk_test_abc123key
 
 ---
 
-### `envvault unset`
+### `envault unset`
 
 Delete an environment variable.
 
 **Usage:**
 ```bash
-envvault unset <KEY> [flags]
+envault unset <KEY> [flags]
 ```
 
 **Flags:**
@@ -324,13 +324,13 @@ envvault unset <KEY> [flags]
 **Examples:**
 ```bash
 # Delete a secret (with confirmation)
-envvault unset OLD_API_KEY
+envault unset OLD_API_KEY
 
 # Delete from specific environment
-envvault unset DATABASE_URL --env staging
+envault unset DATABASE_URL --env staging
 
 # Delete without confirmation
-envvault unset TEMP_KEY --force
+envault unset TEMP_KEY --force
 ```
 
 **Confirmation:**
@@ -343,13 +343,13 @@ envvault unset TEMP_KEY --force
 
 ## Environment Management
 
-### `envvault env list`
+### `envault env list`
 
 List all environments in the current project.
 
 **Usage:**
 ```bash
-envvault env list [flags]
+envault env list [flags]
 ```
 
 **Flags:**
@@ -357,7 +357,7 @@ envvault env list [flags]
 
 **Examples:**
 ```bash
-envvault env list
+envault env list
 ```
 
 **Output:**
@@ -370,22 +370,22 @@ Environments:
 
 ---
 
-### `envvault env create`
+### `envault env create`
 
 Create a new environment.
 
 **Usage:**
 ```bash
-envvault env create <name> [flags]
+envault env create <name> [flags]
 ```
 
 **Examples:**
 ```bash
 # Create new environment
-envvault env create staging
+envault env create staging
 
 # Create and switch to it
-envvault env create production && export ENVVAULT_ENV=production
+envault env create production && export ENVAULT_ENV=production
 ```
 
 **Output:**
@@ -395,13 +395,13 @@ envvault env create production && export ENVVAULT_ENV=production
 
 ---
 
-### `envvault env delete`
+### `envault env delete`
 
 Delete an environment and all its secrets.
 
 **Usage:**
 ```bash
-envvault env delete <name> [flags]
+envault env delete <name> [flags]
 ```
 
 **Flags:**
@@ -410,10 +410,10 @@ envvault env delete <name> [flags]
 **Examples:**
 ```bash
 # Delete environment (with confirmation)
-envvault env delete old-staging
+envault env delete old-staging
 
 # Force delete
-envvault env delete temp --force
+envault env delete temp --force
 ```
 
 **Confirmation:**
@@ -429,13 +429,13 @@ Are you sure? [y/N]: y
 
 ---
 
-### `envvault env copy`
+### `envault env copy`
 
 Copy all secrets from one environment to another.
 
 **Usage:**
 ```bash
-envvault env copy <source> <destination> [flags]
+envault env copy <source> <destination> [flags]
 ```
 
 **Flags:**
@@ -445,13 +445,13 @@ envvault env copy <source> <destination> [flags]
 **Examples:**
 ```bash
 # Copy development to staging
-envvault env copy development staging
+envault env copy development staging
 
 # Copy with overwrite
-envvault env copy development production --overwrite
+envault env copy development production --overwrite
 
 # Merge (keep existing production secrets)
-envvault env copy development production --merge
+envault env copy development production --merge
 ```
 
 **Output:**
@@ -465,13 +465,13 @@ Copying from development to staging...
 
 ## Import/Export
 
-### `envvault import`
+### `envault import`
 
 Import secrets from a file.
 
 **Usage:**
 ```bash
-envvault import <file> [flags]
+envault import <file> [flags]
 ```
 
 **Flags:**
@@ -505,19 +505,19 @@ DATABASE_URL: postgresql://localhost/db
 **Examples:**
 ```bash
 # Import from .env file
-envvault import .env
+envault import .env
 
 # Import to specific environment
-envvault import .env.production --env production
+envault import .env.production --env production
 
 # Import JSON
-envvault import secrets.json
+envault import secrets.json
 
 # Import YAML with overwrite
-envvault import config.yaml --overwrite
+envault import config.yaml --overwrite
 
 # Import from stdin
-cat .env | envvault import -
+cat .env | envault import -
 ```
 
 **Output:**
@@ -529,13 +529,13 @@ Importing from .env...
 
 ---
 
-### `envvault export`
+### `envault export`
 
 Export secrets to a file.
 
 **Usage:**
 ```bash
-envvault export <file> [flags]
+envault export <file> [flags]
 ```
 
 **Flags:**
@@ -575,22 +575,22 @@ export DATABASE_URL=postgresql://localhost/db
 **Examples:**
 ```bash
 # Export to .env
-envvault export .env
+envault export .env
 
 # Export production to .env.production
-envvault export .env.production --env production
+envault export .env.production --env production
 
 # Export as JSON
-envvault export secrets.json --format json
+envault export secrets.json --format json
 
 # Export all environments
-envvault export backup.json --all-envs
+envault export backup.json --all-envs
 
 # Export to stdout
-envvault export - | pbcopy  # Copy to clipboard
+envault export - | pbcopy  # Copy to clipboard
 
 # Export as shell exports
-envvault export vars.sh --format shell
+envault export vars.sh --format shell
 source vars.sh  # Load into shell
 ```
 
@@ -611,13 +611,13 @@ Ensure you:
 
 ## Execution
 
-### `envvault run`
+### `envault run`
 
 Run a command with environment variables injected.
 
 **Usage:**
 ```bash
-envvault run [flags] -- <command> [args...]
+envault run [flags] -- <command> [args...]
 ```
 
 **Flags:**
@@ -626,25 +626,25 @@ envvault run [flags] -- <command> [args...]
 **Examples:**
 ```bash
 # Run Node.js app with secrets
-envvault run npm start
+envault run npm start
 
 # Run with specific environment
-envvault run --env production npm start
+envault run --env production npm start
 
 # Run Python script
-envvault run python app.py
+envault run python app.py
 
 # Run with arguments
-envvault run -- node server.js --port 3000
+envault run -- node server.js --port 3000
 
 # Run in Docker
-envvault run docker-compose up
+envault run docker-compose up
 
 # Run tests
-envvault run npm test
+envault run npm test
 
 # Run database migration
-envvault run npx prisma migrate deploy
+envault run npx prisma migrate deploy
 ```
 
 **How it works:**
@@ -654,26 +654,26 @@ envvault run npx prisma migrate deploy
 4. Secrets are wiped from memory after execution
 
 **Process replacement:**
-On Unix systems, `envvault run` uses `exec()` to replace itself with your command, ensuring no parent process can see the environment variables.
+On Unix systems, `envault run` uses `exec()` to replace itself with your command, ensuring no parent process can see the environment variables.
 
 **Example with debugging:**
 ```bash
 # See what would be injected (without running command)
-envvault list --show-values --env production
-envvault run --env production --debug npm start
+envault list --show-values --env production
+envault run --env production --debug npm start
 ```
 
 ---
 
 ## Team Collaboration
 
-### `envvault login`
+### `envault login`
 
 Authenticate with EnvVault cloud for team sync.
 
 **Usage:**
 ```bash
-envvault login [flags]
+envault login [flags]
 ```
 
 **Flags:**
@@ -683,13 +683,13 @@ envvault login [flags]
 **Examples:**
 ```bash
 # Interactive login (opens browser)
-envvault login
+envault login
 
 # Login with token (for CI/CD)
-envvault login --token envt_abc123...
+envault login --token envt_abc123...
 
 # Manual token entry
-envvault login
+envault login
 # Prompts for token if browser unavailable
 ```
 
@@ -702,29 +702,29 @@ Opening browser for authentication...
 
 **Token Flow:**
 ```bash
-envvault login --token envt_abc123def456
+envault login --token envt_abc123def456
 ✓ Logged in as user@example.com
 ```
 
 **Getting a token:**
-1. Go to https://envvault.com/settings/tokens
+1. Go to https://envault.net/settings/tokens
 2. Create new token
 3. Copy and use with `--token` flag
 
 ---
 
-### `envvault logout`
+### `envault logout`
 
 Log out and clear session.
 
 **Usage:**
 ```bash
-envvault logout
+envault logout
 ```
 
 **Examples:**
 ```bash
-envvault logout
+envault logout
 ```
 
 **Output:**
@@ -735,13 +735,13 @@ envvault logout
 
 ---
 
-### `envvault sync`
+### `envault sync`
 
 Synchronize secrets with your team.
 
 **Usage:**
 ```bash
-envvault sync [flags]
+envault sync [flags]
 ```
 
 **Flags:**
@@ -752,16 +752,16 @@ envvault sync [flags]
 **Examples:**
 ```bash
 # Two-way sync (pull then push)
-envvault sync
+envault sync
 
 # Push local changes to team
-envvault sync --push
+envault sync --push
 
 # Pull team changes
-envvault sync --pull
+envault sync --pull
 
 # Force sync (resolve conflicts)
-envvault sync --force
+envault sync --force
 ```
 
 **Two-way sync (default):**
@@ -805,13 +805,13 @@ Choose: 1
 
 ---
 
-### `envvault team`
+### `envault team`
 
 Manage team members.
 
 **Usage:**
 ```bash
-envvault team <command> [args] [flags]
+envault team <command> [args] [flags]
 ```
 
 **Subcommands:**
@@ -822,24 +822,24 @@ envvault team <command> [args] [flags]
 **Examples:**
 ```bash
 # List team members
-envvault team list
+envault team list
 
 # Invite new member
-envvault team invite user@example.com --role developer
+envault team invite user@example.com --role developer
 
 # Remove member
-envvault team remove user@example.com
+envault team remove user@example.com
 ```
 
 ---
 
-#### `envvault team list`
+#### `envault team list`
 
 List all team members and their roles.
 
 **Usage:**
 ```bash
-envvault team list [flags]
+envault team list [flags]
 ```
 
 **Flags:**
@@ -855,13 +855,13 @@ Team Members (3):
 
 ---
 
-#### `envvault team invite`
+#### `envault team invite`
 
 Invite a new team member.
 
 **Usage:**
 ```bash
-envvault team invite <email> [flags]
+envault team invite <email> [flags]
 ```
 
 **Flags:**
@@ -876,13 +876,13 @@ envvault team invite <email> [flags]
 **Examples:**
 ```bash
 # Invite as developer
-envvault team invite newdev@example.com
+envault team invite newdev@example.com
 
 # Invite as admin
-envvault team invite admin@example.com --role admin
+envault team invite admin@example.com --role admin
 
 # Invite with custom message
-envvault team invite dev@example.com --message "Welcome to the team!"
+envault team invite dev@example.com --message "Welcome to the team!"
 ```
 
 **Output:**
@@ -894,13 +894,13 @@ envvault team invite dev@example.com --message "Welcome to the team!"
 
 ---
 
-#### `envvault team remove`
+#### `envault team remove`
 
 Remove a team member.
 
 **Usage:**
 ```bash
-envvault team remove <email> [flags]
+envault team remove <email> [flags]
 ```
 
 **Flags:**
@@ -909,10 +909,10 @@ envvault team remove <email> [flags]
 **Examples:**
 ```bash
 # Remove member (with confirmation)
-envvault team remove olddev@example.com
+envault team remove olddev@example.com
 
 # Force remove
-envvault team remove temp@example.com --force
+envault team remove temp@example.com --force
 ```
 
 **Confirmation:**
@@ -941,7 +941,7 @@ The CLI uses standard exit codes:
 
 **Usage in scripts:**
 ```bash
-if envvault get API_KEY > /dev/null 2>&1; then
+if envault get API_KEY > /dev/null 2>&1; then
   echo "API_KEY exists"
 else
   echo "API_KEY not found"
@@ -953,7 +953,7 @@ fi
 
 ## Configuration Files
 
-### `.envvault` (Project Config)
+### `.envault` (Project Config)
 
 Located in project root. **DO NOT COMMIT TO GIT.**
 
@@ -966,7 +966,7 @@ Located in project root. **DO NOT COMMIT TO GIT.**
 }
 ```
 
-### `~/.envvault/config.yml` (Global Config)
+### `~/.envault/config.yml` (Global Config)
 
 Optional global configuration:
 
@@ -978,7 +978,7 @@ default_environment: development
 telemetry: false
 
 # Custom API endpoint (for self-hosted)
-api_endpoint: https://api.envvault.com
+api_endpoint: https://api.envault.net
 ```
 
 ---
@@ -989,11 +989,11 @@ These environment variables affect CLI behavior:
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `ENVVAULT_ENV` | Default environment | `export ENVVAULT_ENV=production` |
-| `ENVVAULT_API_URL` | Custom API endpoint | `https://api.envvault.com` |
-| `ENVVAULT_DEBUG` | Enable debug mode | `ENVVAULT_DEBUG=1` |
-| `ENVVAULT_NO_COLOR` | Disable colored output | `ENVVAULT_NO_COLOR=1` |
-| `ENVVAULT_TOKEN` | API token (for CI) | `envt_abc123...` |
+| `ENVAULT_ENV` | Default environment | `export ENVAULT_ENV=production` |
+| `ENVAULT_API_URL` | Custom API endpoint | `https://api.envault.net` |
+| `ENVAULT_DEBUG` | Enable debug mode | `ENVAULT_DEBUG=1` |
+| `ENVAULT_NO_COLOR` | Disable colored output | `ENVAULT_NO_COLOR=1` |
+| `ENVAULT_TOKEN` | API token (for CI) | `envt_abc123...` |
 
 ---
 
@@ -1002,20 +1002,20 @@ These environment variables affect CLI behavior:
 ### 1. Shell Aliases
 ```bash
 # Add to ~/.bashrc or ~/.zshrc
-alias ev="envvault"
-alias evr="envvault run"
-alias evl="envvault list --show-values"
-alias evs="envvault sync"
+alias ev="envault"
+alias evr="envault run"
+alias evl="envault list --show-values"
+alias evs="envault sync"
 ```
 
 ### 2. Per-Project Environment
 ```bash
 # Set default environment for project
 cd my-app
-export ENVVAULT_ENV=production
+export ENVAULT_ENV=production
 
 # Now all commands use production by default
-envvault list  # Lists production secrets
+envault list  # Lists production secrets
 ```
 
 ### 3. Scripting
@@ -1024,25 +1024,25 @@ envvault list  # Lists production secrets
 # deploy.sh
 
 # Check if logged in
-if ! envvault team list > /dev/null 2>&1; then
-  echo "Please login first: envvault login"
+if ! envault team list > /dev/null 2>&1; then
+  echo "Please login first: envault login"
   exit 1
 fi
 
 # Sync latest secrets
-envvault sync --pull
+envault sync --pull
 
 # Deploy with production secrets
-envvault run --env production ./deploy_app.sh
+envault run --env production ./deploy_app.sh
 ```
 
 ### 4. Docker Integration
 ```dockerfile
 # Install EnvVault in Docker
-RUN curl -fsSL https://get.envvault.com | sh
+RUN curl -fsSL https://get.envault.net | sh
 
 # Use in entrypoint
-ENTRYPOINT ["envvault", "run", "--"]
+ENTRYPOINT ["envault", "run", "--"]
 CMD ["npm", "start"]
 ```
 
@@ -1051,10 +1051,10 @@ CMD ["npm", "start"]
 # .git/hooks/pre-commit
 #!/bin/bash
 
-# Ensure .envvault is not committed
-if git diff --cached --name-only | grep -q '^\.envvault$'; then
-  echo "Error: Attempting to commit .envvault file!"
-  echo "Run: git reset HEAD .envvault"
+# Ensure .envault is not committed
+if git diff --cached --name-only | grep -q '^\.envault$'; then
+  echo "Error: Attempting to commit .envault file!"
+  echo "Run: git reset HEAD .envault"
   exit 1
 fi
 ```
@@ -1065,9 +1065,9 @@ fi
 
 ### "Project not initialized"
 ```
-Error: no envvault project found in current directory
+Error: no envault project found in current directory
 
-Solution: Run `envvault init` first
+Solution: Run `envault init` first
 ```
 
 ### "Failed to access keychain"
@@ -1092,9 +1092,9 @@ Solution: Wait 60 seconds or contact support if persistent
 Warning: Conflict detected: Remote has changes since last sync
 
 Solution:
-1. Pull first: envvault sync --pull
-2. Review changes: envvault list
-3. Push: envvault sync --push
+1. Pull first: envault sync --pull
+2. Review changes: envault list
+3. Push: envault sync --push
 ```
 
 ---
@@ -1109,4 +1109,4 @@ Solution:
 
 ---
 
-**Need help?** `envvault <command> --help`
+**Need help?** `envault <command> --help`

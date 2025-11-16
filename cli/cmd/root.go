@@ -21,7 +21,7 @@ var (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "envvault",
+	Use:   "envault",
 	Short: "Secure, local-first environment variable management",
 	Long: `EnvVault is a secure, local-first environment variable management tool
 for developers and teams. It provides zero-knowledge encryption and optional
@@ -46,7 +46,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	// Global flags
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default: $HOME/.envvault/config.yml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default: $HOME/.envault/config.yml)")
 	rootCmd.PersistentFlags().BoolVarP(&quiet, "quiet", "q", false, "suppress output")
 	rootCmd.PersistentFlags().BoolVar(&json, "json", false, "output in JSON format")
 	rootCmd.PersistentFlags().BoolVar(&debug, "debug", false, "enable debug mode")
@@ -55,7 +55,7 @@ func init() {
 	rootCmd.Flags().BoolP("version", "v", false, "show version information")
 	rootCmd.Run = func(cmd *cobra.Command, args []string) {
 		if v, _ := cmd.Flags().GetBool("version"); v {
-			fmt.Printf("envvault version %s (built %s)\n", Version, BuildTime)
+			fmt.Printf("envault version %s (built %s)\n", Version, BuildTime)
 			return
 		}
 		cmd.Help()
@@ -74,7 +74,7 @@ func initConfig() {
 		}
 
 		// Create config directory if it doesn't exist
-		configDir := fmt.Sprintf("%s/.envvault", home)
+		configDir := fmt.Sprintf("%s/.envault", home)
 		if err := os.MkdirAll(configDir, 0700); err != nil {
 			fmt.Fprintln(os.Stderr, "Error creating config directory:", err)
 			os.Exit(1)

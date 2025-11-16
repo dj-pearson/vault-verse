@@ -28,15 +28,15 @@ sed -i.bak \
     -e "s/SHA256_ARM64_PLACEHOLDER/$SHA_DARWIN_ARM64/g" \
     -e "s/SHA256_LINUX_AMD64_PLACEHOLDER/$SHA_LINUX_AMD64/g" \
     -e "s/SHA256_LINUX_ARM64_PLACEHOLDER/$SHA_LINUX_ARM64/g" \
-    envvault.rb
+    envault.rb
 
 # Remove backup file
-rm envvault.rb.bak
+rm envault.rb.bak
 
 echo "✓ Formula updated successfully"
 echo ""
 echo "Next steps:"
-echo "1. Review changes: git diff envvault.rb"
-echo "2. Test locally: brew install --build-from-source envvault.rb"
-echo "3. Commit: git add envvault.rb && git commit -m 'Update to version $VERSION'"
+echo "1. Review changes: git diff envault.rb"
+echo "2. Test locally: brew install --build-from-source envault.rb"
+echo "3. Commit: git add envault.rb && git commit -m 'Update to version $VERSION'"
 echo "4. Push: git push origin main"
