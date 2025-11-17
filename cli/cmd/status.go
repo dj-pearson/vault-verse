@@ -34,7 +34,6 @@ func runStatus(cmd *cobra.Command, args []string) error {
 	cyan := color.New(color.FgCyan, color.Bold)
 	green := color.New(color.FgGreen)
 	yellow := color.New(color.FgYellow)
-	red := color.New(color.FgRed)
 
 	// Load project context
 	ctx, err := utils.LoadProjectContext()

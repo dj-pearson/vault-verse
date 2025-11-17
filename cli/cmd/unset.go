@@ -44,7 +44,6 @@ func init() {
 
 func runUnset(cmd *cobra.Command, args []string) error {
 	green := color.New(color.FgGreen)
-	red := color.New(color.FgRed)
 	yellow := color.New(color.FgYellow)
 
 	key := args[0]

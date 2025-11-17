@@ -61,7 +61,6 @@ func init() {
 
 func runTeamList(cmd *cobra.Command, args []string) error {
 	cyan := color.New(color.FgCyan)
-	red := color.New(color.FgRed)
 
 	// Check authentication
 	if !auth.IsLoggedIn() {
@@ -113,7 +112,6 @@ func runTeamList(cmd *cobra.Command, args []string) error {
 func runTeamInvite(cmd *cobra.Command, args []string) error {
 	green := color.New(color.FgGreen)
 	yellow := color.New(color.FgYellow)
-	red := color.New(color.FgRed)
 
 	email := args[0]
 
@@ -196,7 +194,6 @@ func runTeamInvite(cmd *cobra.Command, args []string) error {
 func runTeamRemove(cmd *cobra.Command, args []string) error {
 	green := color.New(color.FgGreen)
 	yellow := color.New(color.FgYellow)
-	red := color.New(color.FgRed)
 
 	email := args[0]
 

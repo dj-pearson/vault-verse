@@ -48,7 +48,6 @@ func init() {
 }
 
 func runExport(cmd *cobra.Command, args []string) error {
-	red := color.New(color.FgRed)
 	green := color.New(color.FgGreen)
 	yellow := color.New(color.FgYellow)
 

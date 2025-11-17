@@ -64,7 +64,6 @@ func init() {
 }
 
 func runEnvList(cmd *cobra.Command, args []string) error {
-	red := color.New(color.FgRed)
 	cyan := color.New(color.FgCyan)
 
 	// Load project context
@@ -121,7 +120,6 @@ func runEnvList(cmd *cobra.Command, args []string) error {
 
 func runEnvCreate(cmd *cobra.Command, args []string) error {
 	green := color.New(color.FgGreen)
-	red := color.New(color.FgRed)
 	yellow := color.New(color.FgYellow)
 
 	envName := args[0]
@@ -185,7 +183,6 @@ func runEnvCreate(cmd *cobra.Command, args []string) error {
 }
 
 func runEnvDelete(cmd *cobra.Command, args []string) error {
-	red := color.New(color.FgRed)
 	yellow := color.New(color.FgYellow)
 	green := color.New(color.FgGreen)
 
@@ -256,7 +253,6 @@ func runEnvDelete(cmd *cobra.Command, args []string) error {
 
 func runEnvCopy(cmd *cobra.Command, args []string) error {
 	green := color.New(color.FgGreen)
-	red := color.New(color.FgRed)
 	yellow := color.New(color.FgYellow)
 
 	sourceEnv := args[0]

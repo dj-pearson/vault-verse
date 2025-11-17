@@ -47,7 +47,6 @@ func init() {
 func runInit(cmd *cobra.Command, args []string) error {
 	green := color.New(color.FgGreen)
 	yellow := color.New(color.FgYellow)
-	red := color.New(color.FgRed)
 
 	// Check if already initialized
 	if _, err := os.Stat(".envault"); err == nil {

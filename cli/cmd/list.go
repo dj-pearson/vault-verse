@@ -50,7 +50,6 @@ func init() {
 }
 
 func runList(cmd *cobra.Command, args []string) error {
-	red := color.New(color.FgRed)
 	cyan := color.New(color.FgCyan)
 
 	// Load project context

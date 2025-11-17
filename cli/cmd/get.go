@@ -42,7 +42,6 @@ func init() {
 }
 
 func runGet(cmd *cobra.Command, args []string) error {
-	red := color.New(color.FgRed)
 	key := args[0]
 
 	// Load project context

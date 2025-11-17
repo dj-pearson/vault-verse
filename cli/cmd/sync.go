@@ -59,7 +59,6 @@ func init() {
 func runSync(cmd *cobra.Command, args []string) error {
 	green := color.New(color.FgGreen)
 	yellow := color.New(color.FgYellow)
-	red := color.New(color.FgRed)
 	cyan := color.New(color.FgCyan)
 
 	// Check authentication
