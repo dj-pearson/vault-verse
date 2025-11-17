@@ -1,20 +1,20 @@
-# @envault/cli
+# envault-cli
 
 > Secure, local-first environment variable management
 
-[![npm version](https://badge.fury.io/js/%40envault%2Fcli.svg)](https://www.npmjs.com/package/@envault/cli)
+[![npm version](https://badge.fury.io/js/envault-cli.svg)](https://www.npmjs.com/package/envault-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Installation
 
 ```bash
-npm install -g @envault/cli
+npm install -g envault-cli
 ```
 
 Or use npx without installing:
 
 ```bash
-npx @envault/cli --help
+npx envault-cli --help
 ```
 
 ## Quick Start

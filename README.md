@@ -1,73 +1,172 @@
-# Welcome to your Lovable project
+# EnVault - Secure Environment Variable Management
 
-## Project info
+[![Website](https://img.shields.io/badge/Website-envault.net-blue)](https://envault.net)
+[![npm CLI](https://badge.fury.io/js/envault-cli.svg)](https://www.npmjs.com/package/envault-cli)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**URL**: https://lovable.dev/projects/0bd23e8b-59fd-40b2-b0bc-6adbd2dc1c67
+> Secure, local-first environment variable management for developers and teams. Keep your secrets safe while maintaining seamless collaboration.
 
-## How can I edit this code?
+## 🚀 Quick Start
 
-There are several ways of editing your application.
+### Install the CLI
 
-**Use Lovable**
+```bash
+# npm
+npm install -g envault-cli
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/0bd23e8b-59fd-40b2-b0bc-6adbd2dc1c67) and start prompting.
+# Homebrew (macOS/Linux)
+brew install dj-pearson/tap/envault
 
-Changes made via Lovable will be committed automatically to this repo.
+# Direct download
+# Download from https://github.com/dj-pearson/vault-verse/releases/latest
+```
 
-**Use your preferred IDE**
+### Basic Usage
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+```bash
+# Initialize a new project
+envault init my-app
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+# Set environment variables
+envault set DATABASE_URL=postgresql://localhost/mydb
+envault set API_KEY=your-secret-key
 
-Follow these steps:
+# List variables (masked by default)
+envault list
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Export to .env file
+envault export -o .env
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Run command with environment variables
+envault run npm start
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
+## ✨ Features
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+- 🔒 **Zero-knowledge encryption** - Your secrets never leave your machine unencrypted
+- 💻 **Local-first** - Works 100% offline, no account required
+- 🌍 **Multi-environment** - Manage dev, staging, production, and custom environments
+- 👥 **Team sync** - Optional encrypted team collaboration
+- 🔄 **Import/Export** - Seamless migration from .env files
+- 🚀 **Fast & lightweight** - Built in Go, zero dependencies
+- 🌐 **Cross-platform** - macOS, Linux, Windows (Intel & ARM)
+
+## 📦 What's in this Repo
+
+This is a monorepo containing:
+
+- **Web Application** (`/src`) - React + TypeScript dashboard for managing environments via web interface
+- **CLI Tool** (`/cli`) - Go-based command-line interface for local environment management
+- **Documentation** (`/docs`) - Guides, tutorials, and API documentation
+
+## 🌐 Web Application
+
+### Technologies Used
+
+- **Frontend**: React 18, TypeScript, Vite
+- **UI**: shadcn-ui, Tailwind CSS
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Supabase Auth
+- **Hosting**: Cloudflare Pages
+
+### Development Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/dj-pearson/vault-verse.git
+cd vault-verse
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your Supabase credentials
+
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Environment Variables
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Create a `.env` file with:
 
-**Use GitHub Codespaces**
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Building for Production
 
-## What technologies are used for this project?
+```bash
+npm run build
+```
 
-This project is built with:
+The built files will be in the `dist/` directory, ready for deployment to Cloudflare Pages or any static hosting service.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 🔧 CLI Development
 
-## How can I deploy this project?
+The CLI is located in the `/cli` directory and is written in Go.
 
-Simply open [Lovable](https://lovable.dev/projects/0bd23e8b-59fd-40b2-b0bc-6adbd2dc1c67) and click on Share -> Publish.
+### Prerequisites
 
-## Can I connect a custom domain to my Lovable project?
+- Go 1.22 or later
+- Make (optional, for convenience scripts)
 
-Yes, you can!
+### Building the CLI
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```bash
+cd cli
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+# Build for your platform
+go build -o envault
+
+# Or build for all platforms
+make build-all
+```
+
+### Running Tests
+
+```bash
+cd cli
+go test ./...
+```
+
+## 📖 Documentation
+
+- **CLI Reference**: [/docs/CLI_REFERENCE.md](/docs/CLI_REFERENCE.md)
+- **Getting Started Guide**: [/docs/GETTING_STARTED.md](/docs/GETTING_STARTED.md)
+- **Security Overview**: [/docs/SECURITY.md](/docs/SECURITY.md)
+- **Full Documentation**: [envault.net/docs](https://envault.net/docs)
+
+## 🤝 Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔗 Links
+
+- **Website**: [envault.net](https://envault.net)
+- **Documentation**: [envault.net/docs](https://envault.net/docs)
+- **CLI Package**: [npmjs.com/package/envault-cli](https://www.npmjs.com/package/envault-cli)
+- **Issues**: [github.com/dj-pearson/vault-verse/issues](https://github.com/dj-pearson/vault-verse/issues)
+- **Discussions**: [github.com/dj-pearson/vault-verse/discussions](https://github.com/dj-pearson/vault-verse/discussions)
+
+## 💬 Support
+
+- 📧 Email: support@envault.net
+- 💬 GitHub Discussions: [Start a discussion](https://github.com/dj-pearson/vault-verse/discussions)
+- 🐛 Bug Reports: [Create an issue](https://github.com/dj-pearson/vault-verse/issues)
+
+---
+
+Made with ❤️ by the EnVault Team
