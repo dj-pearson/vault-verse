@@ -180,9 +180,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Use --clobber to overwrite existing files if release already exists
           gh release upload ${{ needs.create-release.outputs.version }} \
             ./cli/${{ matrix.output }} \
             ./cli/${{ matrix.output }}.sha256 \
+            --clobber \
             --repo ${{ github.repository }}
 
   # Update Homebrew tap
