@@ -3,8 +3,14 @@ name: CI - Continuous Integration
 on:
   pull_request:
     branches: [main, develop]
+    paths:
+      - 'cli/**'
+      - '.github/workflows/**'
   push:
     branches: [main, develop]
+    paths:
+      - 'cli/**'
+      - '.github/workflows/**'
 
 env:
   GO_VERSION: '1.22'
