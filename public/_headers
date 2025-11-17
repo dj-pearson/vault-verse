@@ -3,3 +3,15 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+/*.js
+  Content-Type: text/javascript; charset=utf-8
+
+/*.mjs
+  Content-Type: text/javascript; charset=utf-8
+
+/*.css
+  Content-Type: text/css; charset=utf-8
+
+/*.html
+  Content-Type: text/html; charset=utf-8
