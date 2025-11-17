@@ -1,0 +1,9 @@
+name = "vault-verse"
+compatibility_date = "2025-11-17"
+pages_build_output_dir = "dist"
+
+[env.production]
+routes = [
+  { pattern = "envault.net", custom_domain = true },
+  { pattern = "www.envault.net", custom_domain = true }
+]
