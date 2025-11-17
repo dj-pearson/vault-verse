@@ -68,7 +68,7 @@ jobs:
 
           ### npm (all platforms)
           \`\`\`bash
-          npm install -g @envault/cli
+          npm install -g envault-cli
           \`\`\`
 
           ### Manual Installation
@@ -203,15 +203,22 @@ jobs:
         run: |
           VERSION="${{ needs.create-release.outputs.version }}"
 
-          # Download binaries
-          curl -L -o envault-darwin-amd64 \
-            "https://github.com/${{ github.repository }}/releases/download/${VERSION}/envault-darwin-amd64"
-          curl -L -o envault-darwin-arm64 \
-            "https://github.com/${{ github.repository }}/releases/download/${VERSION}/envault-darwin-arm64"
-          curl -L -o envault-linux-amd64 \
-            "https://github.com/${{ github.repository }}/releases/download/${VERSION}/envault-linux-amd64"
-          curl -L -o envault-linux-arm64 \
-            "https://github.com/${{ github.repository }}/releases/download/${VERSION}/envault-linux-arm64"
+          # Wait for binaries to be available (retry up to 30 times with 10s delay)
+          for binary in darwin-amd64 darwin-arm64 linux-amd64 linux-arm64; do
+            echo "Downloading envault-${binary}..."
+            for i in {1..30}; do
+              if curl -f -L -o envault-${binary} "https://github.com/${{ github.repository }}/releases/download/${VERSION}/envault-${binary}"; then
+                echo "✓ Downloaded envault-${binary}"
+                break
+              fi
+              if [ $i -eq 30 ]; then
+                echo "Failed to download envault-${binary} after 30 attempts"
+                exit 1
+              fi
+              echo "Attempt $i/30 failed, waiting 10s..."
+              sleep 10
+            done
+          done
 
           # Calculate SHA256
           echo "SHA256_DARWIN_AMD64=$(sha256sum envault-darwin-amd64 | awk '{print $1}')" >> $GITHUB_ENV
@@ -332,8 +339,8 @@ jobs:
         if: needs.build-binaries.result == 'success'
         run: |
           echo "🎉 Release ${{ needs.create-release.outputs.version }} published!"
-          echo "📦 Homebrew: brew install envault/tap/envault"
-          echo "📦 npm: npm install -g @envault/cli"
+          echo "📦 Homebrew: brew install dj-pearson/tap/envault"
+          echo "📦 npm: npm install -g envault-cli"
           echo "📦 GitHub: https://github.com/${{ github.repository }}/releases/tag/${{ needs.create-release.outputs.version }}"
 
       - name: Send Discord/Slack notification

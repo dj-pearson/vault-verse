@@ -1,5 +1,5 @@
 {
-  "name": "@envault/cli",
+  "name": "envault-cli",
   "version": "0.1.0",
   "description": "Secure, local-first environment variable management CLI with zero-knowledge encryption",
   "main": "install.js",
