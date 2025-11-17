@@ -19,7 +19,6 @@ jobs:
     name: Create GitHub Release
     runs-on: ubuntu-latest
     outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
       version: ${{ steps.get_version.outputs.version }}
 
     steps:
@@ -49,7 +48,7 @@ jobs:
             COMMITS=$(git log ${PREVIOUS_TAG}..HEAD --pretty=format:"- %s (%h)" --reverse)
           fi
 
-          cat > release_notes.md << EOF
+          cat > release_notes.md << 'EOF'
           ## What's Changed
 
           ${COMMITS}
@@ -57,43 +56,47 @@ jobs:
           ## Installation
 
           ### macOS (Homebrew)
-          \`\`\`bash
-          brew tap envault/tap
+          ```bash
+          brew tap dj-pearson/tap
           brew install envault
-          \`\`\`
+          ```
 
           ### macOS/Linux (curl)
-          \`\`\`bash
+          ```bash
           curl -fsSL https://get.envault.net | sh
-          \`\`\`
+          ```
 
           ### npm (all platforms)
-          \`\`\`bash
+          ```bash
           npm install -g @envault/cli
-          \`\`\`
+          ```
 
           ### Manual Installation
           Download the binary for your platform below and add it to your PATH.
 
           ## Checksums
           See checksums.txt for SHA256 hashes of all binaries.
-
-          **Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREVIOUS_TAG}...${{ steps.get_version.outputs.version }}
           EOF
+
+          if [ -n "$PREVIOUS_TAG" ]; then
+            echo "" >> release_notes.md
+            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREVIOUS_TAG}...${{ steps.get_version.outputs.version }}" >> release_notes.md
+          fi
+
+          # Replace COMMITS placeholder
+          sed -i "s|\${COMMITS}|${COMMITS}|g" release_notes.md
 
           cat release_notes.md
 
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.get_version.outputs.version }}
-          release_name: EnvVault ${{ steps.get_version.outputs.version }}
-          body_path: release_notes.md
-          draft: false
-          prerelease: ${{ contains(steps.get_version.outputs.version, '-') }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create ${{ steps.get_version.outputs.version }} \
+            --title "EnvVault ${{ steps.get_version.outputs.version }}" \
+            --notes-file release_notes.md \
+            ${{ contains(steps.get_version.outputs.version, '-') && '--prerelease' || '' }}
 
   # Build binaries for all platforms
   build-binaries:
@@ -172,25 +175,14 @@ jobs:
             shasum -a 256 ${{ matrix.output }} > ${{ matrix.output }}.sha256
           fi
 
-      - name: Upload binary
-        uses: actions/upload-release-asset@v1
+      - name: Upload binary and checksum
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ./cli/${{ matrix.output }}
-          asset_name: ${{ matrix.output }}
-          asset_content_type: application/octet-stream
-
-      - name: Upload checksum
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: ./cli/${{ matrix.output }}.sha256
-          asset_name: ${{ matrix.output }}.sha256
-          asset_content_type: text/plain
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload ${{ needs.create-release.outputs.version }} \
+            ./cli/${{ matrix.output }} \
+            ./cli/${{ matrix.output }}.sha256 \
+            --repo ${{ github.repository }}
 
   # Update Homebrew tap
   update-homebrew:
