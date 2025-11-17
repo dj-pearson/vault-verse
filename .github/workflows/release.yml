@@ -203,20 +203,24 @@ jobs:
         run: |
           VERSION="${{ needs.create-release.outputs.version }}"
 
-          # Wait for binaries to be available (retry up to 30 times with 10s delay)
+          # Wait for all build jobs to upload their binaries
+          echo "Waiting 60s for build jobs to complete..."
+          sleep 60
+
+          # Wait for binaries to be available (retry up to 20 times with 15s delay)
           for binary in darwin-amd64 darwin-arm64 linux-amd64 linux-arm64; do
             echo "Downloading envault-${binary}..."
-            for i in {1..30}; do
+            for i in {1..20}; do
               if curl -f -L -o envault-${binary} "https://github.com/${{ github.repository }}/releases/download/${VERSION}/envault-${binary}"; then
                 echo "✓ Downloaded envault-${binary}"
                 break
               fi
-              if [ $i -eq 30 ]; then
-                echo "Failed to download envault-${binary} after 30 attempts"
+              if [ $i -eq 20 ]; then
+                echo "Failed to download envault-${binary} after 20 attempts"
                 exit 1
               fi
-              echo "Attempt $i/30 failed, waiting 10s..."
-              sleep 10
+              echo "Attempt $i/20 failed, waiting 15s..."
+              sleep 15
             done
           done
 
