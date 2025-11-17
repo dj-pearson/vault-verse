@@ -55,7 +55,7 @@ func runExport(cmd *cobra.Command, args []string) error {
 	// Load project context
 	ctx, err := utils.LoadProjectContext()
 	if err != nil {
-		return red.Sprintf("Error: %v", err)
+		return fmt.Errorf("Error: %v", err)
 	}
 
 	// Initialize services

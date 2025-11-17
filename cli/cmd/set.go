@@ -53,7 +53,7 @@ func runSet(cmd *cobra.Command, args []string) error {
 	// Load project context
 	ctx, err := utils.LoadProjectContext()
 	if err != nil {
-		return red.Sprintf("Error: %v\nRun 'envault init' first", err)
+		return fmt.Errorf("Error: %v\nRun 'envault init' first", err)
 	}
 
 	// Initialize services

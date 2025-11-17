@@ -86,7 +86,7 @@ func runLogin(cmd *cobra.Command, args []string) error {
 	baseURL := os.Getenv("ENVAULT_API_URL")
 
 	if apiKey == "" {
-		return red.Sprint("Error: ENVAULT_API_KEY environment variable not set\n\nPlease set your Supabase API key:\n  export ENVAULT_API_KEY=your_anon_key_here")
+		return fmt.Errorf("Error: ENVAULT_API_KEY environment variable not set\n\nPlease set your Supabase API key:\n  export ENVAULT_API_KEY=your_anon_key_here")
 	}
 
 	// Create API client

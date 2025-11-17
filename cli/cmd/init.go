@@ -51,7 +51,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 
 	// Check if already initialized
 	if _, err := os.Stat(".envault"); err == nil {
-		return red.Sprint("Error: Project already initialized in this directory")
+		return fmt.Errorf("Error: Project already initialized in this directory")
 	}
 
 	// Get project name
@@ -118,7 +118,6 @@ func runInit(cmd *cobra.Command, args []string) error {
 	defer db.Close()
 
 	// Create project
-	projectID := uuid.New().String()
 	project, err := db.CreateProject(projectName, "", "local") // Owner ID will be set after login
 	if err != nil {
 		return fmt.Errorf("failed to create project: %w", err)

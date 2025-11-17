@@ -64,7 +64,7 @@ func runSync(cmd *cobra.Command, args []string) error {
 
 	// Check authentication
 	if !auth.IsLoggedIn() {
-		return red.Sprint("Error: Not logged in\nRun 'envault login' first to enable team sync")
+		return fmt.Errorf("Error: Not logged in\nRun 'envault login' first to enable team sync")
 	}
 
 	session, err := auth.GetCurrentUser()
@@ -75,7 +75,7 @@ func runSync(cmd *cobra.Command, args []string) error {
 	// Load project context
 	ctx, err := utils.LoadProjectContext()
 	if err != nil {
-		return red.Sprintf("Error: %v", err)
+		return fmt.Errorf("Error: %v", err)
 	}
 
 	// Initialize services
@@ -100,7 +100,7 @@ func runSync(cmd *cobra.Command, args []string) error {
 	baseURL := os.Getenv("ENVAULT_API_URL")
 
 	if apiKey == "" {
-		return red.Sprint("Error: ENVAULT_API_KEY not set")
+		return fmt.Errorf("Error: ENVAULT_API_KEY not set")
 	}
 
 	client := api.New(baseURL, apiKey)
