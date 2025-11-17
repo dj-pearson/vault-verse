@@ -134,7 +134,7 @@ func runEnvCreate(cmd *cobra.Command, args []string) error {
 	// Load project context
 	ctx, err := utils.LoadProjectContext()
 	if err != nil {
-		return red.Sprintf("Error: %v", err)
+		return fmt.Errorf("Error: %v", err)
 	}
 
 	// Initialize services
@@ -205,7 +205,7 @@ func runEnvDelete(cmd *cobra.Command, args []string) error {
 	// Load project context
 	ctx, err := utils.LoadProjectContext()
 	if err != nil {
-		return red.Sprintf("Error: %v", err)
+		return fmt.Errorf("Error: %v", err)
 	}
 
 	// Initialize services
@@ -244,7 +244,7 @@ func runEnvDelete(cmd *cobra.Command, args []string) error {
 	}
 
 	// Delete environment (cascades to secrets)
-	_, err = db.(*storage.DB).conn.Exec("DELETE FROM environments WHERE id = ?", env.ID)
+	err = db.DeleteEnvironment(env.ID)
 	if err != nil {
 		return fmt.Errorf("failed to delete environment: %w", err)
 	}
@@ -265,7 +265,7 @@ func runEnvCopy(cmd *cobra.Command, args []string) error {
 	// Load project context
 	ctx, err := utils.LoadProjectContext()
 	if err != nil {
-		return red.Sprintf("Error: %v", err)
+		return fmt.Errorf("Error: %v", err)
 	}
 
 	// Initialize services

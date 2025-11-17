@@ -14,9 +14,9 @@ var (
 	BuildTime string
 
 	// Global flags
-	quiet  bool
-	json   bool
-	debug  bool
+	quiet      bool
+	jsonOutput bool
+	debug      bool
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -48,7 +48,7 @@ func init() {
 	// Global flags
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default: $HOME/.envault/config.yml)")
 	rootCmd.PersistentFlags().BoolVarP(&quiet, "quiet", "q", false, "suppress output")
-	rootCmd.PersistentFlags().BoolVar(&json, "json", false, "output in JSON format")
+	rootCmd.PersistentFlags().BoolVar(&jsonOutput, "json", false, "output in JSON format")
 	rootCmd.PersistentFlags().BoolVar(&debug, "debug", false, "enable debug mode")
 
 	// Version flag
