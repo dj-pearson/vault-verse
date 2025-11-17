@@ -7,9 +7,9 @@ import (
 	"strings"
 
 	"github.com/dj-pearson/envault/internal/config"
-	"github.com/dj-pearson/envault/internal/models"
+	"github.com/dj-pearson/envault/internal/storage"
+	"github.com/dj-pearson/envault/internal/utils"
 	"github.com/fatih/color"
-	"github.com/google/uuid"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 )

@@ -29,3 +29,7 @@ cli/dist/
 cli/coverage.out
 cli/coverage.html
 cli/completions/
+
+# GitHub Actions logs
+Github_Logs/
+logs_*.zip

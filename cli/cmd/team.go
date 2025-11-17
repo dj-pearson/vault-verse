@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/dj-pearson/envault/internal/api"
 	"github.com/dj-pearson/envault/internal/auth"
