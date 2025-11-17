@@ -1,0 +1,9 @@
+name = "vault-verse"
+compatibility_date = "2024-12-19"
+pages_build_output_dir = "dist"
+
+[env.production]
+name = "vault-verse"
+
+[env.preview]
+name = "vault-verse-preview"
