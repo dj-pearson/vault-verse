@@ -3,8 +3,6 @@ package crypto
 import (
 	"crypto/rand"
 	"runtime"
-	"syscall"
-	"unsafe"
 )
 
 // SecureBytes represents a byte slice that will be securely wiped from memory
@@ -173,16 +171,6 @@ func WipeString(s *string) {
 	WipeBytes(bytes)
 	*s = ""
 	runtime.KeepAlive(bytes)
-}
-
-// DisableCoreDumps attempts to disable core dumps for the current process
-// to prevent secrets from being written to disk in crash dumps
-func DisableCoreDumps() error {
-	// Set resource limit for core dump size to 0
-	var rLimit syscall.Rlimit
-	rLimit.Max = 0
-	rLimit.Cur = 0
-	return syscall.Setrlimit(syscall.RLIMIT_CORE, &rLimit)
 }
 
 // SecureRandom generates cryptographically secure random bytes

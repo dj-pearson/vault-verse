@@ -33,17 +33,6 @@ var SensitiveKeyPatterns = []string{
 	"SLACK_", "GITHUB_", "AWS_", "AZURE_",
 }
 
-// IsSensitiveKey checks if an environment variable key appears to contain sensitive data
-func IsSensitiveKey(key string) bool {
-	upperKey := strings.ToUpper(key)
-	for _, pattern := range SensitiveKeyPatterns {
-		if strings.Contains(upperKey, pattern) {
-			return true
-		}
-	}
-	return false
-}
-
 // EnsureSecureFilePermissions sets secure permissions on a file
 func EnsureSecureFilePermissions(path string) error {
 	info, err := os.Stat(path)
@@ -116,63 +105,6 @@ func CreateSecureFile(path string) (*os.File, error) {
 	}
 
 	return file, nil
-}
-
-// LooksLikeFilePath detects if a string looks like a file path
-// This helps prevent accidentally setting file paths as secret values
-func LooksLikeFilePath(value string) bool {
-	// Check for common path patterns
-	if strings.HasPrefix(value, "/") || strings.HasPrefix(value, "~/") {
-		return true
-	}
-
-	// Check for Windows paths
-	if matched, _ := regexp.MatchString(`^[A-Za-z]:\\`, value); matched {
-		return true
-	}
-
-	// Check for relative paths with slashes
-	if strings.Contains(value, "/") && !strings.HasPrefix(value, "http://") && !strings.HasPrefix(value, "https://") {
-		parts := strings.Split(value, "/")
-		if len(parts) > 2 {
-			return true
-		}
-	}
-
-	return false
-}
-
-// ValidateEnvKey validates that an environment variable key follows best practices
-func ValidateEnvKey(key string) error {
-	if key == "" {
-		return fmt.Errorf("key cannot be empty")
-	}
-
-	// Check if key starts with a number
-	if key[0] >= '0' && key[0] <= '9' {
-		return fmt.Errorf("key cannot start with a number")
-	}
-
-	// Check for valid characters (uppercase letters, numbers, underscores)
-	validKey := regexp.MustCompile(`^[A-Z][A-Z0-9_]*$`)
-	if !validKey.MatchString(key) {
-		return fmt.Errorf("key must start with a letter and contain only uppercase letters, numbers, and underscores")
-	}
-
-	// Check for reserved/dangerous keys
-	reservedKeys := []string{
-		"PATH", "HOME", "USER", "SHELL", "TERM",
-		"PWD", "OLDPWD", "SHLVL", "LANG", "LC_ALL",
-		"LD_PRELOAD", "LD_LIBRARY_PATH",
-	}
-
-	for _, reserved := range reservedKeys {
-		if key == reserved {
-			return fmt.Errorf("'%s' is a reserved system variable and should not be overwritten", key)
-		}
-	}
-
-	return nil
 }
 
 // RedactSensitiveValue redacts sensitive information for display/logging
@@ -315,18 +247,6 @@ func min(a, b int64) int64 {
 		return a
 	}
 	return b
-}
-
-// Warn prints a warning message in yellow
-func Warn(message string) {
-	yellow := color.New(color.FgYellow)
-	yellow.Printf("⚠ %s\n", message)
-}
-
-// Info prints an informational message in cyan
-func Info(message string) {
-	cyan := color.New(color.FgCyan)
-	cyan.Println(message)
 }
 
 // Success prints a success message in green

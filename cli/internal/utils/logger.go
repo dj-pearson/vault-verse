@@ -135,17 +135,6 @@ func (l *Logger) redactSensitiveData(message string) string {
 			regexp.MustCompile(`(?i)(bearer|authorization):\s*[^\s]+`),
 			"$1: [REDACTED]",
 		},
-		// Environment variable values in key=value format
-		{
-			regexp.MustCompile(`([A-Z_]+)=([^\s]+)`),
-			func(key, value string) string {
-				// Only redact if key looks sensitive
-				if IsSensitiveKey(key) {
-					return key + "=[REDACTED]"
-				}
-				return key + "=" + value
-			},
-		},
 		// JWT tokens
 		{
 			regexp.MustCompile(`eyJ[a-zA-Z0-9_-]*\.eyJ[a-zA-Z0-9_-]*\.[a-zA-Z0-9_-]*`),

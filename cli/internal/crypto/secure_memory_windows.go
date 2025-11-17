@@ -47,3 +47,10 @@ func unlockMemory(b []byte) error {
 	}
 	return nil
 }
+
+// DisableCoreDumps is a no-op on Windows as core dumps work differently
+func DisableCoreDumps() error {
+	// Windows uses Error Reporting and crash dumps differently
+	// This is a no-op for Windows compatibility
+	return nil
+}

@@ -14,3 +14,9 @@ func unlockMemory(b []byte) error {
 	// Memory unlocking not supported on this platform
 	return nil
 }
+
+// DisableCoreDumps is a no-op on unsupported platforms
+func DisableCoreDumps() error {
+	// Core dump disabling not supported on this platform
+	return nil
+}
