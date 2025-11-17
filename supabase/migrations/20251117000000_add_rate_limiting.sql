@@ -77,14 +77,18 @@ BEGIN
   END IF;
 
   -- Record this request (upsert)
-  INSERT INTO public.rate_limits (user_id, ip_address, endpoint, window_start, request_count)
-  VALUES (v_user_id, v_ip_address, p_endpoint, v_window_start, 1)
-  ON CONFLICT (user_id, endpoint, window_start)
-    WHERE user_id IS NOT NULL
-    DO UPDATE SET request_count = rate_limits.request_count + 1
-  ON CONFLICT (ip_address, endpoint, window_start)
-    WHERE user_id IS NULL
-    DO UPDATE SET request_count = rate_limits.request_count + 1;
+  -- Use different conflict resolution based on whether user is authenticated
+  IF v_user_id IS NOT NULL THEN
+    INSERT INTO public.rate_limits (user_id, ip_address, endpoint, window_start, request_count)
+    VALUES (v_user_id, v_ip_address, p_endpoint, v_window_start, 1)
+    ON CONFLICT (user_id, endpoint, window_start)
+      DO UPDATE SET request_count = rate_limits.request_count + 1;
+  ELSE
+    INSERT INTO public.rate_limits (user_id, ip_address, endpoint, window_start, request_count)
+    VALUES (v_user_id, v_ip_address, p_endpoint, v_window_start, 1)
+    ON CONFLICT (ip_address, endpoint, window_start)
+      DO UPDATE SET request_count = rate_limits.request_count + 1;
+  END IF;
 
   RETURN TRUE;
 END;
@@ -205,6 +209,9 @@ $$;
 -- Update other critical RPC functions with rate limiting
 
 -- get_environment_secrets: 100 requests per minute
+-- Drop existing function first (return type changed from JSON to TABLE)
+DROP FUNCTION IF EXISTS public.get_environment_secrets(UUID);
+
 CREATE OR REPLACE FUNCTION public.get_environment_secrets(
   p_environment_id UUID
 ) RETURNS TABLE (
