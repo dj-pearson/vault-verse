@@ -305,9 +305,14 @@ jobs:
         run: |
           VERSION="${{ needs.create-release.outputs.version }}"
           VERSION_NUMBER="${VERSION#v}"  # Remove 'v' prefix
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
 
-          # Update package.json version
-          npm version $VERSION_NUMBER --no-git-tag-version
+          # Only update if version is different
+          if [ "$CURRENT_VERSION" != "$VERSION_NUMBER" ]; then
+            npm version $VERSION_NUMBER --no-git-tag-version
+          else
+            echo "Version already set to $VERSION_NUMBER, skipping update"
+          fi
 
       - name: Publish to npm
         working-directory: ./cli/dist/npm
