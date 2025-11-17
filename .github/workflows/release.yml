@@ -185,11 +185,20 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Use --clobber to overwrite existing files if release already exists
+          echo "Uploading ${{ matrix.output }} to release ${{ needs.create-release.outputs.version }}"
+          ls -lh ./cli/${{ matrix.output }}*
+          
+          # Add a small delay to ensure release is ready
+          sleep 10
+          
           gh release upload ${{ needs.create-release.outputs.version }} \
             ./cli/${{ matrix.output }} \
             ./cli/${{ matrix.output }}.sha256 \
             --clobber \
-            --repo ${{ github.repository }}
+            --repo ${{ github.repository }} \
+            || (echo "Upload failed with exit code $?" && exit 1)
+          
+          echo "✓ Successfully uploaded ${{ matrix.output }}"
 
   # Update Homebrew tap
   update-homebrew:
