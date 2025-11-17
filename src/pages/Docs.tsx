@@ -63,17 +63,18 @@ export default function Docs() {
                 <Card className="p-6">
                   <h3 className="text-xl font-semibold mb-4">1. Install CLI</h3>
                   <TerminalWindow>
-                    <div className="text-terminal-text/50"># macOS</div>
+                    <div className="text-terminal-text/50"># macOS (Homebrew)</div>
+                    <TerminalLine prompt>brew tap dj-pearson/tap</TerminalLine>
                     <TerminalLine prompt>brew install envault</TerminalLine>
                     <div className="h-2" />
-                    <div className="text-terminal-text/50"># Linux</div>
-                    <TerminalLine prompt>curl -sSL get.envault.dev | sh</TerminalLine>
-                    <div className="h-2" />
-                    <div className="text-terminal-text/50"># Windows</div>
-                    <TerminalLine prompt>scoop install envault</TerminalLine>
+                    <div className="text-terminal-text/50"># macOS/Linux (Install Script)</div>
+                    <TerminalLine prompt>curl -fsSL https://get.envault.net | sh</TerminalLine>
                     <div className="h-2" />
                     <div className="text-terminal-text/50"># npm (all platforms)</div>
-                    <TerminalLine prompt>npm install -g envault</TerminalLine>
+                    <TerminalLine prompt>npm install -g envault-cli</TerminalLine>
+                    <div className="h-2" />
+                    <div className="text-terminal-text/50"># Or download from GitHub Releases</div>
+                    <div className="text-terminal-text/70">https://github.com/dj-pearson/vault-verse/releases</div>
                   </TerminalWindow>
                 </Card>
 

@@ -163,7 +163,7 @@ export default function Home() {
 
           <div className="space-y-8">
             {[
-              { step: "1", title: "Install CLI", command: "brew install envault" },
+              { step: "1", title: "Install CLI", command: "npm install -g envault-cli" },
               { step: "2", title: "Initialize Project", command: "envault init myapp" },
               { step: "3", title: "Add Variables", command: "envault set DATABASE_URL postgres://..." },
               { step: "4", title: "Use Anywhere", command: "envault run npm start" },

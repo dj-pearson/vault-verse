@@ -204,9 +204,9 @@ export const OnboardingDialog = ({ open, onOpenChange }: OnboardingDialogProps) 
                   <div className="flex items-center justify-between mb-2">
                     <Badge>Recommended</Badge>
                   </div>
-                  <h4 className="font-semibold mb-2">macOS & Linux (Homebrew)</h4>
+                  <h4 className="font-semibold mb-2">macOS (Homebrew)</h4>
                   <TerminalWindow>
-                    <TerminalLine prompt>brew tap envault/tap</TerminalLine>
+                    <TerminalLine prompt>brew tap dj-pearson/tap</TerminalLine>
                     <TerminalLine prompt>brew install envault</TerminalLine>
                   </TerminalWindow>
                 </Card>
@@ -221,7 +221,7 @@ export const OnboardingDialog = ({ open, onOpenChange }: OnboardingDialogProps) 
                 <Card className="p-4">
                   <h4 className="font-semibold mb-2">All platforms (npm)</h4>
                   <TerminalWindow>
-                    <TerminalLine prompt>npm install -g @envault/cli</TerminalLine>
+                    <TerminalLine prompt>npm install -g envault-cli</TerminalLine>
                   </TerminalWindow>
                 </Card>
 
