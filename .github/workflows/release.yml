@@ -202,7 +202,7 @@ jobs:
       - name: Checkout homebrew tap
         uses: actions/checkout@v4
         with:
-          repository: envault/homebrew-tap
+          repository: dj-pearson/homebrew-tap
           token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
           path: homebrew-tap
 
