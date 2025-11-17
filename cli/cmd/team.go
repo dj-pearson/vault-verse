@@ -6,14 +6,11 @@ import (
 
 	"github.com/dj-pearson/envault/internal/api"
 	"github.com/dj-pearson/envault/internal/auth"
-	"github.com/dj-pearson/envault/internal/config"
-	"github.com/dj-pearson/envault/internal/storage"
 	"github.com/dj-pearson/envault/internal/utils"
 	"github.com/fatih/color"
 	"github.com/manifoldco/promptui"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
-	"strings"
 )
 
 var teamCmd = &cobra.Command{

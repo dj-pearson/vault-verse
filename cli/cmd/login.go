@@ -75,11 +75,6 @@ func runLogin(cmd *cobra.Command, args []string) error {
 	}
 
 	// Get API configuration
-	cfg, err := config.New()
-	if err != nil {
-		return fmt.Errorf("failed to create config: %w", err)
-	}
-
 	// Get API key and base URL from environment or config
 	apiKey := os.Getenv("ENVAULT_API_KEY")
 	baseURL := os.Getenv("ENVAULT_API_URL")
