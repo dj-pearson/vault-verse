@@ -1,3 +1,6 @@
 name = "vault-verse"
 compatibility_date = "2025-11-17"
 pages_build_output_dir = "dist"
+
+[build]
+command = "bun install && bun run build"
