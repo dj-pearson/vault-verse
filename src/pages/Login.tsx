@@ -44,9 +44,9 @@ export default function Login() {
             {/* Left side - Login Form */}
             <div>
               <div className="max-w-md">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent text-accent-foreground text-sm font-medium mb-6 animate-pulse">
                   <Lock className="h-4 w-4" />
-                  Secure Access
+                  Launching December 1st, 2025
                 </div>
                 
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">
@@ -89,10 +89,7 @@ export default function Login() {
                   </form>
 
                   <div className="mt-6 text-center text-sm">
-                    <span className="text-muted-foreground">Don't have an account? </span>
-                    <Link to="/signup" className="text-primary font-medium hover:underline">
-                      Create account
-                    </Link>
+                    <span className="text-muted-foreground">Signups open December 1st, 2025</span>
                   </div>
                 </Card>
 
