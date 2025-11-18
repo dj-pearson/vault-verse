@@ -1,0 +1,233 @@
+{
+  "name": "envault-vscode",
+  "displayName": "EnVault",
+  "description": "Secure environment variable management for VS Code",
+  "version": "0.1.0",
+  "publisher": "envault",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "env",
+    "environment",
+    "secrets",
+    "dotenv",
+    "security"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dj-pearson/vault-verse"
+  },
+  "activationEvents": [
+    "workspaceContains:.envault",
+    "onCommand:envault.init"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "envault.init",
+        "title": "EnVault: Initialize Project",
+        "icon": "$(rocket)"
+      },
+      {
+        "command": "envault.addSecret",
+        "title": "EnVault: Add Secret",
+        "icon": "$(add)"
+      },
+      {
+        "command": "envault.editSecret",
+        "title": "EnVault: Edit Secret",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "envault.deleteSecret",
+        "title": "EnVault: Delete Secret",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "envault.listSecrets",
+        "title": "EnVault: List Secrets",
+        "icon": "$(list-unordered)"
+      },
+      {
+        "command": "envault.sync",
+        "title": "EnVault: Sync Secrets",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "envault.pull",
+        "title": "EnVault: Pull Secrets",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "envault.push",
+        "title": "EnVault: Push Secrets",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "envault.switchEnvironment",
+        "title": "EnVault: Switch Environment",
+        "icon": "$(settings-gear)"
+      },
+      {
+        "command": "envault.exportEnv",
+        "title": "EnVault: Export to .env",
+        "icon": "$(export)"
+      },
+      {
+        "command": "envault.importEnv",
+        "title": "EnVault: Import from .env",
+        "icon": "$(file-add)"
+      },
+      {
+        "command": "envault.refresh",
+        "title": "EnVault: Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "envault.viewAuditLog",
+        "title": "EnVault: View Audit Log",
+        "icon": "$(history)"
+      },
+      {
+        "command": "envault.viewHistory",
+        "title": "EnVault: View Secret History",
+        "icon": "$(versions)"
+      },
+      {
+        "command": "envault.login",
+        "title": "EnVault: Login",
+        "icon": "$(sign-in)"
+      },
+      {
+        "command": "envault.logout",
+        "title": "EnVault: Logout",
+        "icon": "$(sign-out)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "envault-explorer",
+          "title": "EnVault",
+          "icon": "media/sidebar-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "envault-explorer": [
+        {
+          "id": "envault-secrets",
+          "name": "Secrets",
+          "icon": "media/sidebar-icon.svg",
+          "contextualTitle": "EnVault Secrets"
+        },
+        {
+          "id": "envault-environments",
+          "name": "Environments",
+          "contextualTitle": "EnVault Environments"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "envault.refresh",
+          "when": "view == envault-secrets",
+          "group": "navigation"
+        },
+        {
+          "command": "envault.addSecret",
+          "when": "view == envault-secrets",
+          "group": "navigation"
+        },
+        {
+          "command": "envault.sync",
+          "when": "view == envault-secrets",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "envault.editSecret",
+          "when": "view == envault-secrets && viewItem == secret",
+          "group": "inline"
+        },
+        {
+          "command": "envault.deleteSecret",
+          "when": "view == envault-secrets && viewItem == secret",
+          "group": "inline"
+        },
+        {
+          "command": "envault.viewHistory",
+          "when": "view == envault-secrets && viewItem == secret"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "EnVault",
+      "properties": {
+        "envault.cliPath": {
+          "type": "string",
+          "default": "envault",
+          "description": "Path to the EnVault CLI executable"
+        },
+        "envault.defaultEnvironment": {
+          "type": "string",
+          "default": "development",
+          "description": "Default environment to use"
+        },
+        "envault.autoSync": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically sync secrets when opening a project"
+        },
+        "envault.showValuesInTree": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show masked secret values in the tree view"
+        },
+        "envault.enableIntelliSense": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable IntelliSense autocomplete for process.env"
+        },
+        "envault.enableHover": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable hover tooltips for environment variables"
+        },
+        "envault.maskPattern": {
+          "type": "string",
+          "default": "***",
+          "description": "Pattern to use when masking secret values"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "@vscode/test-electron": "^2.3.8",
+    "eslint": "^8.54.0",
+    "typescript": "^5.3.3",
+    "@vscode/vsce": "^2.22.0"
+  },
+  "dependencies": {}
+}
