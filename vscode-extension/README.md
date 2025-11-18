@@ -209,31 +209,91 @@ EnVault uses **zero-knowledge encryption**:
 
 ## Troubleshooting
 
-### CLI Not Found
+### CLI Not Found Error
 
-If you see "EnVault CLI is not installed":
+If you see **"'envault' is not recognized as an internal or external command"** or **"EnVault CLI is not installed"**:
 
-1. Install the CLI (see Installation above)
-2. Ensure it's in your PATH: `which envault`
-3. Or set custom path: `Preferences → Settings → EnVault: CLI Path`
+**Solution:**
+1. Install the CLI first (see [Installation](#installation) above)
+2. Verify installation: Open terminal and run `envault --version`
+3. If installed but not in PATH, configure custom path:
+   - Open VS Code Settings: `Ctrl+,` (Windows/Linux) or `Cmd+,` (Mac)
+   - Search for "EnVault CLI Path"
+   - Set the full path to the `envault` executable
+   - Example (Windows): `C:\Program Files\EnVault\envault.exe`
+   - Example (Mac/Linux): `/usr/local/bin/envault`
+
+**On Windows:** Make sure to restart VS Code after installing the CLI.
+
+### Deprecation Warnings in Output
+
+If you see warnings like:
+```
+[DEP0040] DeprecationWarning: The `punycode` module is deprecated
+[DEP0005] DeprecationWarning: Buffer() is deprecated
+```
+
+**Don't worry!** These are harmless warnings from Node.js dependencies and don't affect functionality. They come from VS Code's internal modules, not EnVault. You can safely ignore them - they will be fixed in future Node.js/VS Code updates.
+
+To hide these warnings (optional):
+- Add `"NODE_NO_WARNINGS=1"` to your environment variables, or
+- Update to the latest VS Code version, or
+- Wait for dependency updates (we're tracking this)
+
+### "unknown flag: --show-description" Error
+
+If you see this error, it means your CLI version is outdated.
+
+**Solution:**
+1. Update the CLI to the latest version:
+   ```bash
+   # If installed via npm
+   npm update -g envault-cli
+
+   # If installed via brew
+   brew upgrade envault
+   ```
+2. Reload VS Code: `Ctrl+Shift+P` → "Developer: Reload Window"
+3. Verify version: Run `envault --version` (should be >= 0.2.0)
+
+### Database Permission Warnings
+
+If you see **"[WARN] Database file had insecure permissions"**:
+
+This is a security feature - EnVault automatically fixes insecure file permissions on your database file. The warning is informational only. The issue has been fixed automatically, and your data is secure.
+
+**To prevent this warning:** Ensure your `.envault.db` file has permissions `600` (owner read/write only).
 
 ### No Secrets Showing
 
-1. Ensure you've initialized the project: `EnVault: Initialize Project`
+1. Ensure you've initialized the project: `Cmd+Shift+P` → `EnVault: Initialize Project`
 2. Check `.envault` file exists in workspace root
-3. Try refreshing: `EnVault: Refresh`
+3. Try refreshing the tree view: `Cmd+Shift+P` → `EnVault: Refresh`
+4. Check you're using the correct environment (see status bar at bottom)
 
 ### IntelliSense Not Working
 
-1. Check `envault.enableIntelliSense` is `true`
-2. Ensure you're typing `process.env.` or similar pattern
-3. Reload window: `Developer: Reload Window`
+1. Verify setting is enabled: `Settings` → `envault.enableIntelliSense` → `true`
+2. Ensure you're typing the correct pattern:
+   - JavaScript/TypeScript: `process.env.`
+   - Python: `os.environ[` or `os.getenv(`
+   - Go: `os.Getenv(`
+3. Reload window: `Cmd+Shift+P` → `Developer: Reload Window`
+4. Check the language is supported (see [Features](#features))
 
 ### Sync Failures
 
-1. Ensure you're logged in: `EnVault: Login`
-2. Check network connection
-3. Verify project has team enabled
+1. Ensure you're logged in: `Cmd+Shift+P` → `EnVault: Login`
+2. Check network connection (firewall/proxy issues)
+3. Verify project has team sync enabled: Check `.envault` file for `team_id`
+4. Try pulling first: `Cmd+Shift+P` → `EnVault: Pull Secrets`
+
+### Extension Not Activating
+
+1. Check VS Code version (requires VS Code 1.80.0 or later)
+2. Look for error messages: `View` → `Output` → Select "EnVault" from dropdown
+3. Reload window: `Cmd+Shift+P` → `Developer: Reload Window`
+4. Reinstall extension if needed
 
 ## FAQ
 
