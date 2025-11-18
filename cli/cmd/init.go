@@ -120,11 +120,27 @@ func runInit(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to create project: %w", err)
 	}
 
+	// Create audit log for project creation
+	metadata := fmt.Sprintf(`{"project_name":"%s","sync_enabled":%t}`, projectName, initTeam)
+	if err := db.CreateAuditLog(project.ID, "project_initialized", metadata); err != nil {
+		// Don't fail the operation, just warn
+		yellow.Printf("Warning: Failed to create audit log: %v\n", err)
+	}
+
 	// Create environments
 	for _, envName := range envs {
-		if _, err := db.CreateEnvironment(project.ID, envName); err != nil {
+		env, err := db.CreateEnvironment(project.ID, envName)
+		if err != nil {
 			return fmt.Errorf("failed to create environment %s: %w", envName, err)
 		}
+
+		// Create audit log for environment creation
+		metadata := fmt.Sprintf(`{"environment":"%s"}`, envName)
+		if err := db.CreateAuditLog(project.ID, "environment_created", metadata); err != nil {
+			// Don't fail the operation, just warn
+			yellow.Printf("Warning: Failed to create audit log: %v\n", err)
+		}
+		_ = env // Use the env variable
 	}
 
 	// Create .envault file in current directory

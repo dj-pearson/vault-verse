@@ -139,6 +139,10 @@ func runSet(cmd *cobra.Command, args []string) error {
 		}
 	}
 
+	// Check if secret already exists (for history tracking)
+	existingSecret, _ := db.GetSecret(env.ID, key)
+	isUpdate := existingSecret != nil
+
 	// Encrypt value
 	encrypted, err := cryptoSvc.Encrypt(value)
 	if err != nil {
@@ -146,8 +150,43 @@ func runSet(cmd *cobra.Command, args []string) error {
 	}
 
 	// Store secret
-	if _, err := db.CreateSecret(env.ID, key, encrypted, setDescription); err != nil {
+	secret, err := db.CreateSecret(env.ID, key, encrypted, setDescription)
+	if err != nil {
 		return fmt.Errorf("failed to store secret: %w", err)
+	}
+
+	// Create history entry if this is an update
+	if isUpdate {
+		// Get the latest version number
+		history, _ := db.ListSecretHistory(secret.ID, 1)
+		nextVersion := 1
+		if len(history) > 0 {
+			nextVersion = history[0].Version + 1
+		}
+
+		// Save the old value to history
+		if err := db.CreateSecretHistory(
+			existingSecret.ID,
+			existingSecret.EnvironmentID,
+			existingSecret.Key,
+			existingSecret.EncryptedValue,
+			existingSecret.Description,
+			nextVersion,
+		); err != nil {
+			// Don't fail the operation, just warn
+			yellow.Printf("Warning: Failed to create history entry: %v\n", err)
+		}
+	}
+
+	// Create audit log
+	action := "secret_created"
+	if isUpdate {
+		action = "secret_updated"
+	}
+	metadata := fmt.Sprintf(`{"key":"%s","environment":"%s"}`, key, setEnv)
+	if err := db.CreateAuditLog(ctx.ProjectID, action, metadata); err != nil {
+		// Don't fail the operation, just warn
+		yellow.Printf("Warning: Failed to create audit log: %v\n", err)
 	}
 
 	if !quiet {
@@ -168,6 +207,9 @@ func importFromFile(db *storage.DB, cryptoSvc *crypto.Service, envID, filePath s
 		return fmt.Errorf("no variables found in %s", filePath)
 	}
 
+	// Get project context for audit logging
+	ctx, _ := utils.LoadProjectContext()
+
 	// Import each variable
 	count := 0
 	for key, value := range envMap {
@@ -177,6 +219,10 @@ func importFromFile(db *storage.DB, cryptoSvc *crypto.Service, envID, filePath s
 			continue
 		}
 
+		// Check if secret exists
+		existingSecret, _ := db.GetSecret(envID, key)
+		isUpdate := existingSecret != nil
+
 		// Encrypt and store
 		encrypted, err := cryptoSvc.Encrypt(value)
 		if err != nil {
@@ -184,9 +230,37 @@ func importFromFile(db *storage.DB, cryptoSvc *crypto.Service, envID, filePath s
 			continue
 		}
 
-		if _, err := db.CreateSecret(envID, key, encrypted, ""); err != nil {
+		secret, err := db.CreateSecret(envID, key, encrypted, "")
+		if err != nil {
 			yellow.Printf("⚠ Failed to store %s: %v\n", key, err)
 			continue
+		}
+
+		// Create history if update
+		if isUpdate {
+			history, _ := db.ListSecretHistory(secret.ID, 1)
+			nextVersion := 1
+			if len(history) > 0 {
+				nextVersion = history[0].Version + 1
+			}
+			db.CreateSecretHistory(
+				existingSecret.ID,
+				existingSecret.EnvironmentID,
+				existingSecret.Key,
+				existingSecret.EncryptedValue,
+				existingSecret.Description,
+				nextVersion,
+			)
+		}
+
+		// Create audit log
+		if ctx != nil {
+			action := "secret_created"
+			if isUpdate {
+				action = "secret_updated"
+			}
+			metadata := fmt.Sprintf(`{"key":"%s","source":"file_import"}`, key)
+			db.CreateAuditLog(ctx.ProjectID, action, metadata)
 		}
 
 		count++
