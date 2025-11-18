@@ -15,7 +15,7 @@ export default function Team() {
               <div className="p-1.5 rounded-lg bg-gradient-primary">
                 <Lock className="h-5 w-5 text-white" />
               </div>
-              <span>EnvVault</span>
+              <span>ENVault</span>
             </div>
 
             <div className="flex items-center gap-6">

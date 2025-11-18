@@ -243,7 +243,7 @@ export default function Pricing() {
       <footer className="py-12 px-4 border-t border-border">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center text-sm text-muted-foreground">
-            © 2025 EnvVault. All rights reserved.
+            © 2025 ENVault. All rights reserved.
           </div>
         </div>
       </footer>

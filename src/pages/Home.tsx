@@ -304,7 +304,7 @@ export default function Home() {
             <div>
               <div className="flex items-center gap-2 font-semibold text-xl mb-4">
                 <Lock className="h-5 w-5" />
-                <span>EnvVault</span>
+                <span>ENVault</span>
               </div>
               <p className="text-sm text-muted-foreground">
                 Secure environment variable management for developers
@@ -336,7 +336,7 @@ export default function Home() {
             </div>
           </div>
           <div className="mt-12 pt-8 border-t border-border text-center text-sm text-muted-foreground">
-            © 2025 EnvVault. All rights reserved.
+            © 2025 ENVault. All rights reserved.
           </div>
         </div>
       </footer>

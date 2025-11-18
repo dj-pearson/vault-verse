@@ -263,7 +263,7 @@ export default function Features() {
       {/* Footer */}
       <footer className="border-t border-border py-8">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>© 2025 EnvVault. Built with security in mind.</p>
+          <p>© 2025 ENVault. Built with security in mind.</p>
         </div>
       </footer>
     </div>
