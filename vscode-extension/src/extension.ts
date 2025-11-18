@@ -112,6 +112,25 @@ export async function activate(context: vscode.ExtensionContext) {
     environmentsTreeProvider
   );
 
+  // Register enhanced commands
+  const {
+    registerSearchSecretsCommand,
+    registerClearSearchCommand,
+    registerCopySecretCommand,
+    registerCheckGitSafetyCommand,
+    registerSetupFromTemplateCommand,
+    registerBulkImportCommand,
+    registerExportFormattedCommand,
+  } = require('./commands/enhancedCommands');
+
+  context.subscriptions.push(registerSearchSecretsCommand(context, secretsTreeProvider));
+  context.subscriptions.push(registerClearSearchCommand(context, secretsTreeProvider));
+  context.subscriptions.push(registerCopySecretCommand(context, cliService, projectService));
+  context.subscriptions.push(registerCheckGitSafetyCommand(context));
+  context.subscriptions.push(registerSetupFromTemplateCommand(context, cliService, projectService, secretsTreeProvider));
+  context.subscriptions.push(registerBulkImportCommand(context, cliService, projectService, secretsTreeProvider));
+  context.subscriptions.push(registerExportFormattedCommand(context, cliService, projectService));
+
   // Add helper commands for hover provider
   context.subscriptions.push(
     vscode.commands.registerCommand('envault.copySecretValue', async (args) => {

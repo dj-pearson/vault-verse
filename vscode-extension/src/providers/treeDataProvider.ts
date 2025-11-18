@@ -1,14 +1,16 @@
 import * as vscode from 'vscode';
 import { CLIService, Secret } from '../services/cliService';
 import { ProjectService } from '../services/projectService';
+import { detectSecretType, validateSecret } from '../utils/secretTypes';
 
 export class SecretTreeItem extends vscode.TreeItem {
   constructor(
     public readonly key: string,
     public readonly value: string,
     public readonly environment: string,
-    public readonly collapsibleState: vscode.TreeItemCollapsibleState,
-    public readonly contextValue: string
+    public readonly description?: string,
+    public readonly collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.None,
+    public readonly contextValue: string = 'secret'
   ) {
     super(key, collapsibleState);
 
@@ -16,9 +18,35 @@ export class SecretTreeItem extends vscode.TreeItem {
     const showValues = config.get<boolean>('showValuesInTree', false);
     const maskPattern = config.get<string>('maskPattern', '***');
 
-    this.tooltip = `${key}${showValues ? ': ' + this.maskValue(value, maskPattern) : ''}`;
-    this.description = showValues ? this.maskValue(value, maskPattern) : '';
-    this.iconPath = new vscode.ThemeIcon('key');
+    // Detect secret type and set appropriate icon
+    const typeInfo = detectSecretType(key, value);
+    this.iconPath = new vscode.ThemeIcon(
+      typeInfo.icon,
+      typeInfo.color ? new vscode.ThemeColor(typeInfo.color) : undefined
+    );
+
+    // Validate secret
+    const validation = validateSecret(key, value);
+
+    // Build tooltip with type info and warnings
+    let tooltipText = `${key}\nType: ${typeInfo.description}`;
+    if (this.description) {
+      tooltipText += `\nDescription: ${this.description}`;
+    }
+    if (showValues) {
+      tooltipText += `\nValue: ${this.maskValue(value, maskPattern)}`;
+    }
+    if (validation.warnings.length > 0) {
+      tooltipText += '\n\n' + validation.warnings.join('\n');
+    }
+
+    this.tooltip = new vscode.MarkdownString(tooltipText);
+    this.description = showValues ? this.maskValue(value, maskPattern) : typeInfo.description;
+
+    // Add warning decoration for invalid secrets
+    if (!validation.isValid && validation.severity === 'error') {
+      this.iconPath = new vscode.ThemeIcon('warning', new vscode.ThemeColor('errorForeground'));
+    }
   }
 
   private maskValue(value: string, maskPattern: string): string {
@@ -50,6 +78,7 @@ export class SecretsTreeDataProvider implements vscode.TreeDataProvider<vscode.T
 
   private cliService: CLIService;
   private projectService: ProjectService;
+  private searchFilter: string = '';
 
   constructor(cliService: CLIService, projectService: ProjectService) {
     this.cliService = cliService;
@@ -63,6 +92,16 @@ export class SecretsTreeDataProvider implements vscode.TreeDataProvider<vscode.T
 
   refresh(): void {
     this._onDidChangeTreeData.fire();
+  }
+
+  setSearchFilter(filter: string): void {
+    this.searchFilter = filter.toLowerCase();
+    this.refresh();
+  }
+
+  clearSearchFilter(): void {
+    this.searchFilter = '';
+    this.refresh();
   }
 
   getTreeItem(element: vscode.TreeItem): vscode.TreeItem {
@@ -103,11 +142,37 @@ export class SecretsTreeDataProvider implements vscode.TreeDataProvider<vscode.T
     if (element instanceof EnvironmentTreeItem) {
       try {
         const secrets = await this.cliService.listSecrets(element.name);
+        let entries = Object.entries(secrets);
 
-        return Object.entries(secrets).map(
-          ([key, secret]) =>
-            new SecretTreeItem(key, secret.value, element.name, vscode.TreeItemCollapsibleState.None, 'secret')
-        );
+        // Apply search filter
+        if (this.searchFilter) {
+          entries = entries.filter(([key, secret]) => {
+            const keyMatch = key.toLowerCase().includes(this.searchFilter);
+            const descMatch = secret.description?.toLowerCase().includes(this.searchFilter);
+            return keyMatch || descMatch;
+          });
+        }
+
+        if (entries.length === 0 && this.searchFilter) {
+          const item = new vscode.TreeItem(
+            `No secrets matching "${this.searchFilter}"`,
+            vscode.TreeItemCollapsibleState.None
+          );
+          item.iconPath = new vscode.ThemeIcon('search');
+          return [item];
+        }
+
+        if (entries.length === 0) {
+          const item = new vscode.TreeItem('No secrets yet', vscode.TreeItemCollapsibleState.None);
+          item.iconPath = new vscode.ThemeIcon('info');
+          item.tooltip = 'Click the + button above to add your first secret';
+          return [item];
+        }
+
+        // Sort alphabetically
+        entries.sort(([a], [b]) => a.localeCompare(b));
+
+        return entries.map(([key, secret]) => new SecretTreeItem(key, secret.value, element.name, secret.description));
       } catch (error) {
         vscode.window.showErrorMessage(`Failed to load secrets: ${error}`);
         return [];

@@ -107,6 +107,41 @@
         "command": "envault.logout",
         "title": "EnVault: Logout",
         "icon": "$(sign-out)"
+      },
+      {
+        "command": "envault.searchSecrets",
+        "title": "EnVault: Search Secrets",
+        "icon": "$(search)"
+      },
+      {
+        "command": "envault.clearSearch",
+        "title": "EnVault: Clear Search",
+        "icon": "$(close)"
+      },
+      {
+        "command": "envault.copySecret",
+        "title": "EnVault: Copy Secret Value",
+        "icon": "$(copy)"
+      },
+      {
+        "command": "envault.checkGitSafety",
+        "title": "EnVault: Check Git Safety",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "envault.setupFromTemplate",
+        "title": "EnVault: Setup from Template",
+        "icon": "$(files)"
+      },
+      {
+        "command": "envault.bulkImport",
+        "title": "EnVault: Bulk Import (JSON/YAML)",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "envault.exportFormatted",
+        "title": "EnVault: Export (Multiple Formats)",
+        "icon": "$(export)"
       }
     ],
     "viewsContainers": {
@@ -136,38 +171,84 @@
     "menus": {
       "view/title": [
         {
-          "command": "envault.refresh",
+          "command": "envault.searchSecrets",
           "when": "view == envault-secrets",
-          "group": "navigation"
+          "group": "navigation@1"
         },
         {
           "command": "envault.addSecret",
           "when": "view == envault-secrets",
-          "group": "navigation"
+          "group": "navigation@2"
         },
         {
           "command": "envault.sync",
           "when": "view == envault-secrets",
-          "group": "navigation"
+          "group": "navigation@3"
+        },
+        {
+          "command": "envault.refresh",
+          "when": "view == envault-secrets",
+          "group": "navigation@4"
+        },
+        {
+          "command": "envault.checkGitSafety",
+          "when": "view == envault-secrets",
+          "group": "secondary@1"
+        },
+        {
+          "command": "envault.setupFromTemplate",
+          "when": "view == envault-secrets",
+          "group": "secondary@2"
         }
       ],
       "view/item/context": [
         {
+          "command": "envault.copySecret",
+          "when": "view == envault-secrets && viewItem == secret",
+          "group": "inline@1"
+        },
+        {
           "command": "envault.editSecret",
           "when": "view == envault-secrets && viewItem == secret",
-          "group": "inline"
+          "group": "inline@2"
         },
         {
           "command": "envault.deleteSecret",
           "when": "view == envault-secrets && viewItem == secret",
-          "group": "inline"
+          "group": "inline@3"
         },
         {
           "command": "envault.viewHistory",
-          "when": "view == envault-secrets && viewItem == secret"
+          "when": "view == envault-secrets && viewItem == secret",
+          "group": "actions@1"
         }
       ]
     },
+    "keybindings": [
+      {
+        "command": "envault.searchSecrets",
+        "key": "ctrl+shift+f",
+        "mac": "cmd+shift+f",
+        "when": "view == envault-secrets"
+      },
+      {
+        "command": "envault.addSecret",
+        "key": "ctrl+shift+n",
+        "mac": "cmd+shift+n",
+        "when": "view == envault-secrets"
+      },
+      {
+        "command": "envault.sync",
+        "key": "ctrl+shift+s",
+        "mac": "cmd+shift+s",
+        "when": "view == envault-secrets"
+      },
+      {
+        "command": "envault.switchEnvironment",
+        "key": "ctrl+shift+e",
+        "mac": "cmd+shift+e"
+      }
+    ],
     "configuration": {
       "title": "EnVault",
       "properties": {

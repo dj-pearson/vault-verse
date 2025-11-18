@@ -85,15 +85,32 @@ Open a workspace folder and run:
 Cmd+Shift+P → EnVault: Initialize Project
 ```
 
-This creates a `.envault` file in your project root.
+Or use a **template wizard** for instant setup:
+```
+Cmd+Shift+P → EnVault: Setup from Template
+```
+
+Choose from Next.js, React, Django, Express, Laravel, Rails, or Supabase templates!
 
 ### 2. Add Your First Secret
 
+**Option A - Manual**:
 ```
 Cmd+Shift+P → EnVault: Add Secret
+Or: Ctrl+Shift+N (Cmd+Shift+N on Mac)
 ```
 
-Enter a key (e.g., `API_KEY`) and value.
+**Option B - Template**:
+```
+Cmd+Shift+P → EnVault: Setup from Template
+```
+Get all common secrets for your framework in 2 minutes!
+
+**Option C - Bulk Import**:
+```
+Cmd+Shift+P → EnVault: Bulk Import (JSON/YAML)
+```
+Import multiple secrets at once from JSON or YAML files.
 
 ### 3. Use in Code
 
@@ -103,17 +120,43 @@ Now just type `process.env.` and see your secrets autocomplete!
 const apiKey = process.env.API_KEY; // ← IntelliSense works here!
 ```
 
+### 4. Security Check
+
+Run a safety check before committing:
+```
+Cmd+Shift+P → EnVault: Check Git Safety
+```
+Ensures `.env` files aren't tracked in git!
+
 ## Commands
 
 All commands are available via the Command Palette (Cmd+Shift+P / Ctrl+Shift+P):
 
+### Core Commands
+
+| Command | Shortcut | Description |
+|---------|----------|-------------|
+| `EnVault: Add Secret` | Ctrl+Shift+N | Add a new environment variable |
+| `EnVault: Search Secrets` | Ctrl+Shift+F | Search/filter secrets by name |
+| `EnVault: Copy Secret Value` | Click icon | Copy secret to clipboard instantly |
+| `EnVault: Switch Environment` | Ctrl+Shift+E | Change active environment |
+| `EnVault: Sync Secrets` | Ctrl+Shift+S | Sync with team |
+
+### New Productivity Features ⚡
+
+| Command | Description |
+|---------|-------------|
+| `EnVault: Setup from Template` | Quick setup for Next.js, React, Django, etc. |
+| `EnVault: Bulk Import (JSON/YAML)` | Import multiple secrets from files |
+| `EnVault: Export (Multiple Formats)` | Export as .env, JSON, YAML, K8s, Docker, TypeScript |
+| `EnVault: Check Git Safety` | Verify no secrets are tracked in git |
+
+### Other Commands
+
 | Command | Description |
 |---------|-------------|
 | `EnVault: Initialize Project` | Create a new EnVault project |
-| `EnVault: Add Secret` | Add a new environment variable |
 | `EnVault: List Secrets` | Browse all secrets in current environment |
-| `EnVault: Switch Environment` | Change active environment |
-| `EnVault: Sync Secrets` | Sync with team |
 | `EnVault: Pull Secrets` | Pull latest secrets from team |
 | `EnVault: Push Secrets` | Push local secrets to team |
 | `EnVault: Export to .env` | Export secrets to .env file (plaintext) |
