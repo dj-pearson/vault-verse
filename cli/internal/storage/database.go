@@ -405,9 +405,9 @@ func (db *DB) ListSecrets(environmentID string) ([]*models.Secret, error) {
 }
 
 // DeleteSecret deletes a secret
-func (db *DB) DeleteSecret(environmentID, key string) error {
-	query := `DELETE FROM secrets WHERE environment_id = ? AND key = ?`
-	result, err := db.conn.Exec(query, environmentID, key)
+func (db *DB) DeleteSecret(id string) error {
+	query := `DELETE FROM secrets WHERE id = ?`
+	result, err := db.conn.Exec(query, id)
 	if err != nil {
 		return fmt.Errorf("failed to delete secret: %w", err)
 	}
@@ -422,6 +422,125 @@ func (db *DB) DeleteSecret(environmentID, key string) error {
 	}
 
 	return nil
+}
+
+// CreateAuditLog creates a new audit log entry
+func (db *DB) CreateAuditLog(projectID, action, metadata string) error {
+	id := uuid.New().String()
+	query := `
+		INSERT INTO audit_logs (id, project_id, action, metadata, created_at)
+		VALUES (?, ?, ?, ?, ?)
+	`
+
+	_, err := db.conn.Exec(query, id, projectID, action, metadata, time.Now())
+	if err != nil {
+		return fmt.Errorf("failed to create audit log: %w", err)
+	}
+
+	return nil
+}
+
+// ListAuditLogs lists audit logs for a project with optional filtering
+func (db *DB) ListAuditLogs(projectID string, limit int) ([]*models.AuditLog, error) {
+	query := `
+		SELECT id, project_id, action, metadata, created_at
+		FROM audit_logs
+		WHERE project_id = ?
+		ORDER BY created_at DESC
+		LIMIT ?
+	`
+
+	rows, err := db.conn.Query(query, projectID, limit)
+	if err != nil {
+		return nil, fmt.Errorf("failed to list audit logs: %w", err)
+	}
+	defer rows.Close()
+
+	var logs []*models.AuditLog
+	for rows.Next() {
+		var log models.AuditLog
+		var metadata sql.NullString
+
+		err := rows.Scan(
+			&log.ID,
+			&log.ProjectID,
+			&log.Action,
+			&metadata,
+			&log.CreatedAt,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan audit log: %w", err)
+		}
+
+		if metadata.Valid {
+			log.Metadata = metadata.String
+		}
+
+		logs = append(logs, &log)
+	}
+
+	return logs, rows.Err()
+}
+
+// CreateSecretHistory creates a history entry for a secret
+func (db *DB) CreateSecretHistory(secretID, environmentID, key string, encryptedValue []byte, description string, version int) error {
+	id := uuid.New().String()
+	query := `
+		INSERT INTO secret_history (id, secret_id, environment_id, key, encrypted_value, description, version, created_at)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+	`
+
+	_, err := db.conn.Exec(query, id, secretID, environmentID, key, encryptedValue, description, version, time.Now())
+	if err != nil {
+		return fmt.Errorf("failed to create secret history: %w", err)
+	}
+
+	return nil
+}
+
+// ListSecretHistory lists all history entries for a secret
+func (db *DB) ListSecretHistory(secretID string, limit int) ([]*models.SecretHistory, error) {
+	query := `
+		SELECT id, secret_id, environment_id, key, encrypted_value, description, version, created_at
+		FROM secret_history
+		WHERE secret_id = ?
+		ORDER BY version DESC
+		LIMIT ?
+	`
+
+	rows, err := db.conn.Query(query, secretID, limit)
+	if err != nil {
+		return nil, fmt.Errorf("failed to list secret history: %w", err)
+	}
+	defer rows.Close()
+
+	var history []*models.SecretHistory
+	for rows.Next() {
+		var h models.SecretHistory
+		var description sql.NullString
+
+		err := rows.Scan(
+			&h.ID,
+			&h.SecretID,
+			&h.EnvironmentID,
+			&h.Key,
+			&h.EncryptedValue,
+			&description,
+			&h.Version,
+			&h.CreatedAt,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan secret history: %w", err)
+		}
+
+		if description.Valid {
+			h.Description = description.String
+		}
+
+		history = append(history, &h)
+	}
+
+	return history, rows.Err()
 }
 
 // Helper function to convert bool to int for SQLite

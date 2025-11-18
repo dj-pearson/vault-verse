@@ -154,6 +154,34 @@ func (c *Client) RemoveTeamMember(projectID, userID string) (bool, error) {
 	return success, nil
 }
 
+// ListTeamMembers retrieves all team members for a project
+func (c *Client) ListTeamMembers(projectID string) ([]TeamMember, error) {
+	payload := map[string]interface{}{
+		"p_project_id": projectID,
+	}
+
+	var members []TeamMember
+	if err := c.rpcCall("list_team_members", payload, &members); err != nil {
+		return nil, err
+	}
+
+	return members, nil
+}
+
+// GetUserByEmail retrieves a user ID by email address
+func (c *Client) GetUserByEmail(email string) (string, error) {
+	payload := map[string]interface{}{
+		"p_email": email,
+	}
+
+	var userID string
+	if err := c.rpcCall("get_user_by_email", payload, &userID); err != nil {
+		return "", err
+	}
+
+	return userID, nil
+}
+
 // rpcCall makes an RPC function call to Supabase
 func (c *Client) rpcCall(functionName string, payload map[string]interface{}, result interface{}) error {
 	url := fmt.Sprintf("/rest/v1/rpc/%s", functionName)
@@ -253,4 +281,12 @@ type Environment struct {
 	ProjectID string    `json:"project_id"`
 	Name      string    `json:"name"`
 	CreatedAt time.Time `json:"created_at"`
+}
+
+type TeamMember struct {
+	ID        string    `json:"id"`
+	Email     string    `json:"email"`
+	Role      string    `json:"role"`
+	CreatedAt time.Time `json:"created_at"`
+	UserID    string    `json:"user_id"`
 }

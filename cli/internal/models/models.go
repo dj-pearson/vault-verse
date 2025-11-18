@@ -51,6 +51,18 @@ type AuditLog struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
+// SecretHistory represents a historical version of a secret
+type SecretHistory struct {
+	ID             string    `json:"id"`
+	SecretID       string    `json:"secret_id"`
+	EnvironmentID  string    `json:"environment_id"`
+	Key            string    `json:"key"`
+	EncryptedValue []byte    `json:"encrypted_value"`
+	Description    string    `json:"description,omitempty"`
+	Version        int       `json:"version"`
+	CreatedAt      time.Time `json:"created_at"`
+}
+
 // AuthSession represents an authenticated session
 type AuthSession struct {
 	UserID      string    `json:"user_id"`
