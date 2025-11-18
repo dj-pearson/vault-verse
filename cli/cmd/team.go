@@ -59,6 +59,7 @@ func init() {
 
 func runTeamList(cmd *cobra.Command, args []string) error {
 	cyan := color.New(color.FgCyan)
+	green := color.New(color.FgGreen)
 
 	// Check authentication
 	if !auth.IsLoggedIn() {
@@ -87,22 +88,35 @@ func runTeamList(cmd *cobra.Command, args []string) error {
 	client := api.New(baseURL, apiKey)
 	client.SetAuthToken(session.AccessToken)
 
-	// Note: This would require a new RPC function to list team members
-	// For now, we'll show a placeholder message
+	// Fetch team members
+	members, err := client.ListTeamMembers(ctx.ProjectID)
+	if err != nil {
+		return fmt.Errorf("failed to fetch team members: %w", err)
+	}
 
 	cyan.Printf("Team members for project: %s\n\n", ctx.ProjectName)
+
+	if len(members) == 0 {
+		fmt.Println("No team members found. Invite members with:")
+		green.Println("  envault team invite user@example.com")
+		return nil
+	}
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"Email", "Role", "Joined"})
 	table.SetBorder(false)
 
-	// Placeholder data
-	table.Append([]string{session.Email, "Owner", "Now"})
+	for _, member := range members {
+		table.Append([]string{
+			member.Email,
+			member.Role,
+			member.CreatedAt.Format("2006-01-02"),
+		})
+	}
 
 	table.Render()
 
-	fmt.Println()
-	fmt.Println("Team member listing requires additional API implementation")
+	fmt.Printf("\nTotal members: %d\n", len(members))
 
 	return nil
 }
@@ -233,14 +247,27 @@ func runTeamRemove(cmd *cobra.Command, args []string) error {
 	client := api.New(baseURL, apiKey)
 	client.SetAuthToken(session.AccessToken)
 
-	// Note: This requires getting the user ID from email first
-	// For now, show placeholder message
+	// Get user ID from email
+	userID, err := client.GetUserByEmail(email)
+	if err != nil {
+		return fmt.Errorf("failed to find user with email %s: %w", email, err)
+	}
+
+	// Remove team member
+	success, err := client.RemoveTeamMember(ctx.ProjectID, userID)
+	if err != nil {
+		return fmt.Errorf("failed to remove team member: %w", err)
+	}
+
+	if !success {
+		return fmt.Errorf("failed to remove team member (operation returned false)")
+	}
 
 	green.Printf("\n✓ Removed %s from team\n", email)
 
 	if !quiet {
 		fmt.Println()
-		yellow.Println("Note: Full team member removal requires additional API implementation")
+		yellow.Println("They no longer have access to project secrets")
 	}
 
 	return nil

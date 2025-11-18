@@ -106,14 +106,28 @@ func runUnset(cmd *cobra.Command, args []string) error {
 			continue
 		}
 
-		if err := db.DeleteSecret(env.ID, key); err != nil {
+		// Get the secret first (for audit logging)
+		secret, err := db.GetSecret(env.ID, key)
+		if err != nil {
 			if strings.Contains(err.Error(), "not found") {
 				if !quiet {
 					yellow.Printf("⚠ '%s' not found in %s\n", key, envName)
 				}
 				continue
 			}
+			return fmt.Errorf("failed to get secret from %s: %w", envName, err)
+		}
+
+		// Delete the secret
+		if err := db.DeleteSecret(secret.ID); err != nil {
 			return fmt.Errorf("failed to delete from %s: %w", envName, err)
+		}
+
+		// Create audit log
+		metadata := fmt.Sprintf(`{"key":"%s","environment":"%s"}`, key, envName)
+		if err := db.CreateAuditLog(ctx.ProjectID, "secret_deleted", metadata); err != nil {
+			// Don't fail the operation, just warn
+			yellow.Printf("Warning: Failed to create audit log: %v\n", err)
 		}
 
 		deletedCount++

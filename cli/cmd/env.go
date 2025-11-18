@@ -159,6 +159,13 @@ func runEnvCreate(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to create environment: %w", err)
 	}
 
+	// Create audit log
+	metadata := fmt.Sprintf(`{"environment":"%s"}`, envName)
+	if err := db.CreateAuditLog(ctx.ProjectID, "environment_created", metadata); err != nil {
+		// Don't fail the operation, just warn
+		yellow.Printf("Warning: Failed to create audit log: %v\n", err)
+	}
+
 	green.Printf("✓ Created environment '%s'\n", env.Name)
 
 	// Ask if they want to copy from existing
@@ -244,6 +251,13 @@ func runEnvDelete(cmd *cobra.Command, args []string) error {
 	err = db.DeleteEnvironment(env.ID)
 	if err != nil {
 		return fmt.Errorf("failed to delete environment: %w", err)
+	}
+
+	// Create audit log
+	metadata := fmt.Sprintf(`{"environment":"%s","secrets_deleted":%d}`, envName, len(secrets))
+	if err := db.CreateAuditLog(ctx.ProjectID, "environment_deleted", metadata); err != nil {
+		// Don't fail the operation, just warn
+		yellow.Printf("Warning: Failed to create audit log: %v\n", err)
 	}
 
 	green.Printf("✓ Deleted environment '%s'\n", envName)

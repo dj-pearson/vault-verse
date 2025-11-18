@@ -58,6 +58,23 @@ CREATE TABLE IF NOT EXISTS audit_logs (
 CREATE INDEX IF NOT EXISTS idx_audit_logs_project ON audit_logs(project_id);
 CREATE INDEX IF NOT EXISTS idx_audit_logs_created ON audit_logs(created_at DESC);
 
+-- Secret history table (for versioning)
+CREATE TABLE IF NOT EXISTS secret_history (
+    id TEXT PRIMARY KEY,
+    secret_id TEXT NOT NULL,
+    environment_id TEXT NOT NULL,
+    key TEXT NOT NULL,
+    encrypted_value BLOB NOT NULL,
+    description TEXT,
+    version INTEGER NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (secret_id) REFERENCES secrets(id) ON DELETE CASCADE,
+    FOREIGN KEY (environment_id) REFERENCES environments(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_secret_history_secret ON secret_history(secret_id);
+CREATE INDEX IF NOT EXISTS idx_secret_history_created ON secret_history(created_at DESC);
+
 -- Sync metadata table (for tracking sync state)
 CREATE TABLE IF NOT EXISTS sync_metadata (
     id TEXT PRIMARY KEY,
