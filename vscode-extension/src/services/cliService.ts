@@ -95,7 +95,7 @@ export class CLIService {
    * List all secrets for an environment
    */
   async listSecrets(environment: string = 'development'): Promise<Record<string, Secret>> {
-    const output = this.exec(`list --json --env ${environment} --show-description`);
+    const output = this.exec(`list --json --env ${environment}`);
     if (!output) {
       return {};
     }
