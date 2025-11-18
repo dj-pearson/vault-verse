@@ -9,10 +9,13 @@ import { AdminRoute } from "./components/AdminRoute";
 import Home from "./pages/Home";
 import Features from "./pages/Features";
 import Pricing from "./pages/Pricing";
-import Docs from "./pages/Docs";
 import DocsLayout from "./pages/DocsLayout";
 import Overview from "./pages/docs/Overview";
 import Installation from "./pages/docs/Installation";
+import QuickStart from "./pages/docs/QuickStart";
+import CLIReference from "./pages/docs/CLIReference";
+import TeamSetup from "./pages/docs/TeamSetup";
+import Security from "./pages/docs/Security";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
@@ -38,10 +41,10 @@ const App = () => (
             <Route path="/docs" element={<DocsLayout />}>
               <Route index element={<Overview />} />
               <Route path="installation" element={<Installation />} />
-              <Route path="quickstart" element={<Docs />} />
-              <Route path="cli" element={<Docs />} />
-              <Route path="team" element={<Docs />} />
-              <Route path="security" element={<Docs />} />
+              <Route path="quickstart" element={<QuickStart />} />
+              <Route path="cli" element={<CLIReference />} />
+              <Route path="team" element={<TeamSetup />} />
+              <Route path="security" element={<Security />} />
             </Route>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
