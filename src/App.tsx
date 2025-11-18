@@ -10,6 +10,9 @@ import Home from "./pages/Home";
 import Features from "./pages/Features";
 import Pricing from "./pages/Pricing";
 import Docs from "./pages/Docs";
+import DocsLayout from "./pages/DocsLayout";
+import Overview from "./pages/docs/Overview";
+import Installation from "./pages/docs/Installation";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
@@ -32,7 +35,14 @@ const App = () => (
             <Route path="/" element={<Home />} />
             <Route path="/features" element={<Features />} />
             <Route path="/pricing" element={<Pricing />} />
-            <Route path="/docs" element={<Docs />} />
+            <Route path="/docs" element={<DocsLayout />}>
+              <Route index element={<Overview />} />
+              <Route path="installation" element={<Installation />} />
+              <Route path="quickstart" element={<Docs />} />
+              <Route path="cli" element={<Docs />} />
+              <Route path="team" element={<Docs />} />
+              <Route path="security" element={<Docs />} />
+            </Route>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
