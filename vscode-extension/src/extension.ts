@@ -112,6 +112,25 @@ export async function activate(context: vscode.ExtensionContext) {
     environmentsTreeProvider
   );
 
+  // Register enhanced commands
+  const {
+    registerSearchSecretsCommand,
+    registerClearSearchCommand,
+    registerCopySecretCommand,
+    registerCheckGitSafetyCommand,
+    registerSetupFromTemplateCommand,
+    registerBulkImportCommand,
+    registerExportFormattedCommand,
+  } = require('./commands/enhancedCommands');
+
+  context.subscriptions.push(registerSearchSecretsCommand(context, secretsTreeProvider));
+  context.subscriptions.push(registerClearSearchCommand(context, secretsTreeProvider));
+  context.subscriptions.push(registerCopySecretCommand(context, cliService, projectService));
+  context.subscriptions.push(registerCheckGitSafetyCommand(context));
+  context.subscriptions.push(registerSetupFromTemplateCommand(context, cliService, projectService, secretsTreeProvider));
+  context.subscriptions.push(registerBulkImportCommand(context, cliService, projectService, secretsTreeProvider));
+  context.subscriptions.push(registerExportFormattedCommand(context, cliService, projectService));
+
   // Add helper commands for hover provider
   context.subscriptions.push(
     vscode.commands.registerCommand('envault.copySecretValue', async (args) => {
@@ -181,17 +200,61 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   }
 
-  // Show welcome message for first-time users
+  // Show comprehensive welcome message for first-time users
   const hasShownWelcome = context.globalState.get<boolean>('envault.hasShownWelcome', false);
-  if (!hasShownWelcome && hasProject) {
-    vscode.window.showInformationMessage(
-      '🔐 EnVault is active! Use the status bar to switch environments or run commands from the Command Palette.',
-      "Don't show again"
-    ).then((action) => {
-      if (action === "Don't show again") {
+
+  if (!hasShownWelcome) {
+    if (cliInstalled && hasProject) {
+      // User has CLI and project - show quick tips
+      const action = await vscode.window.showInformationMessage(
+        '🔐 Welcome to EnVault! Your secrets are now managed securely.',
+        'Quick Tour',
+        'View Commands',
+        "Don't show again"
+      );
+
+      if (action === 'Quick Tour') {
+        vscode.window.showInformationMessage(
+          '💡 Tip 1/3: Type "process.env." in any file for intelligent autocomplete of your secrets!',
+        ).then(() => {
+          vscode.window.showInformationMessage(
+            '💡 Tip 2/3: Use the status bar at the bottom to quickly switch between environments.',
+          ).then(() => {
+            vscode.window.showInformationMessage(
+              '💡 Tip 3/3: Press Ctrl+Shift+P (Cmd+Shift+P on Mac) and type "EnVault" to see all available commands.',
+              'Got it!'
+            );
+          });
+        });
+      } else if (action === 'View Commands') {
+        vscode.commands.executeCommand('workbench.action.showCommands', '>EnVault:');
+      }
+
+      if (action === "Don't show again" || action) {
         context.globalState.update('envault.hasShownWelcome', true);
       }
-    });
+    } else if (cliInstalled && !hasProject) {
+      // User has CLI but no project - guide them to initialize
+      const action = await vscode.window.showInformationMessage(
+        '🔐 EnVault is ready! Get started by initializing a new project.',
+        'Initialize Project',
+        'Learn More',
+        "Don't show again"
+      );
+
+      if (action === 'Initialize Project') {
+        vscode.commands.executeCommand('envault.init');
+      } else if (action === 'Learn More') {
+        vscode.env.openExternal(vscode.Uri.parse('https://envault.net/docs/quickstart'));
+      }
+
+      if (action === "Don't show again" || action) {
+        context.globalState.update('envault.hasShownWelcome', true);
+      }
+    } else if (!cliInstalled) {
+      // User doesn't have CLI - already showed warning above
+      context.globalState.update('envault.hasShownWelcome', true);
+    }
   }
 
   // Cleanup

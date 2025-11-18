@@ -58,7 +58,16 @@ export class CLIService {
       });
       return result.trim();
     } catch (error: any) {
-      throw new Error(`EnVault CLI error: ${error.message}`);
+      // Provide more helpful error messages
+      const errorMessage = error.message || String(error);
+
+      if (errorMessage.includes('not recognized') || errorMessage.includes('command not found') || errorMessage.includes('ENOENT')) {
+        throw new Error(`EnVault CLI not found. Please install it or configure the path in settings (envault.cliPath).`);
+      } else if (errorMessage.includes('unknown flag')) {
+        throw new Error(`EnVault CLI version mismatch. Please update to the latest version.`);
+      }
+
+      throw new Error(`EnVault CLI error: ${errorMessage}`);
     }
   }
 
@@ -106,10 +115,19 @@ export class CLIService {
     // Convert to Secret objects
     const secrets: Record<string, Secret> = {};
     for (const [key, value] of Object.entries(envData)) {
-      secrets[key] = {
-        key,
-        value: typeof value === 'string' ? value : String(value),
-      };
+      // Handle both string values and object values with description
+      if (typeof value === 'object' && value !== null && 'value' in value) {
+        secrets[key] = {
+          key,
+          value: String(value.value),
+          description: value.description || undefined,
+        };
+      } else {
+        secrets[key] = {
+          key,
+          value: typeof value === 'string' ? value : String(value),
+        };
+      }
     }
     return secrets;
   }

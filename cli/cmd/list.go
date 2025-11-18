@@ -195,12 +195,20 @@ func outputTable(allSecrets map[string][]*models.DecryptedSecret, cyan *color.Co
 }
 
 func outputJSON(allSecrets map[string][]*models.DecryptedSecret) error {
-	result := make(map[string]map[string]string)
+	result := make(map[string]map[string]interface{})
 
 	for envName, secrets := range allSecrets {
-		envVars := make(map[string]string)
+		envVars := make(map[string]interface{})
 		for _, secret := range secrets {
-			envVars[secret.Key] = secret.Value
+			// Include description if available
+			if secret.Description != "" {
+				envVars[secret.Key] = map[string]string{
+					"value":       secret.Value,
+					"description": secret.Description,
+				}
+			} else {
+				envVars[secret.Key] = secret.Value
+			}
 		}
 		result[envName] = envVars
 	}

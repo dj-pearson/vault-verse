@@ -85,15 +85,32 @@ Open a workspace folder and run:
 Cmd+Shift+P → EnVault: Initialize Project
 ```
 
-This creates a `.envault` file in your project root.
+Or use a **template wizard** for instant setup:
+```
+Cmd+Shift+P → EnVault: Setup from Template
+```
+
+Choose from Next.js, React, Django, Express, Laravel, Rails, or Supabase templates!
 
 ### 2. Add Your First Secret
 
+**Option A - Manual**:
 ```
 Cmd+Shift+P → EnVault: Add Secret
+Or: Ctrl+Shift+N (Cmd+Shift+N on Mac)
 ```
 
-Enter a key (e.g., `API_KEY`) and value.
+**Option B - Template**:
+```
+Cmd+Shift+P → EnVault: Setup from Template
+```
+Get all common secrets for your framework in 2 minutes!
+
+**Option C - Bulk Import**:
+```
+Cmd+Shift+P → EnVault: Bulk Import (JSON/YAML)
+```
+Import multiple secrets at once from JSON or YAML files.
 
 ### 3. Use in Code
 
@@ -103,17 +120,43 @@ Now just type `process.env.` and see your secrets autocomplete!
 const apiKey = process.env.API_KEY; // ← IntelliSense works here!
 ```
 
+### 4. Security Check
+
+Run a safety check before committing:
+```
+Cmd+Shift+P → EnVault: Check Git Safety
+```
+Ensures `.env` files aren't tracked in git!
+
 ## Commands
 
 All commands are available via the Command Palette (Cmd+Shift+P / Ctrl+Shift+P):
 
+### Core Commands
+
+| Command | Shortcut | Description |
+|---------|----------|-------------|
+| `EnVault: Add Secret` | Ctrl+Shift+N | Add a new environment variable |
+| `EnVault: Search Secrets` | Ctrl+Shift+F | Search/filter secrets by name |
+| `EnVault: Copy Secret Value` | Click icon | Copy secret to clipboard instantly |
+| `EnVault: Switch Environment` | Ctrl+Shift+E | Change active environment |
+| `EnVault: Sync Secrets` | Ctrl+Shift+S | Sync with team |
+
+### New Productivity Features ⚡
+
+| Command | Description |
+|---------|-------------|
+| `EnVault: Setup from Template` | Quick setup for Next.js, React, Django, etc. |
+| `EnVault: Bulk Import (JSON/YAML)` | Import multiple secrets from files |
+| `EnVault: Export (Multiple Formats)` | Export as .env, JSON, YAML, K8s, Docker, TypeScript |
+| `EnVault: Check Git Safety` | Verify no secrets are tracked in git |
+
+### Other Commands
+
 | Command | Description |
 |---------|-------------|
 | `EnVault: Initialize Project` | Create a new EnVault project |
-| `EnVault: Add Secret` | Add a new environment variable |
 | `EnVault: List Secrets` | Browse all secrets in current environment |
-| `EnVault: Switch Environment` | Change active environment |
-| `EnVault: Sync Secrets` | Sync with team |
 | `EnVault: Pull Secrets` | Pull latest secrets from team |
 | `EnVault: Push Secrets` | Push local secrets to team |
 | `EnVault: Export to .env` | Export secrets to .env file (plaintext) |
@@ -209,31 +252,91 @@ EnVault uses **zero-knowledge encryption**:
 
 ## Troubleshooting
 
-### CLI Not Found
+### CLI Not Found Error
 
-If you see "EnVault CLI is not installed":
+If you see **"'envault' is not recognized as an internal or external command"** or **"EnVault CLI is not installed"**:
 
-1. Install the CLI (see Installation above)
-2. Ensure it's in your PATH: `which envault`
-3. Or set custom path: `Preferences → Settings → EnVault: CLI Path`
+**Solution:**
+1. Install the CLI first (see [Installation](#installation) above)
+2. Verify installation: Open terminal and run `envault --version`
+3. If installed but not in PATH, configure custom path:
+   - Open VS Code Settings: `Ctrl+,` (Windows/Linux) or `Cmd+,` (Mac)
+   - Search for "EnVault CLI Path"
+   - Set the full path to the `envault` executable
+   - Example (Windows): `C:\Program Files\EnVault\envault.exe`
+   - Example (Mac/Linux): `/usr/local/bin/envault`
+
+**On Windows:** Make sure to restart VS Code after installing the CLI.
+
+### Deprecation Warnings in Output
+
+If you see warnings like:
+```
+[DEP0040] DeprecationWarning: The `punycode` module is deprecated
+[DEP0005] DeprecationWarning: Buffer() is deprecated
+```
+
+**Don't worry!** These are harmless warnings from Node.js dependencies and don't affect functionality. They come from VS Code's internal modules, not EnVault. You can safely ignore them - they will be fixed in future Node.js/VS Code updates.
+
+To hide these warnings (optional):
+- Add `"NODE_NO_WARNINGS=1"` to your environment variables, or
+- Update to the latest VS Code version, or
+- Wait for dependency updates (we're tracking this)
+
+### "unknown flag: --show-description" Error
+
+If you see this error, it means your CLI version is outdated.
+
+**Solution:**
+1. Update the CLI to the latest version:
+   ```bash
+   # If installed via npm
+   npm update -g envault-cli
+
+   # If installed via brew
+   brew upgrade envault
+   ```
+2. Reload VS Code: `Ctrl+Shift+P` → "Developer: Reload Window"
+3. Verify version: Run `envault --version` (should be >= 0.2.0)
+
+### Database Permission Warnings
+
+If you see **"[WARN] Database file had insecure permissions"**:
+
+This is a security feature - EnVault automatically fixes insecure file permissions on your database file. The warning is informational only. The issue has been fixed automatically, and your data is secure.
+
+**To prevent this warning:** Ensure your `.envault.db` file has permissions `600` (owner read/write only).
 
 ### No Secrets Showing
 
-1. Ensure you've initialized the project: `EnVault: Initialize Project`
+1. Ensure you've initialized the project: `Cmd+Shift+P` → `EnVault: Initialize Project`
 2. Check `.envault` file exists in workspace root
-3. Try refreshing: `EnVault: Refresh`
+3. Try refreshing the tree view: `Cmd+Shift+P` → `EnVault: Refresh`
+4. Check you're using the correct environment (see status bar at bottom)
 
 ### IntelliSense Not Working
 
-1. Check `envault.enableIntelliSense` is `true`
-2. Ensure you're typing `process.env.` or similar pattern
-3. Reload window: `Developer: Reload Window`
+1. Verify setting is enabled: `Settings` → `envault.enableIntelliSense` → `true`
+2. Ensure you're typing the correct pattern:
+   - JavaScript/TypeScript: `process.env.`
+   - Python: `os.environ[` or `os.getenv(`
+   - Go: `os.Getenv(`
+3. Reload window: `Cmd+Shift+P` → `Developer: Reload Window`
+4. Check the language is supported (see [Features](#features))
 
 ### Sync Failures
 
-1. Ensure you're logged in: `EnVault: Login`
-2. Check network connection
-3. Verify project has team enabled
+1. Ensure you're logged in: `Cmd+Shift+P` → `EnVault: Login`
+2. Check network connection (firewall/proxy issues)
+3. Verify project has team sync enabled: Check `.envault` file for `team_id`
+4. Try pulling first: `Cmd+Shift+P` → `EnVault: Pull Secrets`
+
+### Extension Not Activating
+
+1. Check VS Code version (requires VS Code 1.80.0 or later)
+2. Look for error messages: `View` → `Output` → Select "EnVault" from dropdown
+3. Reload window: `Cmd+Shift+P` → `Developer: Reload Window`
+4. Reinstall extension if needed
 
 ## FAQ
 
