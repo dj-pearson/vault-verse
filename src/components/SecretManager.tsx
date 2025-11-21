@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -38,7 +38,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useSecrets, useUpsertSecret, useDeleteSecret } from '@/hooks/useSecrets';
 import { usePlanLimits } from '@/hooks/usePlanLimits';
-import { Eye, EyeOff, Plus, Trash2, Copy, Check, Upload, Download, MoreVertical } from 'lucide-react';
+import { Eye, EyeOff, Plus, Trash2, Copy, Check, Upload, Download, MoreVertical, Search } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 interface SecretManagerProps {
@@ -61,12 +61,25 @@ export const SecretManager = ({ environmentId, environmentName, canEdit = true }
   const [secretToDelete, setSecretToDelete] = useState<{ id: string; key: string } | null>(null);
   const [selectedSecrets, setSelectedSecrets] = useState<Set<string>>(new Set());
   const [bulkDeleteConfirm, setBulkDeleteConfirm] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const [newSecret, setNewSecret] = useState({
     key: '',
     value: '',
     description: '',
   });
+
+  // Filter secrets based on search term
+  const filteredSecrets = useMemo(() => {
+    if (!secrets) return [];
+    if (!searchTerm.trim()) return secrets;
+
+    const search = searchTerm.toLowerCase();
+    return secrets.filter(secret =>
+      secret.key.toLowerCase().includes(search) ||
+      secret.description?.toLowerCase().includes(search)
+    );
+  }, [secrets, searchTerm]);
 
   const handleAddSecret = async () => {
     if (!newSecret.key || !newSecret.value) {
@@ -136,7 +149,7 @@ export const SecretManager = ({ environmentId, environmentName, canEdit = true }
     });
   };
 
-  const handleExportCSV = () => {
+  const handleExport = (format: 'csv' | 'json' | 'yaml' | 'env') => {
     if (!secrets || secrets.length === 0) {
       toast({
         title: 'No Data',
@@ -146,21 +159,66 @@ export const SecretManager = ({ environmentId, environmentName, canEdit = true }
       return;
     }
 
-    // Create CSV content
-    const csvContent = [
-      ['KEY', 'VALUE'].join(','),
-      ...secrets.map(s => [
-        s.key,
-        `"${s.value.replace(/"/g, '""')}"`, // Escape quotes
-      ].join(','))
-    ].join('\n');
+    let content: string;
+    let mimeType: string;
+    let extension: string;
+
+    switch (format) {
+      case 'csv':
+        // CSV format
+        content = [
+          ['KEY', 'VALUE'].join(','),
+          ...secrets.map(s => [
+            s.key,
+            `"${s.value.replace(/"/g, '""')}"`, // Escape quotes
+          ].join(','))
+        ].join('\n');
+        mimeType = 'text/csv';
+        extension = 'csv';
+        break;
+
+      case 'json':
+        // JSON format
+        const jsonObj = secrets.reduce((acc, s) => {
+          acc[s.key] = s.value;
+          return acc;
+        }, {} as Record<string, string>);
+        content = JSON.stringify(jsonObj, null, 2);
+        mimeType = 'application/json';
+        extension = 'json';
+        break;
+
+      case 'yaml':
+        // YAML format
+        content = secrets.map(s => {
+          // Escape special characters in values
+          const needsQuotes = /[:#@&*!|>'"{}[\],]/.test(s.value) || s.value.trim() !== s.value;
+          const value = needsQuotes ? `"${s.value.replace(/"/g, '\\"')}"` : s.value;
+          return `${s.key}: ${value}`;
+        }).join('\n');
+        mimeType = 'text/yaml';
+        extension = 'yaml';
+        break;
+
+      case 'env':
+        // .env format
+        content = secrets.map(s => {
+          // Escape quotes and wrap in quotes if value contains spaces or special chars
+          const needsQuotes = /[\s#]/.test(s.value);
+          const value = needsQuotes ? `"${s.value.replace(/"/g, '\\"')}"` : s.value;
+          return `${s.key}=${value}`;
+        }).join('\n');
+        mimeType = 'text/plain';
+        extension = 'env';
+        break;
+    }
 
     // Create download link
-    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const blob = new Blob([content], { type: mimeType });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${environmentName}-secrets-${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `${environmentName}-secrets-${new Date().toISOString().split('T')[0]}.${extension}`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -168,7 +226,7 @@ export const SecretManager = ({ environmentId, environmentName, canEdit = true }
 
     toast({
       title: 'Success',
-      description: `Exported ${secrets.length} variable(s) to CSV`,
+      description: `Exported ${secrets.length} variable(s) as ${format.toUpperCase()}`,
     });
   };
 
@@ -268,10 +326,10 @@ export const SecretManager = ({ environmentId, environmentName, canEdit = true }
   };
 
   const toggleSelectAll = () => {
-    if (selectedSecrets.size === secrets?.length) {
+    if (selectedSecrets.size === filteredSecrets.length && filteredSecrets.length > 0) {
       setSelectedSecrets(new Set());
     } else {
-      setSelectedSecrets(new Set(secrets?.map(s => s.id) || []));
+      setSelectedSecrets(new Set(filteredSecrets.map(s => s.id)));
     }
   };
 
@@ -301,6 +359,7 @@ export const SecretManager = ({ environmentId, environmentName, canEdit = true }
           <h3 className="text-lg font-semibold">Environment Variables</h3>
           <p className="text-sm text-muted-foreground">
             Manage variables for <span className="font-medium">{environmentName}</span> environment
+            {searchTerm && ` • ${filteredSecrets.length} of ${secrets?.length || 0} shown`}
           </p>
         </div>
         {canEdit && (
@@ -327,9 +386,21 @@ export const SecretManager = ({ environmentId, environmentName, canEdit = true }
                   <Upload className="h-4 w-4 mr-2" />
                   Import from CSV
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleExportCSV} disabled={!secrets || secrets.length === 0}>
+                <DropdownMenuItem onClick={() => handleExport('csv')} disabled={!secrets || secrets.length === 0}>
                   <Download className="h-4 w-4 mr-2" />
-                  Export to CSV
+                  Export as CSV
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleExport('json')} disabled={!secrets || secrets.length === 0}>
+                  <Download className="h-4 w-4 mr-2" />
+                  Export as JSON
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleExport('yaml')} disabled={!secrets || secrets.length === 0}>
+                  <Download className="h-4 w-4 mr-2" />
+                  Export as YAML
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleExport('env')} disabled={!secrets || secrets.length === 0}>
+                  <Download className="h-4 w-4 mr-2" />
+                  Export as .env
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -434,6 +505,19 @@ API_KEY,"sk_live_123456","Stripe API key"`}
         </DialogContent>
       </Dialog>
 
+      {/* Search Bar */}
+      {secrets && secrets.length > 0 && (
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by key or description..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-9"
+          />
+        </div>
+      )}
+
       {!secrets || secrets.length === 0 ? (
         <div className="text-center py-12 border rounded-lg">
           <p className="text-muted-foreground">No environment variables yet</p>
@@ -443,6 +527,17 @@ API_KEY,"sk_live_123456","Stripe API key"`}
             </p>
           )}
         </div>
+      ) : filteredSecrets.length === 0 ? (
+        <div className="text-center py-12 border rounded-lg">
+          <p className="text-muted-foreground">No variables match your search</p>
+          <Button
+            variant="link"
+            onClick={() => setSearchTerm('')}
+            className="mt-2"
+          >
+            Clear search
+          </Button>
+        </div>
       ) : (
         <div className="border rounded-lg">
           <Table>
@@ -451,7 +546,7 @@ API_KEY,"sk_live_123456","Stripe API key"`}
                 {canEdit && (
                   <TableHead className="w-[50px]">
                     <Checkbox
-                      checked={selectedSecrets.size === secrets.length}
+                      checked={selectedSecrets.size === filteredSecrets.length && filteredSecrets.length > 0}
                       onCheckedChange={toggleSelectAll}
                     />
                   </TableHead>
@@ -462,7 +557,7 @@ API_KEY,"sk_live_123456","Stripe API key"`}
               </TableRow>
             </TableHeader>
             <TableBody>
-              {secrets.map((secret) => (
+              {filteredSecrets.map((secret) => (
                 <TableRow key={secret.id}>
                   {canEdit && (
                     <TableCell>
