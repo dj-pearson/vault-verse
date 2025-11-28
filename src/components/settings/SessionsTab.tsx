@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,7 +15,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
-import { Monitor, Smartphone, Tablet, MapPin, Clock, Shield, XCircle } from 'lucide-react';
+import { Monitor, Smartphone, Tablet, MapPin, Clock, Shield, XCircle, Info } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 interface Session {
@@ -46,22 +47,20 @@ export const SessionsTab = () => {
         return;
       }
 
-      // Mock sessions data - in production, this would come from a backend endpoint
-      // that tracks user sessions across devices
-      const mockSessions: Session[] = [
+      // Currently only tracking the current session
+      // Multi-device session tracking requires backend implementation
+      const currentSessionData: Session[] = [
         {
           id: currentSession.access_token.substring(0, 16),
           user_agent: navigator.userAgent,
-          ip_address: 'Current location',
+          ip_address: 'Current device',
           last_active: new Date().toISOString(),
           created_at: currentSession.user?.created_at || new Date().toISOString(),
           is_current: true,
         },
-        // Add mock historical sessions for demonstration
-        // In production, these would be real sessions from the database
       ];
 
-      setSessions(mockSessions);
+      setSessions(currentSessionData);
     } catch (error: any) {
       toast({
         title: 'Error',
@@ -163,16 +162,21 @@ export const SessionsTab = () => {
         <div>
           <h2 className="text-2xl font-bold">Active Sessions</h2>
           <p className="text-muted-foreground">
-            Manage your active sessions across all devices
+            View and manage your current session
           </p>
         </div>
-        {sessions.length > 1 && (
-          <Button variant="destructive" onClick={handleRevokeAll}>
-            <Shield className="h-4 w-4 mr-2" />
-            Revoke All Sessions
-          </Button>
-        )}
+        <Button variant="destructive" onClick={handleRevokeAll}>
+          <Shield className="h-4 w-4 mr-2" />
+          Sign Out
+        </Button>
       </div>
+
+      <Alert>
+        <Info className="h-4 w-4" />
+        <AlertDescription>
+          Currently showing your active session on this device. Multi-device session tracking is coming soon.
+        </AlertDescription>
+      </Alert>
 
       {sessions.length === 0 ? (
         <Card>

@@ -1,10 +1,150 @@
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Lock, Plus, Search, Mail, Shield, UserX, Crown, Users as UsersIcon } from "lucide-react";
+import { Lock, Search, Shield, Crown, Users as UsersIcon, FolderOpen, ArrowRight, Info } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useProjects } from "@/hooks/useProjects";
+import { useAuth } from "@/contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+
+interface TeamMemberWithProject {
+  id: string;
+  role: string;
+  projectId: string;
+  projectName: string;
+  user: {
+    id: string;
+    email: string;
+    full_name: string | null;
+    avatar_url: string | null;
+  };
+}
 
 export default function Team() {
+  const { user } = useAuth();
+  const { projects, isLoading: projectsLoading } = useProjects();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Fetch all team members across all user's projects
+  const { data: allTeamMembers, isLoading: membersLoading } = useQuery({
+    queryKey: ["all-team-members", projects?.map(p => p.id)],
+    queryFn: async () => {
+      if (!projects || projects.length === 0) return [];
+
+      const projectIds = projects.map(p => p.id);
+
+      const { data, error } = await supabase
+        .from("team_members")
+        .select("id, role, project_id, user_id, profiles(id, email, full_name, avatar_url)")
+        .in("project_id", projectIds);
+
+      if (error) throw error;
+
+      // Map to include project names
+      const projectMap = new Map(projects.map(p => [p.id, p.name]));
+
+      return (data || []).map(member => ({
+        id: member.id,
+        role: member.role,
+        projectId: member.project_id,
+        projectName: projectMap.get(member.project_id) || "Unknown",
+        user: {
+          id: member.profiles?.id || member.user_id,
+          email: member.profiles?.email || "Unknown",
+          full_name: member.profiles?.full_name || null,
+          avatar_url: member.profiles?.avatar_url || null,
+        },
+      })) as TeamMemberWithProject[];
+    },
+    enabled: !!projects && projects.length > 0,
+  });
+
+  // Get unique team members (deduplicated by user id)
+  const uniqueMembers = useMemo(() => {
+    if (!allTeamMembers) return [];
+
+    const memberMap = new Map<string, TeamMemberWithProject & { projects: { id: string; name: string; role: string }[] }>();
+
+    allTeamMembers.forEach(member => {
+      const existing = memberMap.get(member.user.id);
+      if (existing) {
+        existing.projects.push({
+          id: member.projectId,
+          name: member.projectName,
+          role: member.role
+        });
+      } else {
+        memberMap.set(member.user.id, {
+          ...member,
+          projects: [{ id: member.projectId, name: member.projectName, role: member.role }],
+        });
+      }
+    });
+
+    return Array.from(memberMap.values());
+  }, [allTeamMembers]);
+
+  // Filter members based on search query
+  const filteredMembers = useMemo(() => {
+    if (!searchQuery.trim()) return uniqueMembers;
+
+    const query = searchQuery.toLowerCase();
+    return uniqueMembers.filter(member =>
+      member.user.email.toLowerCase().includes(query) ||
+      member.user.full_name?.toLowerCase().includes(query)
+    );
+  }, [uniqueMembers, searchQuery]);
+
+  // Calculate stats
+  const stats = useMemo(() => {
+    return {
+      totalMembers: uniqueMembers.length,
+      projectsWithTeams: new Set(allTeamMembers?.map(m => m.projectId) || []).size,
+      totalProjects: projects?.length || 0,
+    };
+  }, [uniqueMembers, allTeamMembers, projects]);
+
+  const isLoading = projectsLoading || membersLoading;
+
+  const getInitials = (name: string | null, email: string) => {
+    if (name) {
+      return name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
+    }
+    return email.slice(0, 2).toUpperCase();
+  };
+
+  const getRoleIcon = (role: string) => {
+    switch (role) {
+      case "admin":
+        return <Shield className="h-3 w-3" />;
+      case "owner":
+        return <Crown className="h-3 w-3" />;
+      default:
+        return null;
+    }
+  };
+
+  const getRoleBadgeVariant = (role: string) => {
+    switch (role) {
+      case "admin":
+        return "default";
+      case "owner":
+        return "default";
+      default:
+        return "secondary";
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Top Navigation */}
@@ -37,16 +177,20 @@ export default function Team() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Team Management</h1>
-            <p className="text-muted-foreground">Manage team members and their access</p>
+            <h1 className="text-3xl font-bold mb-2">Team Overview</h1>
+            <p className="text-muted-foreground">View team members across all your projects</p>
           </div>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Invite Member
-          </Button>
         </div>
 
-        {/* Team Overview */}
+        {/* Info Alert */}
+        <Alert className="mb-6">
+          <Info className="h-4 w-4" />
+          <AlertDescription>
+            Team members are managed at the project level. To invite or manage members, go to a specific project's Team tab.
+          </AlertDescription>
+        </Alert>
+
+        {/* Team Overview Stats */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
           <Card className="p-6">
             <div className="flex items-center gap-3 mb-2">
@@ -54,7 +198,7 @@ export default function Team() {
                 <UsersIcon className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="text-2xl font-bold">5</p>
+                <p className="text-2xl font-bold">{isLoading ? "..." : stats.totalMembers}</p>
                 <p className="text-sm text-muted-foreground">Team Members</p>
               </div>
             </div>
@@ -63,11 +207,11 @@ export default function Team() {
           <Card className="p-6">
             <div className="flex items-center gap-3 mb-2">
               <div className="p-2 rounded-lg bg-accent/10">
-                <Shield className="h-5 w-5 text-accent" />
+                <FolderOpen className="h-5 w-5 text-accent" />
               </div>
               <div>
-                <p className="text-2xl font-bold">4</p>
-                <p className="text-sm text-muted-foreground">Shared Projects</p>
+                <p className="text-2xl font-bold">{isLoading ? "..." : stats.projectsWithTeams}</p>
+                <p className="text-sm text-muted-foreground">Projects with Teams</p>
               </div>
             </div>
           </Card>
@@ -75,11 +219,11 @@ export default function Team() {
           <Card className="p-6">
             <div className="flex items-center gap-3 mb-2">
               <div className="p-2 rounded-lg bg-primary/10">
-                <Mail className="h-5 w-5 text-primary" />
+                <Shield className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="text-2xl font-bold">2</p>
-                <p className="text-sm text-muted-foreground">Pending Invites</p>
+                <p className="text-2xl font-bold">{isLoading ? "..." : stats.totalProjects}</p>
+                <p className="text-sm text-muted-foreground">Total Projects</p>
               </div>
             </div>
           </Card>
@@ -92,202 +236,119 @@ export default function Team() {
             <Input
               placeholder="Search team members..."
               className="pl-10"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
         </div>
 
-        {/* Active Members */}
+        {/* Team Members List */}
         <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">Active Members (5)</h2>
-          
-          <div className="space-y-3">
-            <Card className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="h-10 w-10 rounded-full bg-gradient-primary flex items-center justify-center text-white font-semibold">
-                    AC
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">alice@acme.com</p>
-                      <span className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">
-                        <Crown className="h-3 w-3" />
-                        Owner
-                      </span>
-                      <span className="text-xs text-muted-foreground">(You)</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground">Joined Oct 1, 2025 • Last active: Now</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" disabled>
-                    View Projects
-                  </Button>
-                </div>
-              </div>
-            </Card>
+          <h2 className="text-xl font-semibold mb-4">
+            Team Members {!isLoading && `(${filteredMembers.length})`}
+          </h2>
 
-            <Card className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-foreground font-semibold">
-                    BJ
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">bob@acme.com</p>
-                      <span className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground">
-                        <Shield className="h-3 w-3" />
-                        Admin
-                      </span>
-                    </div>
-                    <p className="text-sm text-muted-foreground">Joined Oct 5, 2025 • Last active: 2h ago</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm">
-                    Change Role
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <UserX className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+          {isLoading ? (
+            <Card className="p-8 text-center text-muted-foreground">
+              Loading team members...
             </Card>
-
-            <Card className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-foreground font-semibold">
-                    CD
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">charlie@acme.com</p>
-                      <span className="text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground">
-                        Developer
-                      </span>
-                    </div>
-                    <p className="text-sm text-muted-foreground">Joined Oct 12, 2025 • Last active: 5h ago</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm">
-                    Change Role
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <UserX className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+          ) : filteredMembers.length === 0 ? (
+            <Card className="p-8 text-center">
+              <UsersIcon className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+              <p className="text-muted-foreground">
+                {searchQuery ? "No team members match your search" : "No team members yet"}
+              </p>
+              <p className="text-sm text-muted-foreground mt-2">
+                Invite team members from within a project's Team tab
+              </p>
             </Card>
-
-            <Card className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-foreground font-semibold">
-                    DL
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">diana@acme.com</p>
-                      <span className="text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground">
-                        Developer
-                      </span>
+          ) : (
+            <div className="space-y-3">
+              {filteredMembers.map((member) => (
+                <Card key={member.user.id} className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <Avatar className="h-10 w-10">
+                        <AvatarImage src={member.user.avatar_url || undefined} />
+                        <AvatarFallback className="bg-gradient-primary text-white">
+                          {getInitials(member.user.full_name, member.user.email)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium">
+                            {member.user.full_name || member.user.email}
+                          </p>
+                          {member.user.id === user?.id && (
+                            <span className="text-xs text-muted-foreground">(You)</span>
+                          )}
+                        </div>
+                        <p className="text-sm text-muted-foreground">{member.user.email}</p>
+                      </div>
                     </div>
-                    <p className="text-sm text-muted-foreground">Joined Oct 18, 2025 • Last active: Yesterday</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm">
-                    Change Role
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <UserX className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-foreground font-semibold">
-                    ET
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">eve@acme.com</p>
-                      <span className="text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground">
-                        Viewer
-                      </span>
+                    <div className="flex items-center gap-3">
+                      <div className="flex flex-wrap gap-1 justify-end max-w-xs">
+                        {member.projects.slice(0, 3).map((project) => (
+                          <Link
+                            key={project.id}
+                            to={`/project/${project.id}`}
+                            className="group"
+                          >
+                            <Badge
+                              variant={getRoleBadgeVariant(project.role)}
+                              className="gap-1 hover:bg-primary/80 transition-colors cursor-pointer"
+                            >
+                              {getRoleIcon(project.role)}
+                              {project.name}
+                            </Badge>
+                          </Link>
+                        ))}
+                        {member.projects.length > 3 && (
+                          <Badge variant="outline">
+                            +{member.projects.length - 3} more
+                          </Badge>
+                        )}
+                      </div>
                     </div>
-                    <p className="text-sm text-muted-foreground">Joined Nov 1, 2025 • Last active: 3d ago</p>
                   </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm">
-                    Change Role
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <UserX className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          </div>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Pending Invites */}
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Pending Invites (2)</h2>
-          
-          <div className="space-y-3">
-            <Card className="p-4 bg-muted/30">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="h-10 w-10 rounded-full border-2 border-dashed border-muted-foreground/30 flex items-center justify-center">
-                    <Mail className="h-5 w-5 text-muted-foreground" />
-                  </div>
-                  <div>
-                    <p className="font-medium">frank@acme.com</p>
-                    <p className="text-sm text-muted-foreground">Invited 2 days ago • Developer role</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm">
-                    Resend Invite
+        {/* Projects Quick Access */}
+        {projects && projects.length > 0 && (
+          <div>
+            <h2 className="text-xl font-semibold mb-4">Manage Project Teams</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {projects.slice(0, 6).map((project) => (
+                <Link key={project.id} to={`/project/${project.id}`}>
+                  <Card className="p-4 hover:border-primary/50 transition-colors cursor-pointer">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">{project.name}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {project.description || "No description"}
+                        </p>
+                      </div>
+                      <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+            {projects.length > 6 && (
+              <div className="mt-4 text-center">
+                <Link to="/dashboard">
+                  <Button variant="outline">
+                    View All Projects
                   </Button>
-                  <Button variant="ghost" size="sm">
-                    Cancel
-                  </Button>
-                </div>
+                </Link>
               </div>
-            </Card>
-
-            <Card className="p-4 bg-muted/30">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="h-10 w-10 rounded-full border-2 border-dashed border-muted-foreground/30 flex items-center justify-center">
-                    <Mail className="h-5 w-5 text-muted-foreground" />
-                  </div>
-                  <div>
-                    <p className="font-medium">grace@acme.com</p>
-                    <p className="text-sm text-muted-foreground">Invited 5 days ago • Viewer role</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm">
-                    Resend Invite
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    Cancel
-                  </Button>
-                </div>
-              </div>
-            </Card>
+            )}
           </div>
-        </div>
+        )}
 
         {/* Role Information */}
         <Card className="mt-8 p-6 bg-muted/30">
@@ -308,7 +369,7 @@ export default function Team() {
             <div className="flex gap-3">
               <UsersIcon className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
               <div>
-                <strong>Developer:</strong> Read/write dev & staging, read-only production
+                <strong>Member:</strong> Read/write dev & staging, read-only production
               </div>
             </div>
             <div className="flex gap-3">
