@@ -18,6 +18,13 @@ import { toast } from '@/hooks/use-toast';
 import { Monitor, Smartphone, Tablet, MapPin, Clock, Shield, XCircle, Info } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
+// Generate a secure session display ID without exposing token data
+const generateSecureSessionId = (): string => {
+  const array = new Uint8Array(12);
+  crypto.getRandomValues(array);
+  return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+};
+
 interface Session {
   id: string;
   user_agent: string;
@@ -51,7 +58,7 @@ export const SessionsTab = () => {
       // Multi-device session tracking requires backend implementation
       const currentSessionData: Session[] = [
         {
-          id: currentSession.access_token.substring(0, 16),
+          id: generateSecureSessionId(), // Use secure random ID instead of token substring
           user_agent: navigator.userAgent,
           ip_address: 'Current device',
           last_active: new Date().toISOString(),
