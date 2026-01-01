@@ -44,34 +44,20 @@ export default function Signup() {
             {/* Left side - Signup Form */}
             <div>
               <div className="max-w-md">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent text-accent-foreground text-sm font-medium mb-6">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
                   <Lock className="h-4 w-4" />
-                  Coming Soon
+                  Zero-Knowledge Encryption
                 </div>
-                
+
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                  Launching December 1st, 2025
+                  Create Your Account
                 </h1>
                 <p className="text-lg text-muted-foreground mb-8">
-                  We're preparing something special. Sign up will be available at launch.
+                  Get started with secure environment variable management in minutes.
                 </p>
 
-                <Card className="p-8 bg-muted/30">
-                  <div className="text-center py-8">
-                    <Lock className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                    <h3 className="text-xl font-semibold mb-2">Signups Currently Closed</h3>
-                    <p className="text-muted-foreground mb-6">
-                      New account registration will open on December 1st, 2025.
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Already have an account?{" "}
-                      <Link to="/login" className="text-primary font-medium hover:underline">
-                        Sign in here
-                      </Link>
-                    </p>
-                  </div>
-
-                  <form onSubmit={handleSubmit} className="space-y-6 hidden">
+                <Card className="p-8">
+                  <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-2">
                       <Label htmlFor="fullName">Full Name</Label>
                       <Input 

@@ -8,10 +8,11 @@ import { Badge } from '@/components/ui/badge';
 import { SecretManager } from '@/components/SecretManager';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Settings, Users, FileText, ChevronLeft, Loader2 } from 'lucide-react';
+import { Settings, Users, FileText, ChevronLeft } from 'lucide-react';
 import { ProjectSettingsTab } from '@/components/project/ProjectSettingsTab';
 import { ProjectTeamTab } from '@/components/project/ProjectTeamTab';
 import { ProjectAuditTab } from '@/components/project/ProjectAuditTab';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface Environment {
   id: string;
@@ -82,8 +83,56 @@ export default function ProjectDetail() {
       <div className="min-h-screen bg-background">
         <Navigation />
         <main className="container mx-auto px-4 py-8 mt-16">
-          <div className="flex items-center justify-center h-64">
-            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          {/* Header Skeleton */}
+          <div className="mb-8">
+            <Skeleton className="h-4 w-32 mb-4" />
+            <div className="flex items-start justify-between">
+              <div>
+                <Skeleton className="h-9 w-64 mb-2" />
+                <Skeleton className="h-5 w-96" />
+              </div>
+              <Skeleton className="h-6 w-24" />
+            </div>
+          </div>
+
+          {/* Tabs Skeleton */}
+          <div className="space-y-6">
+            <div className="flex gap-2">
+              <Skeleton className="h-10 w-32" />
+              <Skeleton className="h-10 w-20" />
+              <Skeleton className="h-10 w-24" />
+              <Skeleton className="h-10 w-24" />
+            </div>
+
+            {/* Environment tabs skeleton */}
+            <div className="flex gap-2 mb-4">
+              <Skeleton className="h-9 w-28" />
+              <Skeleton className="h-9 w-28" />
+              <Skeleton className="h-9 w-28" />
+            </div>
+
+            {/* Card skeleton */}
+            <Card>
+              <CardHeader>
+                <Skeleton className="h-6 w-48 mb-2" />
+                <Skeleton className="h-4 w-72" />
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Secret rows skeleton */}
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="flex items-center justify-between py-3 border-b last:border-0">
+                    <div className="flex items-center gap-4">
+                      <Skeleton className="h-5 w-32" />
+                      <Skeleton className="h-5 w-48" />
+                    </div>
+                    <div className="flex gap-2">
+                      <Skeleton className="h-8 w-8" />
+                      <Skeleton className="h-8 w-8" />
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
           </div>
         </main>
       </div>

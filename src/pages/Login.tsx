@@ -44,16 +44,16 @@ export default function Login() {
             {/* Left side - Login Form */}
             <div>
               <div className="max-w-md">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent text-accent-foreground text-sm font-medium mb-6 animate-pulse">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
                   <Lock className="h-4 w-4" />
-                  Launching December 1st, 2025
+                  Zero-Knowledge Encryption
                 </div>
-                
+
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">
                   Welcome Back
                 </h1>
                 <p className="text-lg text-muted-foreground mb-8">
-                  Sign in to manage your team's environment variables
+                  Sign in to manage your team's environment variables securely.
                 </p>
 
                 <Card className="p-8">
@@ -89,7 +89,10 @@ export default function Login() {
                   </form>
 
                   <div className="mt-6 text-center text-sm">
-                    <span className="text-muted-foreground">Signups open December 1st, 2025</span>
+                    <span className="text-muted-foreground">Don't have an account? </span>
+                    <Link to="/signup" className="text-primary font-medium hover:underline">
+                      Sign up
+                    </Link>
                   </div>
                 </Card>
 
