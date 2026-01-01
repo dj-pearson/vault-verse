@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, useCallback, memo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -47,7 +47,7 @@ interface SecretManagerProps {
   canEdit?: boolean;
 }
 
-export const SecretManager = ({ environmentId, environmentName, canEdit = true }: SecretManagerProps) => {
+export const SecretManager = memo(function SecretManager({ environmentId, environmentName, canEdit = true }: SecretManagerProps) {
   const { data: secrets, isLoading } = useSecrets(environmentId);
   const upsertSecret = useUpsertSecret();
   const deleteSecret = useDeleteSecret();
@@ -305,25 +305,29 @@ export const SecretManager = ({ environmentId, environmentName, canEdit = true }
     }
   };
 
-  const toggleSecretVisibility = (key: string) => {
-    const newVisible = new Set(visibleSecrets);
-    if (newVisible.has(key)) {
-      newVisible.delete(key);
-    } else {
-      newVisible.add(key);
-    }
-    setVisibleSecrets(newVisible);
-  };
+  const toggleSecretVisibility = useCallback((key: string) => {
+    setVisibleSecrets(prev => {
+      const newVisible = new Set(prev);
+      if (newVisible.has(key)) {
+        newVisible.delete(key);
+      } else {
+        newVisible.add(key);
+      }
+      return newVisible;
+    });
+  }, []);
 
-  const toggleSecretSelection = (id: string) => {
-    const newSelected = new Set(selectedSecrets);
-    if (newSelected.has(id)) {
-      newSelected.delete(id);
-    } else {
-      newSelected.add(id);
-    }
-    setSelectedSecrets(newSelected);
-  };
+  const toggleSecretSelection = useCallback((id: string) => {
+    setSelectedSecrets(prev => {
+      const newSelected = new Set(prev);
+      if (newSelected.has(id)) {
+        newSelected.delete(id);
+      } else {
+        newSelected.add(id);
+      }
+      return newSelected;
+    });
+  }, []);
 
   const toggleSelectAll = () => {
     if (selectedSecrets.size === filteredSecrets.length && filteredSecrets.length > 0) {
@@ -333,7 +337,7 @@ export const SecretManager = ({ environmentId, environmentName, canEdit = true }
     }
   };
 
-  const copyToClipboard = async (text: string, key: string) => {
+  const copyToClipboard = useCallback(async (text: string, key: string) => {
     await navigator.clipboard.writeText(text);
     setCopiedKey(key);
     setTimeout(() => setCopiedKey(null), 2000);
@@ -341,7 +345,7 @@ export const SecretManager = ({ environmentId, environmentName, canEdit = true }
       title: 'Copied',
       description: 'Value copied to clipboard',
     });
-  };
+  }, []);
 
   const maskValue = (value: string) => {
     if (value.length <= 4) return '***';
@@ -670,4 +674,4 @@ API_KEY,"sk_live_123456","Stripe API key"`}
       )}
     </div>
   );
-};
+});
