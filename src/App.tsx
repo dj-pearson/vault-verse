@@ -16,6 +16,7 @@ import QuickStart from "./pages/docs/QuickStart";
 import CLIReference from "./pages/docs/CLIReference";
 import TeamSetup from "./pages/docs/TeamSetup";
 import Security from "./pages/docs/Security";
+import Integrations from "./pages/docs/Integrations";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
@@ -45,6 +46,7 @@ const App = () => (
               <Route path="cli" element={<CLIReference />} />
               <Route path="team" element={<TeamSetup />} />
               <Route path="security" element={<Security />} />
+              <Route path="integrations" element={<Integrations />} />
             </Route>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
