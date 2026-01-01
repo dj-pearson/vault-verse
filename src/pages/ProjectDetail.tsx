@@ -33,6 +33,7 @@ interface Project {
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
   const [activeTab, setActiveTab] = useState('environments');
+  const [activeEnvironmentId, setActiveEnvironmentId] = useState<string | null>(null);
 
   const { data: project, isLoading: projectLoading } = useQuery({
     queryKey: ['project', id],
@@ -205,7 +206,11 @@ export default function ProjectDetail() {
           {/* Environments Tab */}
           <TabsContent value="environments" className="space-y-6">
             {environments && environments.length > 0 ? (
-              <Tabs defaultValue={environments[0].id} className="space-y-6">
+              <Tabs
+                value={activeEnvironmentId || environments[0].id}
+                onValueChange={setActiveEnvironmentId}
+                className="space-y-6"
+              >
                 <TabsList>
                   {environments.map((env) => (
                     <TabsTrigger key={env.id} value={env.id} className="capitalize">
@@ -214,25 +219,31 @@ export default function ProjectDetail() {
                   ))}
                 </TabsList>
 
-                {environments.map((env) => (
-                  <TabsContent key={env.id} value={env.id}>
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="capitalize">{env.name} Environment</CardTitle>
-                        <CardDescription>
-                          Manage environment variables for {env.name}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <SecretManager
-                          environmentId={env.id}
-                          environmentName={env.name}
-                          canEdit={true}
-                        />
-                      </CardContent>
-                    </Card>
-                  </TabsContent>
-                ))}
+                {/* Only render the active environment's SecretManager */}
+                {environments.map((env) => {
+                  const isActive = env.id === (activeEnvironmentId || environments[0].id);
+                  return (
+                    <TabsContent key={env.id} value={env.id}>
+                      <Card>
+                        <CardHeader>
+                          <CardTitle className="capitalize">{env.name} Environment</CardTitle>
+                          <CardDescription>
+                            Manage environment variables for {env.name}
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          {isActive && (
+                            <SecretManager
+                              environmentId={env.id}
+                              environmentName={env.name}
+                              canEdit={true}
+                            />
+                          )}
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+                  );
+                })}
               </Tabs>
             ) : (
               <Card>
