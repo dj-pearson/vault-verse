@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface TeamMemberWithProject {
   id: string;
@@ -249,9 +250,25 @@ export default function Team() {
           </h2>
 
           {isLoading ? (
-            <Card className="p-8 text-center text-muted-foreground">
-              Loading team members...
-            </Card>
+            <div className="space-y-3">
+              {[1, 2, 3, 4].map((i) => (
+                <Card key={i} className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <Skeleton className="h-10 w-10 rounded-full" />
+                      <div>
+                        <Skeleton className="h-5 w-40 mb-2" />
+                        <Skeleton className="h-4 w-56" />
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Skeleton className="h-6 w-20" />
+                      <Skeleton className="h-6 w-20" />
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
           ) : filteredMembers.length === 0 ? (
             <Card className="p-8 text-center">
               <UsersIcon className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
@@ -291,7 +308,7 @@ export default function Team() {
                         {member.projects.slice(0, 3).map((project) => (
                           <Link
                             key={project.id}
-                            to={`/project/${project.id}`}
+                            to={`/dashboard/projects/${project.id}`}
                             className="group"
                           >
                             <Badge
@@ -323,7 +340,7 @@ export default function Team() {
             <h2 className="text-xl font-semibold mb-4">Manage Project Teams</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {projects.slice(0, 6).map((project) => (
-                <Link key={project.id} to={`/project/${project.id}`}>
+                <Link key={project.id} to={`/dashboard/projects/${project.id}`}>
                   <Card className="p-4 hover:border-primary/50 transition-colors cursor-pointer">
                     <div className="flex items-center justify-between">
                       <div>
