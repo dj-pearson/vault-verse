@@ -353,7 +353,12 @@ export const SecretManager = memo(function SecretManager({ environmentId, enviro
   };
 
   if (isLoading) {
-    return <div className="text-center py-8">Loading secrets...</div>;
+    return (
+      <div className="text-center py-8" role="status" aria-busy="true" aria-live="polite">
+        <span className="sr-only">Loading environment variables</span>
+        Loading secrets...
+      </div>
+    );
   }
 
   return (
@@ -372,38 +377,39 @@ export const SecretManager = memo(function SecretManager({ environmentId, enviro
               <Button
                 variant="destructive"
                 onClick={() => setBulkDeleteConfirm(true)}
+                aria-label={`Delete ${selectedSecrets.size} selected variables`}
               >
-                <Trash2 className="h-4 w-4 mr-2" />
+                <Trash2 className="h-4 w-4 mr-2" aria-hidden="true" />
                 Delete Selected ({selectedSecrets.size})
               </Button>
             )}
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline">
-                  <MoreVertical className="h-4 w-4 mr-2" />
+                <Button variant="outline" aria-label="Bulk actions menu">
+                  <MoreVertical className="h-4 w-4 mr-2" aria-hidden="true" />
                   Bulk Actions
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => setIsImportDialogOpen(true)}>
-                  <Upload className="h-4 w-4 mr-2" />
+                  <Upload className="h-4 w-4 mr-2" aria-hidden="true" />
                   Import from CSV
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleExport('csv')} disabled={!secrets || secrets.length === 0}>
-                  <Download className="h-4 w-4 mr-2" />
+                  <Download className="h-4 w-4 mr-2" aria-hidden="true" />
                   Export as CSV
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleExport('json')} disabled={!secrets || secrets.length === 0}>
-                  <Download className="h-4 w-4 mr-2" />
+                  <Download className="h-4 w-4 mr-2" aria-hidden="true" />
                   Export as JSON
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleExport('yaml')} disabled={!secrets || secrets.length === 0}>
-                  <Download className="h-4 w-4 mr-2" />
+                  <Download className="h-4 w-4 mr-2" aria-hidden="true" />
                   Export as YAML
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleExport('env')} disabled={!secrets || secrets.length === 0}>
-                  <Download className="h-4 w-4 mr-2" />
+                  <Download className="h-4 w-4 mr-2" aria-hidden="true" />
                   Export as .env
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -411,8 +417,8 @@ export const SecretManager = memo(function SecretManager({ environmentId, enviro
 
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
               <DialogTrigger asChild>
-                <Button>
-                  <Plus className="h-4 w-4 mr-2" />
+                <Button aria-label="Add new environment variable">
+                  <Plus className="h-4 w-4 mr-2" aria-hidden="true" />
                   Add Variable
                 </Button>
               </DialogTrigger>
@@ -512,13 +518,19 @@ API_KEY,"sk_live_123456","Stripe API key"`}
       {/* Search Bar */}
       {secrets && secrets.length > 0 && (
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+          <label htmlFor="secret-search" className="sr-only">Search environment variables</label>
           <Input
+            id="secret-search"
             placeholder="Search by key or description..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-9"
+            aria-describedby="search-results-status"
           />
+          <div id="search-results-status" className="sr-only" aria-live="polite" aria-atomic="true">
+            {searchTerm && `${filteredSecrets.length} of ${secrets?.length || 0} variables shown`}
+          </div>
         </div>
       )}
 
@@ -544,20 +556,25 @@ API_KEY,"sk_live_123456","Stripe API key"`}
         </div>
       ) : (
         <div className="border rounded-lg">
-          <Table>
+          <Table aria-label={`Environment variables for ${environmentName}`}>
+            <caption className="sr-only">
+              Environment variables table. {filteredSecrets.length} variables shown.
+              Use the action buttons to show, copy, or delete values.
+            </caption>
             <TableHeader>
               <TableRow>
                 {canEdit && (
-                  <TableHead className="w-[50px]">
+                  <TableHead scope="col" className="w-[50px]">
                     <Checkbox
                       checked={selectedSecrets.size === filteredSecrets.length && filteredSecrets.length > 0}
                       onCheckedChange={toggleSelectAll}
+                      aria-label={selectedSecrets.size === filteredSecrets.length ? "Deselect all variables" : "Select all variables"}
                     />
                   </TableHead>
                 )}
-                <TableHead>Key</TableHead>
-                <TableHead>Value</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead scope="col">Key</TableHead>
+                <TableHead scope="col">Value</TableHead>
+                <TableHead scope="col" className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -568,37 +585,46 @@ API_KEY,"sk_live_123456","Stripe API key"`}
                       <Checkbox
                         checked={selectedSecrets.has(secret.id)}
                         onCheckedChange={() => toggleSecretSelection(secret.id)}
+                        aria-label={`Select ${secret.key}`}
                       />
                     </TableCell>
                   )}
-                  <TableCell className="font-mono font-medium">{secret.key}</TableCell>
+                  <TableCell className="font-mono font-medium">
+                    <span id={`key-${secret.id}`}>{secret.key}</span>
+                  </TableCell>
                   <TableCell className="font-mono text-sm">
-                    {visibleSecrets.has(secret.key) ? secret.value : maskValue(secret.value)}
+                    <span aria-live="polite">
+                      {visibleSecrets.has(secret.key) ? secret.value : maskValue(secret.value)}
+                    </span>
+                    <span className="sr-only">
+                      {visibleSecrets.has(secret.key) ? 'Value is visible' : 'Value is hidden'}
+                    </span>
                   </TableCell>
                   <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
+                    <div className="flex justify-end gap-2" role="group" aria-label={`Actions for ${secret.key}`}>
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => toggleSecretVisibility(secret.key)}
-                        title={visibleSecrets.has(secret.key) ? 'Hide value' : 'Show value'}
+                        aria-label={visibleSecrets.has(secret.key) ? `Hide value for ${secret.key}` : `Show value for ${secret.key}`}
+                        aria-pressed={visibleSecrets.has(secret.key)}
                       >
                         {visibleSecrets.has(secret.key) ? (
-                          <EyeOff className="h-4 w-4" />
+                          <EyeOff className="h-4 w-4" aria-hidden="true" />
                         ) : (
-                          <Eye className="h-4 w-4" />
+                          <Eye className="h-4 w-4" aria-hidden="true" />
                         )}
                       </Button>
                       <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => copyToClipboard(secret.value, secret.key)}
-                        title="Copy value"
+                        aria-label={copiedKey === secret.key ? `Copied ${secret.key} to clipboard` : `Copy ${secret.key} value to clipboard`}
                       >
                         {copiedKey === secret.key ? (
-                          <Check className="h-4 w-4 text-green-600" />
+                          <Check className="h-4 w-4 text-green-600" aria-hidden="true" />
                         ) : (
-                          <Copy className="h-4 w-4" />
+                          <Copy className="h-4 w-4" aria-hidden="true" />
                         )}
                       </Button>
                       {canEdit && (
@@ -606,9 +632,9 @@ API_KEY,"sk_live_123456","Stripe API key"`}
                           variant="ghost"
                           size="icon"
                           onClick={() => setSecretToDelete({ id: secret.id, key: secret.key })}
-                          title="Delete variable"
+                          aria-label={`Delete ${secret.key}`}
                         >
-                          <Trash2 className="h-4 w-4 text-destructive" />
+                          <Trash2 className="h-4 w-4 text-destructive" aria-hidden="true" />
                         </Button>
                       )}
                     </div>

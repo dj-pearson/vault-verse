@@ -110,4 +110,95 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Accessibility: Focus visible styles for keyboard navigation */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  /* Accessibility: Skip link styling */
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999];
+    @apply focus:block focus:px-4 focus:py-2 focus:rounded-md;
+    @apply focus:bg-primary focus:text-primary-foreground;
+    @apply focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2;
+  }
+}
+
+/* Accessibility: Reduced motion support
+ * WCAG 2.1 Success Criterion 2.3.3 - Animation from Interactions (Level AAA)
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Keep essential transitions for focus states */
+  :focus-visible {
+    transition: outline-offset 0.1s ease;
+  }
+}
+
+/* Accessibility: High contrast mode support */
+@media (prefers-contrast: more) {
+  :root {
+    --border: 220 20% 30%;
+    --ring: 217 100% 50%;
+  }
+
+  .dark {
+    --border: 220 20% 50%;
+  }
+
+  /* Ensure sufficient contrast for interactive elements */
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    border-width: 2px;
+  }
+}
+
+/* Accessibility: Ensure minimum touch target size */
+@media (pointer: coarse) {
+  button,
+  a,
+  [role="button"],
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Accessibility: Screen reader only class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Accessibility: Make sr-only visible on focus (for skip links) */
+.sr-only-focusable:focus,
+.sr-only-focusable:active {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
 }

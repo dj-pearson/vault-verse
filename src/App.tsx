@@ -4,8 +4,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
+import { AccessibilityProvider } from "./contexts/AccessibilityContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { AdminRoute } from "./components/AdminRoute";
+import { SkipLink } from "./components/accessibility/SkipLink";
 import Home from "./pages/Home";
 import Features from "./pages/Features";
 import Pricing from "./pages/Pricing";
@@ -24,6 +26,7 @@ import Team from "./pages/Team";
 import ProjectDetail from "./pages/ProjectDetail";
 import Settings from "./pages/Settings";
 import Admin from "./pages/Admin";
+import Accessibility from "./pages/Accessibility";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,31 +37,36 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/features" element={<Features />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/docs" element={<DocsLayout />}>
-              <Route index element={<Overview />} />
-              <Route path="installation" element={<Installation />} />
-              <Route path="quickstart" element={<QuickStart />} />
-              <Route path="cli" element={<CLIReference />} />
-              <Route path="team" element={<TeamSetup />} />
-              <Route path="security" element={<Security />} />
-              <Route path="integrations" element={<Integrations />} />
-            </Route>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/dashboard/team" element={<ProtectedRoute><Team /></ProtectedRoute>} />
-            <Route path="/dashboard/projects/:id" element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
-            <Route path="/dashboard/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-            <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AuthProvider>
+        <AccessibilityProvider>
+          <AuthProvider>
+            {/* Skip link for keyboard navigation - WCAG 2.4.1 */}
+            <SkipLink />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/features" element={<Features />} />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/accessibility" element={<Accessibility />} />
+              <Route path="/docs" element={<DocsLayout />}>
+                <Route index element={<Overview />} />
+                <Route path="installation" element={<Installation />} />
+                <Route path="quickstart" element={<QuickStart />} />
+                <Route path="cli" element={<CLIReference />} />
+                <Route path="team" element={<TeamSetup />} />
+                <Route path="security" element={<Security />} />
+                <Route path="integrations" element={<Integrations />} />
+              </Route>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/dashboard/team" element={<ProtectedRoute><Team /></ProtectedRoute>} />
+              <Route path="/dashboard/projects/:id" element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
+              <Route path="/dashboard/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+              <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AuthProvider>
+        </AccessibilityProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
