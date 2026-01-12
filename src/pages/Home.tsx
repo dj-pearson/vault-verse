@@ -4,22 +4,27 @@ import { Card } from "@/components/ui/card";
 import { TerminalWindow, TerminalLine } from "@/components/TerminalWindow";
 import { Lock, Zap, DollarSign, Shield, Users, Terminal, Database, Clock, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 export default function Home() {
+  useDocumentTitle("Home");
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
-      
+
+      {/* Main Content - Skip link target */}
+      <main id="main-content" tabIndex={-1}>
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4">
+      <section className="pt-32 pb-20 px-4" aria-labelledby="hero-heading">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
-              <Shield className="h-4 w-4" />
+              <Shield className="h-4 w-4" aria-hidden="true" />
               Zero-knowledge encryption
             </div>
-            
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-primary bg-clip-text text-transparent">
+
+            <h1 id="hero-heading" className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-primary bg-clip-text text-transparent">
               Manage Environment Variables
               <br />Without the Pain
             </h1>
@@ -39,11 +44,11 @@ export default function Home() {
 
             <div className="flex flex-col sm:flex-row gap-6 justify-center text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
-                <Lock className="h-4 w-4" />
+                <Lock className="h-4 w-4" aria-hidden="true" />
                 Your secrets never leave your machine
               </div>
               <div className="flex items-center gap-2">
-                <Terminal className="h-4 w-4" />
+                <Terminal className="h-4 w-4" aria-hidden="true" />
                 Open source CLI
               </div>
             </div>
@@ -193,14 +198,17 @@ export default function Home() {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
+            <table className="w-full border-collapse" aria-label="Feature comparison between ENVault and competitors">
+              <caption className="sr-only">
+                Comparison of features and pricing between ENVault, Doppler, 1Password, and .env files
+              </caption>
               <thead>
                 <tr className="border-b border-border">
-                  <th className="text-left p-4 font-semibold">Feature</th>
-                  <th className="text-center p-4 font-semibold text-primary">EnvVault</th>
-                  <th className="text-center p-4 font-semibold">Doppler</th>
-                  <th className="text-center p-4 font-semibold">1Password</th>
-                  <th className="text-center p-4 font-semibold">.env Files</th>
+                  <th scope="col" className="text-left p-4 font-semibold">Feature</th>
+                  <th scope="col" className="text-center p-4 font-semibold text-primary">EnvVault</th>
+                  <th scope="col" className="text-center p-4 font-semibold">Doppler</th>
+                  <th scope="col" className="text-center p-4 font-semibold">1Password</th>
+                  <th scope="col" className="text-center p-4 font-semibold">.env Files</th>
                 </tr>
               </thead>
               <tbody>
@@ -213,31 +221,31 @@ export default function Home() {
                   { feature: "Open Source", envault: true, doppler: false, onepass: false, dotenv: null },
                 ].map((row, i) => (
                   <tr key={i} className="border-b border-border/50">
-                    <td className="p-4 font-medium">{row.feature}</td>
+                    <th scope="row" className="p-4 font-medium text-left">{row.feature}</th>
                     <td className="text-center p-4">
-                      {row.envault === true && <span className="text-primary font-bold">✓</span>}
-                      {row.envault === false && <span className="text-muted-foreground">✗</span>}
+                      {row.envault === true && <span className="text-primary font-bold" aria-label="Yes">✓</span>}
+                      {row.envault === false && <span className="text-muted-foreground" aria-label="No">✗</span>}
                       {typeof row.envault === "string" && <span className="text-muted-foreground">{row.envault}</span>}
-                      {row.envault === null && <span className="text-muted-foreground">-</span>}
+                      {row.envault === null && <span className="text-muted-foreground" aria-label="Not applicable">-</span>}
                     </td>
                     <td className="text-center p-4">
-                      {row.doppler === true && <span className="text-primary font-bold">✓</span>}
-                      {row.doppler === false && <span className="text-muted-foreground">✗</span>}
+                      {row.doppler === true && <span className="text-primary font-bold" aria-label="Yes">✓</span>}
+                      {row.doppler === false && <span className="text-muted-foreground" aria-label="No">✗</span>}
                     </td>
                     <td className="text-center p-4">
-                      {row.onepass === true && <span className="text-primary font-bold">✓</span>}
-                      {row.onepass === false && <span className="text-muted-foreground">✗</span>}
+                      {row.onepass === true && <span className="text-primary font-bold" aria-label="Yes">✓</span>}
+                      {row.onepass === false && <span className="text-muted-foreground" aria-label="No">✗</span>}
                       {typeof row.onepass === "string" && <span className="text-muted-foreground">{row.onepass}</span>}
                     </td>
                     <td className="text-center p-4">
-                      {row.dotenv === true && <span className="text-primary font-bold">✓</span>}
-                      {row.dotenv === false && <span className="text-muted-foreground">✗</span>}
-                      {row.dotenv === null && <span className="text-muted-foreground">-</span>}
+                      {row.dotenv === true && <span className="text-primary font-bold" aria-label="Yes">✓</span>}
+                      {row.dotenv === false && <span className="text-muted-foreground" aria-label="No">✗</span>}
+                      {row.dotenv === null && <span className="text-muted-foreground" aria-label="Not applicable">-</span>}
                     </td>
                   </tr>
                 ))}
                 <tr className="bg-primary/5 font-semibold">
-                  <td className="p-4">Price (5 users/mo)</td>
+                  <th scope="row" className="p-4 text-left">Price (5 users/mo)</th>
                   <td className="text-center p-4 text-primary">$40</td>
                   <td className="text-center p-4">$60</td>
                   <td className="text-center p-4">$40</td>
@@ -277,10 +285,12 @@ export default function Home() {
         </div>
       </section>
 
+      </main>
+
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-primary">
+      <section className="py-20 px-4 bg-gradient-primary" aria-labelledby="cta-heading">
         <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+          <h2 id="cta-heading" className="text-4xl md:text-5xl font-bold mb-6 text-white">
             Ready to Stop Losing .env Files?
           </h2>
           <p className="text-xl text-white/90 mb-8">
@@ -332,6 +342,7 @@ export default function Home() {
                 <li><a href="#" className="hover:text-foreground transition-colors">Privacy</a></li>
                 <li><a href="#" className="hover:text-foreground transition-colors">Terms</a></li>
                 <li><Link to="/docs/security" className="hover:text-foreground transition-colors">Security</Link></li>
+                <li><Link to="/accessibility" className="hover:text-foreground transition-colors">Accessibility</Link></li>
               </ul>
             </div>
           </div>

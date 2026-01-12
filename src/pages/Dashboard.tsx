@@ -18,8 +18,11 @@ import { useProjects } from "@/hooks/useProjects";
 import { Link } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { UsageLimitsBadge } from "@/components/UsageLimitsBadge";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 export default function Dashboard() {
+  useDocumentTitle("Dashboard");
+
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<{ id: string; name: string } | null>(null);
@@ -54,7 +57,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
-      <div className="container mx-auto p-6">
+      <main id="main-content" className="container mx-auto p-6" tabIndex={-1}>
         <div className="flex justify-between items-start mb-8">
           <div className="space-y-4">
             <div>
@@ -63,24 +66,25 @@ export default function Dashboard() {
             </div>
             <UsageLimitsBadge />
           </div>
-          <Button onClick={() => setIsCreateDialogOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
+          <Button onClick={() => setIsCreateDialogOpen(true)} aria-label="Create new project">
+            <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
             New Project
           </Button>
         </div>
 
         {isLoading ? (
-          <div className="text-center py-12">
+          <div className="text-center py-12" role="status" aria-busy="true" aria-live="polite">
+            <span className="sr-only">Loading projects</span>
             <p className="text-muted-foreground">Loading projects...</p>
           </div>
         ) : projects && projects.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3" role="list" aria-label="Your projects">
             {projects.map((project) => (
-              <Card key={project.id}>
+              <Card key={project.id} role="listitem">
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-2">
-                      <Folder className="h-5 w-5 text-primary" />
+                      <Folder className="h-5 w-5 text-primary" aria-hidden="true" />
                       <CardTitle className="text-lg">{project.name}</CardTitle>
                     </div>
                     <Button
@@ -89,7 +93,7 @@ export default function Dashboard() {
                       onClick={() => setProjectToDelete({ id: project.id, name: project.name })}
                       aria-label={`Delete ${project.name}`}
                     >
-                      <Trash2 className="h-4 w-4 text-destructive" />
+                      <Trash2 className="h-4 w-4 text-destructive" aria-hidden="true" />
                     </Button>
                   </div>
                   {project.description && (
@@ -98,7 +102,7 @@ export default function Dashboard() {
                 </CardHeader>
                 <CardContent>
                   <Button variant="outline" size="sm" asChild className="w-full">
-                    <Link to={`/dashboard/projects/${project.id}`}>
+                    <Link to={`/dashboard/projects/${project.id}`} aria-label={`View details for ${project.name}`}>
                       View Details
                     </Link>
                   </Button>
@@ -108,18 +112,18 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className="text-center py-12 border-2 border-dashed rounded-lg">
-            <Folder className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+            <Folder className="h-12 w-12 mx-auto text-muted-foreground mb-4" aria-hidden="true" />
             <h3 className="text-lg font-semibold mb-2">No projects yet</h3>
             <p className="text-muted-foreground mb-4">
               Create your first project to get started
             </p>
-            <Button onClick={() => setIsCreateDialogOpen(true)}>
-              <Plus className="mr-2 h-4 w-4" />
+            <Button onClick={() => setIsCreateDialogOpen(true)} aria-label="Create your first project">
+              <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
               Create Project
             </Button>
           </div>
         )}
-      </div>
+      </main>
 
       <CreateProjectDialog
         open={isCreateDialogOpen}
